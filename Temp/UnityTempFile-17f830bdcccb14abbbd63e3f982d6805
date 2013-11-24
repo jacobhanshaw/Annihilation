@@ -36,6 +36,7 @@
 -define:ENABLE_PROFILER
 -define:UNITY_EDITOR
 -define:UNITY_EDITOR_OSX
+'Assets/CoreLogic.cs'
 'Assets/LitJson/IJsonWrapper.cs'
 'Assets/LitJson/JsonData.cs'
 'Assets/LitJson/JsonException.cs'
@@ -44,7 +45,10 @@
 'Assets/LitJson/JsonWriter.cs'
 'Assets/LitJson/Lexer.cs'
 'Assets/LitJson/ParserToken.cs'
+'Assets/MyAssets/MyScripts/CameraFollow.cs'
+'Assets/MyAssets/MyScripts/Pauser.cs'
 'Assets/MyAssets/MyScripts/PlayerController.cs'
+'Assets/MyAssets/MyScripts/PlayerHealth.cs'
 'Assets/NGUI/Scripts/Interaction/LanguageSelection.cs'
 'Assets/NGUI/Scripts/Interaction/UIButton.cs'
 'Assets/NGUI/Scripts/Interaction/UIButtonColor.cs'
