@@ -77,9 +77,6 @@ OuyaSDK.IMenuAppearingListener
 	
 		void Update ()
 		{
-				//GetAxis(OuyaSDK.KeyEnum.AXIS_LSTICK_Y, Index) GetAxis(OuyaSDK.KeyEnum.AXIS_LSTICK_X, Index)
-				//GetAxis(OuyaSDK.KeyEnum.AXIS_RSTICK_Y, Index) GetAxis(OuyaSDK.KeyEnum.AXIS_RSTICK_X, Index)
-		
 				// Check if grounded
 				int layerMask = 1 << LayerMask.NameToLayer ("Ground");
 				layerMask |= 1 << LayerMask.NameToLayer ("Player");
@@ -92,7 +89,7 @@ OuyaSDK.IMenuAppearingListener
 						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
 						foreach (RaycastHit2D raycastInfo in hits) {
 								grounded |= !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject);
-								//Debug.Log ("Name: " + raycastInfo.collider.ToString () + " isTrigger: " + !raycastInfo.collider.isTrigger);
+								//	Debug.Log ("Name: " + raycastInfo.collider.ToString () + " isTrigger: " + !raycastInfo.collider.isTrigger);
 						}
 				}
 				
@@ -114,7 +111,9 @@ OuyaSDK.IMenuAppearingListener
 			
 				}
 				
-				if (GrabPressed () && carriedPlayer == null) {
+				bool grabPressed = GrabPressed ();
+			
+				if (carriedPlayer == null && grabPressed) {
 						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, gameObject.transform.localScale.y + extraGrabRadius);
 						foreach (Collider2D collider in hitColliders) {
 								if (collider.gameObject != gameObject && collider.gameObject != carryingPlayer && collider.gameObject.CompareTag ("Player")) {		
@@ -136,41 +135,11 @@ OuyaSDK.IMenuAppearingListener
 										break;
 								}
 						}
-				} else if (!GrabPressed () && carriedPlayer != null) {
-					
+				} else if (carriedPlayer != null && !grabPressed) {	
 						PlayerController playerController = carriedPlayer.GetComponent<PlayerController> ();
 						playerController.carryingPlayer = null;
 						PlayerLaunched ();
 				}
-		
-				/*
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_L3, Index))
-						Debug.Log ("L3");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_R3, Index))
-						Debug.Log ("R3");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_O, Index))
-						Debug.Log ("O");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_U, Index))
-						Debug.Log ("U");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_Y, Index))
-						Debug.Log ("Y");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_A, Index))
-						Debug.Log ("A");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_LB, Index))
-						Debug.Log ("LB");
-				if ()
-						Debug.Log ("RB");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_LT, Index))
-						Debug.Log ("LT");		
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, Index))
-						Debug.Log ("D_UP");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_DOWN, Index))
-						Debug.Log ("D_DOWN");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, Index))
-						Debug.Log ("D_LEFT");
-				if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, Index))
-						Debug.Log ("D_RIGHT");
-			*/
 		}
 		
 		public void PlayerLaunched ()

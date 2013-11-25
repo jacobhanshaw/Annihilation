@@ -55,7 +55,7 @@
      <Compile Include="Assets\LitJson\Lexer.cs" />
      <Compile Include="Assets\LitJson\ParserToken.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\CameraFollow.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\CoreLogic.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\LevelLogic.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Pauser.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\PlayerController.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\PlayerHealth.cs" />
