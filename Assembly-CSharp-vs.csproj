@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GameLogic.cs" />
      <Compile Include="Assets\LitJson\IJsonWrapper.cs" />
      <Compile Include="Assets\LitJson\JsonData.cs" />
      <Compile Include="Assets\LitJson\JsonException.cs" />
@@ -56,9 +57,11 @@
      <Compile Include="Assets\LitJson\ParserToken.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\CameraFollow.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\LevelLogic.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\MonoBehaviourExtended.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Pauser.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\PlayerController.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\PlayerHealth.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Singleton.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\StickyWall.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\SwitchScript.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
