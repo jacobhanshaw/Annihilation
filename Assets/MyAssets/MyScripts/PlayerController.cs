@@ -9,6 +9,7 @@ OuyaSDK.IMenuAppearingListener
 {
 
 		public TextMesh textMesh;
+		private GameObject grabIndicator;
 		private bool keyboardDebugMode = true;
 
 		public OuyaSDK.OuyaPlayer index = OuyaSDK.OuyaPlayer.player1;
@@ -18,9 +19,10 @@ OuyaSDK.IMenuAppearingListener
 		[HideInInspector]
 		public bool
 				facingRight = true;			// For determining which way the player is currently facing.
-		[HideInInspector]
-		public bool
-				jump = false;				// Condition for whether the player should jump.	
+		
+		public bool jump = false;				// Condition for whether the player should jump.
+		public bool jumping = false;
+		public int jumpedFromPlayer = -1;
 	
 		public float moveForce = 365f;			// Amount of force added to move the player left and right.
 		public float maxSpeed = 3.0f;				// The fastest the player can travel in the x axis.
@@ -37,7 +39,7 @@ OuyaSDK.IMenuAppearingListener
 		
 		private float score;
 		
-		private float holdingDistance = 3.0f;
+		private float holdingDistance = 4.0f;
 		private GameObject carriedPlayer;
 		private GameObject carryingPlayer;
 		private DistanceJoint2D jointToCarriedPlayer;
@@ -49,6 +51,8 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.registerMenuAppearingListener (this);
 				OuyaSDK.registerPauseListener (this);
 				OuyaSDK.registerResumeListener (this);
+		
+				grabIndicator = transform.Find ("grabIndicator").gameObject;
 		
 				groundChecks [0] = transform.Find ("groundChecka");
 				groundChecks [1] = transform.Find ("groundCheckb");
@@ -74,72 +78,67 @@ OuyaSDK.IMenuAppearingListener
 				if (other.gameObject.CompareTag ("Points"))
 						score += Time.deltaTime;
 		}
+		
+		void DestroyConnection ()
+		{
+				if (carryingPlayer != null) {
+						carryingPlayer.GetComponent<PlayerController> ().PlayerLaunched ();
+						carryingPlayer = null;
+				} else if (carriedPlayer != null) {
+						carriedPlayer.GetComponent<PlayerController> ().carryingPlayer = null;
+						carriedPlayer = null;
+						PlayerLaunched ();
+				}
+		}
 	
 		void Update ()
 		{
-				// Check if grounded
-				int layerMask = 1 << LayerMask.NameToLayer ("Ground");
-				layerMask |= 1 << LayerMask.NameToLayer ("Player");
-				Vector3 startRaycast = transform.position;
-				startRaycast.y -= transform.localScale.y / 1.99f;
-				grounded = false;
+				grounded = PlayerIsGrounded ();
 				
-				
-				foreach (Transform groundCheck in groundChecks) {
-						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
-						foreach (RaycastHit2D raycastInfo in hits) {
-								grounded |= !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject);
-								//	Debug.Log ("Name: " + raycastInfo.collider.ToString () + " isTrigger: " + !raycastInfo.collider.isTrigger);
-						}
-				}
-				
-				//	if (index == OuyaSDK.OuyaPlayer.player1) 
-				//			textMesh.text = "I am grounded: " + grounded;
+				jumping &= !grounded;
+				if (grounded)
+						jumpedFromPlayer = -1;
 					
-				// If the jump button is pressed and the player is grounded or being carried then the player should jump.
-				if (JumpPressed () && (grounded || carryingPlayer != null)) { //|| carriedPlayer != null)) {
-						jump = true;
-						if (carryingPlayer != null) {
-								carryingPlayer.GetComponent<PlayerController> ().PlayerLaunched ();
-								carryingPlayer = null;
-						} 
-						/*else if (carriedPlayer != null) {
-								carriedPlayer.GetComponent<PlayerController> ().carryingPlayer = null;
-								carriedPlayer = null;
-								PlayerLaunched ();
-						} */
-			
-				}
+				bool shouldJump = JumpPressed ();
+				shouldJump &= !jumping;
 				
-				bool grabPressed = GrabPressed ();
+				if (shouldJump && carryingPlayer != null && jumpedFromPlayer != carryingPlayer.GetInstanceID ()) {
+						jump = true;
+						jumpedFromPlayer = carryingPlayer.GetInstanceID ();
+						DestroyConnection ();
+				} else if (shouldJump && grounded) {
+						jump = true;
+						DestroyConnection ();
+				}
 			
+				bool grabPressed = GrabPressed ();
+				
+				if (carriedPlayer != null)
+						grabIndicator.SetActive (true);
+				else
+						grabIndicator.SetActive (false);
+					
 				if (carriedPlayer == null && grabPressed) {
-						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, gameObject.transform.localScale.y + extraGrabRadius);
+						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance); // gameObject.transform.localScale.y + extraGrabRadius);
 						foreach (Collider2D collider in hitColliders) {
 								if (collider.gameObject != gameObject && collider.gameObject != carryingPlayer && collider.gameObject.CompareTag ("Player")) {		
+										
 										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
-										playerController.carryingPlayer = gameObject;
-										carriedPlayer = collider.gameObject;
+										if (!(playerController.jumpedFromPlayer == gameObject.GetInstanceID ())) {
+												playerController.carryingPlayer = gameObject;
+												carriedPlayer = collider.gameObject;
 												
-										/*	float holdingDistance = gameObject.transform.localScale.y * 2.1f;
-												Vector3 pickedUpPosition = gameObject.transform.position;
-												pickedUpPosition.y += gameObject.transform.localScale.y / 2.0f;
-												pickedUpPosition.y += holdingDistance;
-												pickedUpPosition.y += collider.gameObject.transform.localScale.y / 2.0f;
-												collider.gameObject.transform.position = pickedUpPosition; */
 												
-										jointToCarriedPlayer = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
-										jointToCarriedPlayer.collideConnected = true;
-										jointToCarriedPlayer.connectedBody = collider.gameObject.rigidbody2D;
-										jointToCarriedPlayer.distance = holdingDistance;
-										break;
+												jointToCarriedPlayer = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
+												jointToCarriedPlayer.collideConnected = true;
+												jointToCarriedPlayer.connectedBody = collider.gameObject.rigidbody2D;
+												jointToCarriedPlayer.distance = holdingDistance;
+												break;
+										}
 								}
 						}
-				} else if (carriedPlayer != null && !grabPressed) {	
-						PlayerController playerController = carriedPlayer.GetComponent<PlayerController> ();
-						playerController.carryingPlayer = null;
-						PlayerLaunched ();
-				}
+				} else if (carriedPlayer != null && !grabPressed) 
+						DestroyConnection ();
 		}
 		
 		public void PlayerLaunched ()
@@ -217,32 +216,36 @@ OuyaSDK.IMenuAppearingListener
 	
 		void FixedUpdate ()
 		{
-				// Cache the horizontal input.
-				float h = GetHorizontalMovement ();
-									
-				// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-				if (h * rigidbody2D.velocity.x < maxSpeed)
-		// ... add a force to the player.
-						rigidbody2D.AddForce (Vector2.right * h * moveForce);
-	
-				// If the player's horizontal velocity is greater than the maxSpeed...
-				if (Mathf.Abs (rigidbody2D.velocity.x) > maxSpeed)
-		// ... set the player's velocity to the maxSpeed in the x axis.
-						rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
-	
-				//		if (h > 0 && !facingRight)
-				//				Flip ();
-				//		else if (h < 0 && facingRight)
-				//				Flip ();
-				
 				if (jump) {
 						rigidbody2D.AddForce (new Vector2 (0f, jumpForce));
 			
 						// Make sure the player can't jump again until the jump conditions from Update are satisfied.
 						jump = false;
+						jumping = true;
 				}
-		}
 		
+				// Cache the horizontal input.
+				if (grounded || (jumping && carryingPlayer == null)) {
+						float h = GetHorizontalMovement ();
+									
+						// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
+						if (h * rigidbody2D.velocity.x < maxSpeed)
+						// ... add a force to the player.
+								rigidbody2D.AddForce (Vector2.right * h * moveForce);
+	
+						//		if (h > 0 && !facingRight)
+						//				Flip ();
+						//		else if (h < 0 && facingRight)
+						//				Flip ();
+				}
+					
+				// If the player's horizontal velocity is greater than the maxSpeed...
+				if (Mathf.Abs (rigidbody2D.velocity.x) > maxSpeed)
+			// ... set the player's velocity to the maxSpeed in the x axis.
+						rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
+		
+		}
+	
 		bool JumpPressed ()
 		{
 				if (!keyboardDebugMode) {
@@ -263,7 +266,9 @@ OuyaSDK.IMenuAppearingListener
 								}
 						}
 				} else if (index == OuyaSDK.OuyaPlayer.player1)   
-						return Input.GetButton ("Jump") || Input.GetKey (KeyCode.UpArrow);
+						return Input.GetKey (KeyCode.W);
+				else if (index == OuyaSDK.OuyaPlayer.player2)   
+						return Input.GetKey (KeyCode.I);
 				else
 						return false;
 		}
@@ -275,8 +280,10 @@ OuyaSDK.IMenuAppearingListener
 								return GetButton (OuyaSDK.KeyEnum.BUTTON_LT, index);
 						else
 								return GetButton (OuyaSDK.KeyEnum.BUTTON_RT, index);
-				} else if (index == OuyaSDK.OuyaPlayer.player1)   
-						return Input.GetKey ("f");
+				} else if (index == OuyaSDK.OuyaPlayer.player2)   
+						return Input.GetKey (";");
+				else if (index == OuyaSDK.OuyaPlayer.player1)   
+						return Input.GetKey (KeyCode.LeftShift);
 				else
 						return false;
 	
@@ -285,6 +292,8 @@ OuyaSDK.IMenuAppearingListener
 		float GetHorizontalMovement ()
 		{
 				float horizontal = 0.0f;
+		
+
 				if (!keyboardDebugMode) {
 						if (!splitController || leftSplit)
 								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, index);
@@ -297,11 +306,34 @@ OuyaSDK.IMenuAppearingListener
 								else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, index))
 										return 1.0f;
 						}
-				} else if (Input.GetKey (KeyCode.LeftArrow) && index == OuyaSDK.OuyaPlayer.player1)
+				} else if (Input.GetKey (KeyCode.A) && index == OuyaSDK.OuyaPlayer.player1)
 						horizontal = -1.0f;
-				else if (Input.GetKey (KeyCode.RightArrow) && index == OuyaSDK.OuyaPlayer.player1)
+				else if (Input.GetKey (KeyCode.D) && index == OuyaSDK.OuyaPlayer.player1)
+						horizontal = 1.0f;
+				else if (Input.GetKey (KeyCode.J) && index == OuyaSDK.OuyaPlayer.player2)
+						horizontal = -1.0f;
+				else if (Input.GetKey (KeyCode.L) && index == OuyaSDK.OuyaPlayer.player2)
 						horizontal = 1.0f;	
+				
 				return horizontal;
+		}
+		
+		bool PlayerIsGrounded ()
+		{
+				bool playerGrounded = false;
+				int layerMask = 1 << LayerMask.NameToLayer ("Ground");
+				layerMask |= 1 << LayerMask.NameToLayer ("Player");
+				Vector3 startRaycast = transform.position;
+				startRaycast.y -= transform.localScale.y / 1.99f;
+				
+				foreach (Transform groundCheck in groundChecks) {
+						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
+						foreach (RaycastHit2D raycastInfo in hits) 
+								playerGrounded |= !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject);
+
+				}
+				
+				return playerGrounded;
 		}
 	
 		void Flip ()

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class StickyWall : MonoBehaviour
 {
-
+/*
 		// Use this for initialization
 		void Start ()
 		{
@@ -15,7 +15,7 @@ public class StickyWall : MonoBehaviour
 		{
 	
 		}
-	
+*/	
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				other.transform.parent = gameObject.transform;

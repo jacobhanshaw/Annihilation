@@ -36,6 +36,7 @@
 -define:ENABLE_PROFILER
 -define:UNITY_EDITOR
 -define:UNITY_EDITOR_OSX
+'Assets/GameLogic.cs'
 'Assets/LitJson/IJsonWrapper.cs'
 'Assets/LitJson/JsonData.cs'
 'Assets/LitJson/JsonException.cs'

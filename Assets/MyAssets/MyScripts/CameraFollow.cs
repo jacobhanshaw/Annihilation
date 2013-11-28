@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
 		private GameObject[] players;		// Reference to the player's transform.
 		private Transform player;
 
-		void Awake ()
+		void Start () //Awake
 		{
 				// Setting up the reference.
 				players = GameObject.FindGameObjectsWithTag ("Player");
@@ -38,7 +38,7 @@ public class CameraFollow : MonoBehaviour
 
 		void FixedUpdate ()
 		{
-				TrackPlayer ();
+				TrackPlayers ();
 		}
 	
 	
@@ -58,11 +58,27 @@ public class CameraFollow : MonoBehaviour
 			// ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
 						targetY = Mathf.Lerp (transform.position.y, player.position.y, ySmooth * Time.deltaTime);
 
+				Debug.Log ("XMargin: " + CheckXMargin () + " YMargin: " + CheckYMargin ());
+				
 				// The target x and y coordinates should not be larger than the maximum or smaller than the minimum.
 				targetX = Mathf.Clamp (targetX, minXAndY.x, maxXAndY.x);
 				targetY = Mathf.Clamp (targetY, minXAndY.y, maxXAndY.y);
 
 				// Set the camera's position to the target position with the same z component.
 				transform.position = new Vector3 (targetX, targetY, transform.position.z);
+		}
+		
+		void TrackPlayers ()
+		{
+				Vector3 centroid = new Vector3 (0, 0, 0);
+		
+				foreach (GameObject player in players)	
+						centroid += player.transform.position;
+			
+				centroid /= players.Length;
+				
+				centroid.z = -10;
+				
+				transform.position = centroid;
 		}
 }
