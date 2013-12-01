@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CameraFollow : MonoBehaviour
@@ -10,18 +10,27 @@ public class CameraFollow : MonoBehaviour
 		public Vector2 maxXAndY;		// The maximum x and y coordinates the camera can have.
 		public Vector2 minXAndY;		// The minimum x and y coordinates the camera can have.
 
-
+		private float standardZPos = -10.0f;
+		private float minCameraSize = 9.0f;
+		private float standardZoomAmount = 0.1f;
+		private float frameEdgeGap = 0.1f;
+		private float zoomEdgeGap = 0.25f;
 		private GameObject[] players;		// Reference to the player's transform.
-		private Transform player;
+		//private Transform player;
 
 		void Start () //Awake
 		{
 				// Setting up the reference.
 				players = GameObject.FindGameObjectsWithTag ("Player");
-				player = players [0].transform;
+				//player = players [0].transform;
+		}
+		
+		void FixedUpdate ()
+		{
+				TrackPlayers ();
 		}
 
-
+/*
 		bool CheckXMargin ()
 		{
 				// Returns true if the distance between the camera and the player in the x axis is greater than the x margin.
@@ -35,13 +44,6 @@ public class CameraFollow : MonoBehaviour
 				return Mathf.Abs (transform.position.y - player.position.y) > yMargin;
 		}
 
-
-		void FixedUpdate ()
-		{
-				TrackPlayers ();
-		}
-	
-	
 		void TrackPlayer ()
 		{
 				// By default the target x and y coordinates of the camera are it's current x and y coordinates.
@@ -67,18 +69,44 @@ public class CameraFollow : MonoBehaviour
 				// Set the camera's position to the target position with the same z component.
 				transform.position = new Vector3 (targetX, targetY, transform.position.z);
 		}
+		*/
 		
 		void TrackPlayers ()
-		{
+		{				
 				Vector3 centroid = new Vector3 (0, 0, 0);
 		
-				foreach (GameObject player in players)	
+				bool zoomOutNecessary = false;
+				bool zoomInNecessary = true;
+				foreach (GameObject player in players) {
 						centroid += player.transform.position;
+						Vector2 viewportLocation = gameObject.camera.WorldToViewportPoint (player.transform.position); 
+			
+						if (viewportLocation.x < frameEdgeGap ||
+								viewportLocation.y < frameEdgeGap ||
+								viewportLocation.x > 1 - frameEdgeGap ||
+								viewportLocation.y > 1 - frameEdgeGap)
+								zoomOutNecessary = true;
+						else if (!(viewportLocation.x > zoomEdgeGap &&
+								viewportLocation.y > zoomEdgeGap &&
+								viewportLocation.x < 1 - zoomEdgeGap &&
+								viewportLocation.y < 1 - zoomEdgeGap))
+								zoomInNecessary = false;
+				}
 			
 				centroid /= players.Length;
 				
-				centroid.z = -10;
+				centroid.z = standardZPos;
 				
-				transform.position = centroid;
+				if (zoomOutNecessary)
+						gameObject.camera.orthographicSize += standardZoomAmount;
+				else if (zoomInNecessary) {
+						gameObject.camera.orthographicSize -= standardZoomAmount;
+						if (gameObject.camera.orthographicSize < minCameraSize)
+								gameObject.camera.orthographicSize = minCameraSize;
+				}
+				
+				transform.position = new Vector3 (Mathf.Lerp (transform.position.x, centroid.x, Time.deltaTime * xSmooth), 
+										  Mathf.Lerp (transform.position.y, centroid.y, Time.deltaTime * ySmooth), 
+										  transform.position.z);
 		}
 }

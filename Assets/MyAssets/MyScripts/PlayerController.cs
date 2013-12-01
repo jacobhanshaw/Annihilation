@@ -10,10 +10,12 @@ OuyaSDK.IMenuAppearingListener
 
 		public TextMesh textMesh;
 		private GameObject grabIndicator;
+		public  Color spawnColor;
+		public  GameObject spawnLocation;
+	
 		private bool keyboardDebugMode = true;
 
 		public OuyaSDK.OuyaPlayer index = OuyaSDK.OuyaPlayer.player1;
-	
 		private bool m_useSDKForInput = false;
 		
 		[HideInInspector]
@@ -25,14 +27,16 @@ OuyaSDK.IMenuAppearingListener
 		public int jumpedFromPlayer = -1;
 	
 		public float moveForce = 365f;			// Amount of force added to move the player left and right.
-		public float maxSpeed = 3.0f;				// The fastest the player can travel in the x axis.
-		public float jumpForce = 1000f;			// Amount of force added when the player jumps.
+		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
+		public float jumpForce = 100.0f;
+		public float jumpVelocity = 7.5f;			// Amount of force added when the player jumps.
 
 		private Transform[] groundChecks = new Transform[3];			// A position marking where to check if the player is grounded.
-		private bool grounded = false;			// Whether or not the player is grounded.
+		public bool grounded = false;			// Whether or not the player is grounded.
+		private bool jumpedFromGround = false;
 		
 		private float debounceDistance = 0.25f;
-		private float extraGrabRadius = 0.2f;
+		//private float extraGrabRadius = 0.2f;
 		
 		public bool splitController = false;
 		public bool leftSplit = false;
@@ -40,8 +44,14 @@ OuyaSDK.IMenuAppearingListener
 		private float score;
 		
 		private float holdingDistance = 4.0f;
-		private GameObject carriedPlayer;
-		private GameObject carryingPlayer;
+		public GameObject carriedPlayer;
+		public GameObject carryingPlayer;
+		public int possiblePlayerPlatformId;
+		public int playerPlatformId;
+		[HideInInspector]
+		public  float
+				connectionCreationTime;
+		private  float minConnectionTime = 0.1f;
 		private DistanceJoint2D jointToCarriedPlayer;
 	
 		void Awake ()
@@ -72,67 +82,91 @@ OuyaSDK.IMenuAppearingListener
 		{
 				Input.ResetInputAxes ();
 		}
-		
-		void OnTriggerStay (Collider other)
+	
+		void OnTriggerEnter2D (Collider2D other)
 		{
-				if (other.gameObject.CompareTag ("Points"))
-						score += Time.deltaTime;
+				if (other.gameObject.CompareTag ("Respawn") && other.gameObject.GetInstanceID () != spawnLocation.GetInstanceID ()) {
+						SpawnScript spawnScript = other.gameObject.GetComponent<SpawnScript> ();
+						spawnScript.addColor (spawnColor);
+						spawnLocation = other.gameObject;
+				} else if (other.gameObject.CompareTag ("Deadly")) {
+						DestroyConnection ();
+						StartCoroutine ("RespawnPlayer");
+				}
+		}
+
+		IEnumerator RespawnPlayer ()
+		{
+				gameObject.transform.position = new Vector3 (spawnLocation.transform.position.x, spawnLocation.transform.position.y, -20);
+				
+				yield return new WaitForSeconds (0.5f); //WaitForSeconds(2);
+		
+				gameObject.transform.position = spawnLocation.transform.position;
+		}
+		
+		void OnTriggerStay2D (Collider2D other)
+		{
+				//	if (other.gameObject.CompareTag ("Points"))
+				//			score += Time.deltaTime;
 		}
 		
 		void DestroyConnection ()
 		{
 				if (carryingPlayer != null) {
-						carryingPlayer.GetComponent<PlayerController> ().PlayerLaunched ();
+						carryingPlayer.GetComponent<PlayerController> ().DestroyConnection ();
 						carryingPlayer = null;
 				} else if (carriedPlayer != null) {
 						carriedPlayer.GetComponent<PlayerController> ().carryingPlayer = null;
 						carriedPlayer = null;
-						PlayerLaunched ();
+						grabIndicator.SetActive (false);
+						Destroy (jointToCarriedPlayer);
 				}
 		}
 	
 		void Update ()
-		{
-				grounded = PlayerIsGrounded ();
+		{		
+				UpdateGrounded ();
 				
-				jumping &= !grounded;
-				if (grounded)
-						jumpedFromPlayer = -1;
-					
 				bool shouldJump = JumpPressed ();
 				shouldJump &= !jumping;
-				
-				if (shouldJump && carryingPlayer != null && jumpedFromPlayer != carryingPlayer.GetInstanceID ()) {
-						jump = true;
-						jumpedFromPlayer = carryingPlayer.GetInstanceID ();
-						DestroyConnection ();
-				} else if (shouldJump && grounded) {
-						jump = true;
-						DestroyConnection ();
+		
+				if (shouldJump) { //&& !jumping?
+						if (carryingPlayer != null) {
+								if (jumpedFromPlayer != carryingPlayer.GetInstanceID () && Time.time - carryingPlayer.GetComponent<PlayerController> ().connectionCreationTime > minConnectionTime) {
+										jump = true;
+										jumpedFromGround = false;
+										jumpedFromPlayer = carryingPlayer.GetInstanceID ();
+										DestroyConnection ();
+								}
+						} else if (grounded) {
+								jump = true;
+								possiblePlayerPlatformId = playerPlatformId;
+								jumpedFromGround = true;		
+								DestroyConnection ();
+						}
 				}
-			
+		
 				bool grabPressed = GrabPressed ();
-				
-				if (carriedPlayer != null)
-						grabIndicator.SetActive (true);
-				else
-						grabIndicator.SetActive (false);
-					
+		
 				if (carriedPlayer == null && grabPressed) {
-						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance); // gameObject.transform.localScale.y + extraGrabRadius);
+						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
 						foreach (Collider2D collider in hitColliders) {
 								if (collider.gameObject != gameObject && collider.gameObject != carryingPlayer && collider.gameObject.CompareTag ("Player")) {		
-										
 										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
-										if (!(playerController.jumpedFromPlayer == gameObject.GetInstanceID ())) {
+										playerController.UpdateGrounded ();
+										if (playerController.jumpedFromPlayer != gameObject.GetInstanceID () && playerController.playerPlatformId != gameObject.GetInstanceID ()) {
+												playerController.jumping = false;
 												playerController.carryingPlayer = gameObject;
+												
+												jumping = false;
+												grabIndicator.SetActive (true);
 												carriedPlayer = collider.gameObject;
-												
-												
+						
 												jointToCarriedPlayer = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
 												jointToCarriedPlayer.collideConnected = true;
 												jointToCarriedPlayer.connectedBody = collider.gameObject.rigidbody2D;
 												jointToCarriedPlayer.distance = holdingDistance;
+												connectionCreationTime = Time.time;
 												break;
 										}
 								}
@@ -140,11 +174,11 @@ OuyaSDK.IMenuAppearingListener
 				} else if (carriedPlayer != null && !grabPressed) 
 						DestroyConnection ();
 		}
-		
-		public void PlayerLaunched ()
+	
+		public void UpdateGrounded ()
 		{
-				carriedPlayer = null;
-				Destroy (jointToCarriedPlayer);
+				grounded = PlayerIsGrounded ();
+				jumping &= !grounded;
 		}
 	
 		public void OuyaMenuButtonUp ()
@@ -216,8 +250,14 @@ OuyaSDK.IMenuAppearingListener
 	
 		void FixedUpdate ()
 		{
+				Vector2 velocity = rigidbody2D.velocity;
+	
 				if (jump) {
-						rigidbody2D.AddForce (new Vector2 (0f, jumpForce));
+						if (jumpedFromGround)
+								velocity.y = jumpVelocity;
+						else
+								rigidbody2D.AddForce (new Vector2 (0f, jumpForce));
+			
 			
 						// Make sure the player can't jump again until the jump conditions from Update are satisfied.
 						jump = false;
@@ -225,14 +265,19 @@ OuyaSDK.IMenuAppearingListener
 				}
 		
 				// Cache the horizontal input.
-				if (grounded || (jumping && carryingPlayer == null)) {
+				if (grounded || jumping || (carryingPlayer == null && carriedPlayer == null)) {
 						float h = GetHorizontalMovement ();
 									
 						// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-						if (h * rigidbody2D.velocity.x < maxSpeed)
+						//	if (h * rigidbody2D.velocity.x < maxSpeed)
 						// ... add a force to the player.
-								rigidbody2D.AddForce (Vector2.right * h * moveForce);
-	
+						//rigidbody2D.AddForce (Vector2.right * h * moveForce);
+						
+						
+						if (h * rigidbody2D.velocity.x < maxSpeed)
+								velocity.x = maxSpeed * h;
+						
+			
 						//		if (h > 0 && !facingRight)
 						//				Flip ();
 						//		else if (h < 0 && facingRight)
@@ -240,9 +285,11 @@ OuyaSDK.IMenuAppearingListener
 				}
 					
 				// If the player's horizontal velocity is greater than the maxSpeed...
-				if (Mathf.Abs (rigidbody2D.velocity.x) > maxSpeed)
-			// ... set the player's velocity to the maxSpeed in the x axis.
-						rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
+				//	if (Mathf.Abs (rigidbody2D.velocity.x) > maxSpeed)
+				// ... set the player's velocity to the maxSpeed in the x axis.
+				//			rigidbody2D.velocity = new Vector2 (Mathf.Sign (rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
+		
+				rigidbody2D.velocity = velocity;
 		
 		}
 	
@@ -281,7 +328,7 @@ OuyaSDK.IMenuAppearingListener
 						else
 								return GetButton (OuyaSDK.KeyEnum.BUTTON_RT, index);
 				} else if (index == OuyaSDK.OuyaPlayer.player2)   
-						return Input.GetKey (";");
+						return Input.GetKey (KeyCode.Period);
 				else if (index == OuyaSDK.OuyaPlayer.player1)   
 						return Input.GetKey (KeyCode.LeftShift);
 				else
@@ -325,12 +372,22 @@ OuyaSDK.IMenuAppearingListener
 				layerMask |= 1 << LayerMask.NameToLayer ("Player");
 				Vector3 startRaycast = transform.position;
 				startRaycast.y -= transform.localScale.y / 1.99f;
-				
+		
 				foreach (Transform groundCheck in groundChecks) {
 						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
-						foreach (RaycastHit2D raycastInfo in hits) 
-								playerGrounded |= !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject);
-
+						foreach (RaycastHit2D raycastInfo in hits) {
+								int colliderInstanceId = raycastInfo.collider.GetInstanceID ();
+								if ((!raycastInfo.collider.CompareTag ("Player") || (colliderInstanceId != jumpedFromPlayer && colliderInstanceId != playerPlatformId)) 
+										&& !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject)) {
+										playerGrounded |= true;
+										jumpedFromPlayer = -1;
+										possiblePlayerPlatformId = -1;
+										playerPlatformId = -1;
+								}
+				
+								if (raycastInfo.collider.CompareTag ("Player"))
+										possiblePlayerPlatformId = colliderInstanceId;
+						}
 				}
 				
 				return playerGrounded;
