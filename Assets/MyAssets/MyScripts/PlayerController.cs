@@ -7,7 +7,6 @@ OuyaSDK.IPauseListener, OuyaSDK.IResumeListener,
 OuyaSDK.IMenuButtonUpListener,
 OuyaSDK.IMenuAppearingListener
 {
-
 		public TextMesh textMesh;
 		private GameObject grabIndicator;
 		public  Color spawnColor;
@@ -26,8 +25,11 @@ OuyaSDK.IMenuAppearingListener
 		public bool jumping = false;
 		public int jumpedFromPlayer = -1;
 	
+		public GameObject possibleGroundedByPlayer;
+		public GameObject groundedByPlayer;
 		public float moveForce = 365f;			// Amount of force added to move the player left and right.
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
+		public float backJumpForce = -50.0f;
 		public float jumpForce = 100.0f;
 		public float jumpVelocity = 7.5f;			// Amount of force added when the player jumps.
 
@@ -46,8 +48,6 @@ OuyaSDK.IMenuAppearingListener
 		private float holdingDistance = 4.0f;
 		public GameObject carriedPlayer;
 		public GameObject carryingPlayer;
-		public int possiblePlayerPlatformId;
-		public int playerPlatformId;
 		[HideInInspector]
 		public  float
 				connectionCreationTime;
@@ -132,7 +132,7 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (shouldJump) { //&& !jumping?
 						if (carryingPlayer != null) {
-								if (jumpedFromPlayer != carryingPlayer.GetInstanceID () && Time.time - carryingPlayer.GetComponent<PlayerController> ().connectionCreationTime > minConnectionTime) {
+								if (jumpedFromPlayer != carryingPlayer.GetInstanceID () && Time.time - carryingPlayer.GetComponent<PlayerController> ().connectionCreationTime > minConnectionTime) { //
 										jump = true;
 										jumpedFromGround = false;
 										jumpedFromPlayer = carryingPlayer.GetInstanceID ();
@@ -140,8 +140,8 @@ OuyaSDK.IMenuAppearingListener
 								}
 						} else if (grounded) {
 								jump = true;
-								possiblePlayerPlatformId = playerPlatformId;
-								jumpedFromGround = true;		
+								jumpedFromGround = true;	
+								groundedByPlayer = possibleGroundedByPlayer;
 								DestroyConnection ();
 						}
 				}
@@ -153,8 +153,18 @@ OuyaSDK.IMenuAppearingListener
 						foreach (Collider2D collider in hitColliders) {
 								if (collider.gameObject != gameObject && collider.gameObject != carryingPlayer && collider.gameObject.CompareTag ("Player")) {		
 										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
-										playerController.UpdateGrounded ();
-										if (playerController.jumpedFromPlayer != gameObject.GetInstanceID () && playerController.playerPlatformId != gameObject.GetInstanceID ()) {
+										//playerController.UpdateGrounded ();
+										
+										//A IS ISSUE
+										Debug.Log ("A: " + (jumpedFromPlayer != collider.gameObject.GetInstanceID ()) + " B: " +
+												(playerController.jumpedFromPlayer != gameObject.GetInstanceID ()) + " C: " +
+												(playerController.groundedByPlayer == null || playerController.groundedByPlayer.GetInstanceID () != gameObject.GetInstanceID ()) + " D: " +
+												(groundedByPlayer == null || groundedByPlayer.GetInstanceID () != collider.gameObject.GetInstanceID ()));
+										
+										//	if (jumpedFromPlayer != collider.gameObject.GetInstanceID () && //Don't make connection with someone who just made connection with you
+										if (playerController.jumpedFromPlayer != gameObject.GetInstanceID () && //Don't re-make the same connection
+												(playerController.groundedByPlayer == null || playerController.groundedByPlayer.GetInstanceID () != gameObject.GetInstanceID ()) && //Don't make a connection if the other player is grounded by you after jump
+												(groundedByPlayer == null || groundedByPlayer.GetInstanceID () != collider.gameObject.GetInstanceID ())) { //Don't make a connection if you are grounded by other player after jump
 												playerController.jumping = false;
 												playerController.carryingPlayer = gameObject;
 												
@@ -253,10 +263,16 @@ OuyaSDK.IMenuAppearingListener
 				Vector2 velocity = rigidbody2D.velocity;
 	
 				if (jump) {
-						if (jumpedFromGround)
+						if (jumpedFromGround) {
 								velocity.y = jumpVelocity;
-						else
+								if (groundedByPlayer != null) {
+										//velocity.y = jumpVelocity / 1.1f;
+										groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce));
+								}
+						} else
 								rigidbody2D.AddForce (new Vector2 (0f, jumpForce));
+			
+						
 			
 			
 						// Make sure the player can't jump again until the jump conditions from Update are satisfied.
@@ -376,17 +392,21 @@ OuyaSDK.IMenuAppearingListener
 				foreach (Transform groundCheck in groundChecks) {
 						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
 						foreach (RaycastHit2D raycastInfo in hits) {
-								int colliderInstanceId = raycastInfo.collider.GetInstanceID ();
-								if ((!raycastInfo.collider.CompareTag ("Player") || (colliderInstanceId != jumpedFromPlayer && colliderInstanceId != playerPlatformId)) 
-										&& !(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject)) {
-										playerGrounded |= true;
-										jumpedFromPlayer = -1;
-										possiblePlayerPlatformId = -1;
-										playerPlatformId = -1;
+								if (!(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject)) {
+										int colliderInstanceId = raycastInfo.collider.gameObject.GetInstanceID ();
+										playerGrounded = true;		
+										possibleGroundedByPlayer = null;
+										
+										if (groundedByPlayer != null && colliderInstanceId != groundedByPlayer.GetInstanceID ())
+												groundedByPlayer = null;
+										
+										if (colliderInstanceId != jumpedFromPlayer) 
+												jumpedFromPlayer = -1;
+										
+										if (raycastInfo.collider.CompareTag ("Player")) 
+												possibleGroundedByPlayer = raycastInfo.collider.gameObject;
+	
 								}
-				
-								if (raycastInfo.collider.CompareTag ("Player"))
-										possiblePlayerPlatformId = colliderInstanceId;
 						}
 				}
 				
