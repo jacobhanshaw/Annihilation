@@ -21,7 +21,7 @@ public class OuyaSceneMain : MonoBehaviour
 		private int splitControllers = -1;
 
 		private int selectedNumPlayers = 0;
-		private int   availablePlayers = 0;
+		private int   availablePlayers = 2;
 		private float maxNumPlayers = 4.0f;
 		private float maxItemsPerRow = 5.0f;
 		
@@ -184,6 +184,8 @@ public class OuyaSceneMain : MonoBehaviour
 	
 		void CheckNumAvailablePlayers ()
 		{
+				availablePlayers = 2;
+		
 				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) != null)
 						availablePlayers = 1;
 				else if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player2) != null)

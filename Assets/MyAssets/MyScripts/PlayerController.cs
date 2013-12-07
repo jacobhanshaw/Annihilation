@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour,
 OuyaSDK.IJoystickCalibrationListener,
@@ -7,12 +8,13 @@ OuyaSDK.IPauseListener, OuyaSDK.IResumeListener,
 OuyaSDK.IMenuButtonUpListener,
 OuyaSDK.IMenuAppearingListener
 {
-		public TextMesh textMesh;
 		private GameObject grabIndicator;
+		private GameObject grabRadiusIndicator;
+		
 		public  Color spawnColor;
 		public  GameObject spawnLocation;
 	
-		private bool keyboardDebugMode = true;
+		private bool keyboardDebugMode = false;
 
 		public OuyaSDK.OuyaPlayer index = OuyaSDK.OuyaPlayer.player1;
 		private bool m_useSDKForInput = false;
@@ -37,13 +39,14 @@ OuyaSDK.IMenuAppearingListener
 		public bool grounded = false;			// Whether or not the player is grounded.
 		private bool jumpedFromGround = false;
 		
-		private float debounceDistance = 0.25f;
-		//private float extraGrabRadius = 0.2f;
+		//private float debounceX = 0.25f; //unused
+		//private float debounceY = 0.85f;
 		
 		public bool splitController = false;
 		public bool leftSplit = false;
 		
-		private float score;
+		public int score;
+		public  List<Achievement> achievements;
 		
 		private float holdingDistance = 4.0f;
 		public GameObject carriedPlayer;
@@ -63,6 +66,7 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.registerResumeListener (this);
 		
 				grabIndicator = transform.Find ("grabIndicator").gameObject;
+				grabRadiusIndicator = transform.Find ("grabRadiusIndicator").gameObject;
 		
 				groundChecks [0] = transform.Find ("groundChecka");
 				groundChecks [1] = transform.Find ("groundCheckb");
@@ -81,17 +85,30 @@ OuyaSDK.IMenuAppearingListener
 		void Start ()
 		{
 				Input.ResetInputAxes ();
+				keyboardDebugMode = OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) == null;
+				achievements = new List<Achievement> ();
 		}
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				if (other.gameObject.CompareTag ("Respawn") && other.gameObject.GetInstanceID () != spawnLocation.GetInstanceID ()) {
-						SpawnScript spawnScript = other.gameObject.GetComponent<SpawnScript> ();
+						SpawnScript spawnScript;
+						if (spawnLocation != null) {
+								spawnScript = spawnLocation.GetComponent<SpawnScript> ();
+								if (spawnScript != null)
+										spawnScript.removeColor (spawnColor);
+						}
+						spawnScript = other.gameObject.GetComponent<SpawnScript> ();
 						spawnScript.addColor (spawnColor);
 						spawnLocation = other.gameObject;
 				} else if (other.gameObject.CompareTag ("Deadly")) {
 						DestroyConnection ();
 						StartCoroutine ("RespawnPlayer");
+				} else if (other.gameObject.CompareTag ("Coin")) {
+						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();
+						achievements.Add (newAchievement);
+						score += newAchievement.points;
+						Destroy (other.gameObject);
 				}
 		}
 
@@ -149,22 +166,16 @@ OuyaSDK.IMenuAppearingListener
 				bool grabPressed = GrabPressed ();
 		
 				if (carriedPlayer == null && grabPressed) {
+						bool foundPlayer = false;
 						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
 						foreach (Collider2D collider in hitColliders) {
 								if (collider.gameObject != gameObject && collider.gameObject != carryingPlayer && collider.gameObject.CompareTag ("Player")) {		
 										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
-										//playerController.UpdateGrounded ();
-										
-										//A IS ISSUE
-										Debug.Log ("A: " + (jumpedFromPlayer != collider.gameObject.GetInstanceID ()) + " B: " +
-												(playerController.jumpedFromPlayer != gameObject.GetInstanceID ()) + " C: " +
-												(playerController.groundedByPlayer == null || playerController.groundedByPlayer.GetInstanceID () != gameObject.GetInstanceID ()) + " D: " +
-												(groundedByPlayer == null || groundedByPlayer.GetInstanceID () != collider.gameObject.GetInstanceID ()));
-										
-										//	if (jumpedFromPlayer != collider.gameObject.GetInstanceID () && //Don't make connection with someone who just made connection with you
-										if (playerController.jumpedFromPlayer != gameObject.GetInstanceID () && //Don't re-make the same connection
-												(playerController.groundedByPlayer == null || playerController.groundedByPlayer.GetInstanceID () != gameObject.GetInstanceID ()) && //Don't make a connection if the other player is grounded by you after jump
-												(groundedByPlayer == null || groundedByPlayer.GetInstanceID () != collider.gameObject.GetInstanceID ())) { //Don't make a connection if you are grounded by other player after jump
+										playerController.UpdateGrounded ();
+										if (jumpedFromPlayer != collider.gameObject.GetInstanceID () && //Don't make connection with someone who just made connection with you
+												playerController.jumpedFromPlayer != gameObject.GetInstanceID ()) {// && //Don't re-make the same connection
+												//(playerController.groundedByPlayer == null || playerController.groundedByPlayer.GetInstanceID () != gameObject.GetInstanceID ()) && //Don't make a connection if the other player is grounded by you after jump
+												//(groundedByPlayer == null || groundedByPlayer.GetInstanceID () != collider.gameObject.GetInstanceID ())) { //Don't make a connection if you are grounded by other player after jump
 												playerController.jumping = false;
 												playerController.carryingPlayer = gameObject;
 												
@@ -177,17 +188,20 @@ OuyaSDK.IMenuAppearingListener
 												jointToCarriedPlayer.connectedBody = collider.gameObject.rigidbody2D;
 												jointToCarriedPlayer.distance = holdingDistance;
 												connectionCreationTime = Time.time;
+												foundPlayer = true;
 												break;
 										}
 								}
 						}
 				} else if (carriedPlayer != null && !grabPressed) 
 						DestroyConnection ();
+						
+				grabRadiusIndicator.SetActive (grabPressed && carriedPlayer == null);
 		}
 	
 		public void UpdateGrounded ()
 		{
-				grounded = PlayerIsGrounded ();
+				grounded = PlayerIsGrounded (gameObject.GetInstanceID (), true);
 				jumping &= !grounded;
 		}
 	
@@ -281,7 +295,8 @@ OuyaSDK.IMenuAppearingListener
 				}
 		
 				// Cache the horizontal input.
-				if (grounded || jumping || (carryingPlayer == null && carriedPlayer == null)) {
+				if (grounded || (jumping && carriedPlayer == null) || (carryingPlayer == null && carriedPlayer == null)) {
+
 						float h = GetHorizontalMovement ();
 									
 						// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
@@ -315,17 +330,17 @@ OuyaSDK.IMenuAppearingListener
 						if (!splitController) {
 								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, index) || 
 										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, index) ||
-										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index) || 
-										(GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceDistance);
+										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index); // ||
+								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceY);
 						} else {
 								if (leftSplit) {
 										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, index) ||
-												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index) || 
-												(GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceDistance);
+												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index);// || 
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceY);
 								} else {
 										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, index) || 
-												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, index) ||
-												(GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, index) > debounceDistance);
+												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, index);// ||
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, index) > debounceY);
 								}
 						}
 				} else if (index == OuyaSDK.OuyaPlayer.player1)   
@@ -361,7 +376,7 @@ OuyaSDK.IMenuAppearingListener
 						if (!splitController || leftSplit)
 								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, index);
 						else
-								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, index);
+								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, index);
 					
 						if (horizontal == 0.0f && (!splitController || leftSplit)) {
 								if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, index))
@@ -381,7 +396,7 @@ OuyaSDK.IMenuAppearingListener
 				return horizontal;
 		}
 		
-		bool PlayerIsGrounded ()
+		bool PlayerIsGrounded (int originalId, bool originalCall)
 		{
 				bool playerGrounded = false;
 				int layerMask = 1 << LayerMask.NameToLayer ("Ground");
@@ -403,7 +418,8 @@ OuyaSDK.IMenuAppearingListener
 										if (colliderInstanceId != jumpedFromPlayer) 
 												jumpedFromPlayer = -1;
 										
-										if (raycastInfo.collider.CompareTag ("Player")) 
+										if (raycastInfo.collider.CompareTag ("Player") && (originalCall || gameObject.GetInstanceID () != originalId) && 
+												raycastInfo.collider.gameObject.GetComponent<PlayerController> ().PlayerIsGrounded (originalId, false))
 												possibleGroundedByPlayer = raycastInfo.collider.gameObject;
 	
 								}

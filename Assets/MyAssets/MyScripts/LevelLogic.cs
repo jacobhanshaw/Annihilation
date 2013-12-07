@@ -1,9 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelLogic : MonoBehaviour
 {
+
+/*	public delegate void EnergyTypeClickEventHandler(EnergySelection energyType);
+	public static EnergyTypeClickEventHandler EnergyChange; check if null
+	EnergyChange(currentEnergyType);
+	EnergyTypeClickHandler.EnergyChange += EnergyChange;
+	EnergyTypeClickHandler.EnergyChange -= EnergyChange;  */
+	
 		public GameObject playerPrefab;
+		
+		private List<PlayerController> playerControllers;
+		private List<TextMesh> scoreTexts;
+		
 		private Color[] colors = {
 				new Color (0.0f, 181.0f / 255.0f, 1.0f),
 				new Color (0.0f, 1.0f, 149.0f / 255.0f),
@@ -28,25 +40,30 @@ public class LevelLogic : MonoBehaviour
 		
 		public GameObject[] spawnLocations;
 		
-		// Use this for initialization
 		void Start ()
 		{
+				playerControllers = new List<PlayerController> ();
+				scoreTexts = new List<TextMesh> ();
+				
 				for (int i = 1; i <= GameLogic.Instance.numPlayers; ++i) {
 						GameObject playerObj = (GameObject)Instantiate (playerPrefab, spawnLocations [i - 1].transform.position, Quaternion.identity);
 						playerObj.renderer.material.color = colors [i - 1];
 						PlayerController controller = playerObj.GetComponent<PlayerController> ();
+						playerControllers.Add (controller);
+						scoreTexts.Add (Camera.main.gameObject.transform.FindChild ("Player" + i + "Points").GetComponent<TextMesh> ());
 						controller.spawnColor = spawnColors [i - 1];
 						controller.spawnLocation = spawnLocations [i - 1];
-						controller.index = (OuyaSDK.OuyaPlayer)i;
+						controller.index = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
 						controller.splitController = GameLogic.Instance.splitControllers;
-						controller.leftSplit = (i % 2) != 0;
+						controller.leftSplit = ((i % 2) != 0);
 				}
 				
 		}
 	
-		// Update is called once per frame
-		//	void Update ()
-		//	{
-
-		//	}
+		void Update ()
+		{
+				for (int i = 0; i < playerControllers.Count; ++i) {
+						scoreTexts [i].text = playerControllers [i].score.ToString ();
+				}
+		}
 }

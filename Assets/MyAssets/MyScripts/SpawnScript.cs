@@ -43,5 +43,13 @@ public class SpawnScript : MonoBehaviour
 				currentIndex = colors.Count - 1;
 				changeColor ();
 		}
+		
+		public void removeColor (Color color)
+		{
+				colors.Remove (color);
+				if (currentIndex >= colors.Count)
+						currentIndex = 0;
+				changeColor ();
+		}
 	
 }
