@@ -68,6 +68,7 @@
      <Compile Include="Assets\MyAssets\MyScripts\StickyWall.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\SwitchMoveScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\SwitchStartTimer.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\TextInfoScript.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButton.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButtonColor.cs" />
@@ -132,7 +133,6 @@
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneInit.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneMain.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneSplash.cs" />
-     <Compile Include="Assets\TextInfoScript.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Depth.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />

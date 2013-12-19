@@ -47,8 +47,15 @@ public class CoinScript : MonoBehaviour
 						int rest = (int)((timeLeft % 60.0f - seconds) * 100.0f);
 						timeText.text = minutes + ":" + seconds.ToString ("00") + ":" + rest.ToString ("00");
 						
-						if (coinExpires && timeLeft <= 0)
-								Destroy (gameObject);
+						if (timeLeft <= 0) {
+								if (coinExpires)
+										Destroy (gameObject);
+								else {
+										timerUsed = false;
+										textObject.SetActive (timerUsed);
+								}	
+						}
+								
 				}
 		}
 	
@@ -75,7 +82,7 @@ public class CoinScript : MonoBehaviour
 								return i;
 				}
 			
-				return achievementName.Length;
+				return seconds.Length;
 		}
 		
 		public void startTimer ()

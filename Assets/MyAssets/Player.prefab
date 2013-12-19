@@ -106,7 +106,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .5, y: -.519999981, z: 0}
+  m_LocalPosition: {x: .49000001, y: -.519999981, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -117,7 +117,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -34.8353882, y: 2.7806139, z: 0}
+  m_LocalPosition: {x: -18.1239262, y: 3.16555429, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400010}
@@ -133,7 +133,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.5, y: -.519999981, z: 0}
+  m_LocalPosition: {x: -.49000001, y: -.519999981, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -276,7 +276,7 @@ BoxCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
-  m_Material: {fileID: 6200000, guid: 24ac79603fb61400588e37d9f6fe952a, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Size: {x: 1, y: 1}
   m_Center: {x: 0, y: 0}
@@ -294,24 +294,20 @@ MonoBehaviour:
   spawnColor: {r: 0, g: 0, b: 0, a: 0}
   spawnLocation: {fileID: 0}
   index: 1
-  facingRight: 1
-  jump: 1
-  jumping: 0
-  jumpedFromPlayer: -1
-  possibleGroundedByPlayer: {fileID: 0}
-  groundedByPlayer: {fileID: 0}
-  moveForce: 100
-  maxSpeed: 5
-  backJumpForce: -50
-  jumpForce: 80
-  jumpVelocity: 8
-  grounded: 0
   splitController: 0
   leftSplit: 0
+  jump: 0
+  jumping: 0
+  moveForce: 100
+  moveDrag: .5
+  maxSpeed: 5
+  backJumpForce: -50
+  slingShotForce: 80
+  jumpVelocity: 8
+  grounded: 0
   score: 0
-  carriedPlayer: {fileID: 0}
-  carryingPlayer: {fileID: 0}
-  connectionCreationTime: 0
+  possibleGroundedByPlayer: {fileID: 0}
+  groundedByPlayer: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
