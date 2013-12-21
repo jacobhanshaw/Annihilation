@@ -11,10 +11,10 @@ public class LevelLogic : MonoBehaviour
 	EnergyTypeClickHandler.EnergyChange += EnergyChange;
 	EnergyTypeClickHandler.EnergyChange -= EnergyChange;  */
 	
+	
+		//Player variables
 		public GameObject playerPrefab;
-		
 		private List<PlayerController> playerControllers;
-		private List<TextMesh> scoreTexts;
 		
 		private Color[] colors = {
 				new Color (0.0f, 181.0f / 255.0f, 1.0f),
@@ -27,6 +27,8 @@ public class LevelLogic : MonoBehaviour
 				new Color (1.0f / 255.0f, 249.0f / 255.0f, 97.0f / 255.0f)
 		};
 		
+		//Spawn variables
+		public GameObject[] spawnLocations;
 		private Color[] spawnColors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
 		new Color (0.0f, 1.0f, 0.0f),
@@ -37,33 +39,30 @@ public class LevelLogic : MonoBehaviour
 		new Color (160.0f / 255.0f, 204.0f / 255.0f, 186.0f / 255.0f),
 		new Color (1.0f / 255.0f, 249.0f / 255.0f, 97.0f / 255.0f)
 	};
-		
-		public GameObject[] spawnLocations;
+	
+		//GUI
+		GuiCameraLogic guiCameraLogic;
 		
 		void Start ()
 		{
+				guiCameraLogic = GameObject.Find ("GuiCamera").gameObject.GetComponent<GuiCameraLogic> ();
+				PlayerController.AchievementReceivedListeners += guiCameraLogic.UpdateScore;
+		
 				playerControllers = new List<PlayerController> ();
-				scoreTexts = new List<TextMesh> ();
 				
 				for (int i = 1; i <= GameLogic.Instance.numPlayers; ++i) {
 						GameObject playerObj = (GameObject)Instantiate (playerPrefab, spawnLocations [i - 1].transform.position, Quaternion.identity);
 						playerObj.renderer.material.color = colors [i - 1];
 						PlayerController controller = playerObj.GetComponent<PlayerController> ();
 						playerControllers.Add (controller);
-						scoreTexts.Add (Camera.main.gameObject.transform.FindChild ("Player" + i + "Points").GetComponent<TextMesh> ());
 						controller.spawnColor = spawnColors [i - 1];
 						controller.spawnLocation = spawnLocations [i - 1];
-						controller.index = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
+						controller.playerIndex = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
 						controller.splitController = GameLogic.Instance.splitControllers;
 						controller.leftSplit = ((i % 2) != 0);
 				}
 				
 		}
 	
-		void Update ()
-		{
-				for (int i = 0; i < playerControllers.Count; ++i) {
-						scoreTexts [i].text = playerControllers [i].score.ToString ();
-				}
-		}
+		//void Update () { }
 }

@@ -1,6 +1,6 @@
 ﻿
 public class Achievement
 {
-		public string achievementName;
+		public string name;
 		public int    points;
 }

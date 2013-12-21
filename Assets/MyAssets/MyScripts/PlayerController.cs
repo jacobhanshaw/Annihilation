@@ -7,11 +7,24 @@ OuyaSDK.IJoystickCalibrationListener,
 OuyaSDK.IPauseListener, OuyaSDK.IResumeListener,
 OuyaSDK.IMenuButtonUpListener,
 OuyaSDK.IMenuAppearingListener
-{
-		//private bool facingRight = true;			// For determining which way the player is currently facing.
-		//private float debounceX = 0.25f; //unused
+{		
+		//Delegates
+		public delegate void AchievementReceived (Achievement achievement,int playerIndex,int newScore);
+		public static AchievementReceived AchievementReceivedListeners; //check if null
+		
+		//Control variables
+		public bool grabHeld;
+		public bool jumpDisabled;
+		public bool jointDisabled;
+		public bool pickUpDisabled;
+		public bool jointLengthChangeDisabled;
+		
+		//Debounce variables
+		// public int jumpDebounce;
 		private float debounceY = 0.85f;
-
+		private bool jumpNotReleased;
+		private bool prevGrabPressed;
+	
 		//Grab indicators
 		private GameObject grabIndicator;
 		private GameObject grabRadiusIndicator;
@@ -22,16 +35,11 @@ OuyaSDK.IMenuAppearingListener
 	
 		//Controller info
 		private bool keyboardDebugMode = false;
-		public OuyaSDK.OuyaPlayer index = OuyaSDK.OuyaPlayer.player1;
+		public OuyaSDK.OuyaPlayer playerIndex = OuyaSDK.OuyaPlayer.player1;
 		public bool splitController = false;
 		public bool leftSplit = false;
 		private bool m_useSDKForInput = false;
-		
-		//Debounce variables
-		// public int jumpDebounce;
-		private bool jumpNotReleased;
-		private bool prevGrabPressed;
-		
+
 		//Jump status variables
 		public bool jump = false;				// Condition for whether the player should jump.
 		public bool jumping = false;
@@ -65,6 +73,8 @@ OuyaSDK.IMenuAppearingListener
 		
 		public GameObject possibleGroundedByPlayer;
 		public GameObject groundedByPlayer;
+		
+		//private bool facingRight = true;			// For determining which way the player is currently facing.
 	
 		void Awake ()
 		{
@@ -74,12 +84,12 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.registerPauseListener (this);
 				OuyaSDK.registerResumeListener (this);
 				
-				grabIndicator = transform.Find ("grabIndicator").gameObject;
-				grabRadiusIndicator = transform.Find ("grabRadiusIndicator").gameObject;
+				grabIndicator = transform.FindChild ("grabIndicator").gameObject;
+				grabRadiusIndicator = transform.FindChild ("grabRadiusIndicator").gameObject;
 				
-				groundChecks [0] = transform.Find ("groundChecka");
-				groundChecks [1] = transform.Find ("groundCheckb");
-				groundChecks [2] = transform.Find ("groundCheckc");
+				groundChecks [0] = transform.FindChild ("groundChecka");
+				groundChecks [1] = transform.FindChild ("groundCheckb");
+				groundChecks [2] = transform.FindChild ("groundCheckc");
 				
 				achievements = new List<Achievement> ();
 		}
@@ -97,6 +107,7 @@ OuyaSDK.IMenuAppearingListener
 		{
 				Input.ResetInputAxes ();
 				keyboardDebugMode = OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) == null;
+				
 				Color grabRadiusIndicatorColor = gameObject.renderer.material.color;
 				grabRadiusIndicatorColor.a = 0.5f;
 				grabRadiusIndicator.renderer.material.color = grabRadiusIndicatorColor;
@@ -227,13 +238,11 @@ OuyaSDK.IMenuAppearingListener
 		void ThrowPlayer ()
 		{
 				if ((connectedPlayerController != null && connectedPlayerController.pickedUp) || (joint != null && joint.connectedBody.GetComponent<PlayerController> ().pickedUp)) {
-						Debug.Log ("Tried Throw");
 						float fractionX = Mathf.Abs (gameObject.rigidbody2D.velocity.x / maxSpeed);//maxSpeed;
 						float direction = gameObject.rigidbody2D.velocity.x < 0 ? -1 : 1;
 						if (fractionX == 0)
 								direction = 0;
 						Vector2 forceVector = new Vector2 ((1.0f + fractionX) * throwForceX * direction, (2.0f - fractionX) * throwForceY);
-						Debug.Log ("Force Vector: " + forceVector);
 						OtherPlayer ().rigidbody2D.AddForce (forceVector);
 				}
 			
@@ -264,6 +273,8 @@ OuyaSDK.IMenuAppearingListener
 						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();
 						achievements.Add (newAchievement);
 						score += newAchievement.points;
+						if (AchievementReceivedListeners != null)
+								AchievementReceivedListeners (newAchievement, (int)playerIndex, score);
 						Destroy (other.gameObject);
 				}
 		}
@@ -302,6 +313,14 @@ OuyaSDK.IMenuAppearingListener
 	
 		void Update ()
 		{		
+				if (Input.GetKey (KeyCode.P) && playerIndex == OuyaSDK.OuyaPlayer.player1) {
+						Debug.Log ("Time: " + Time.timeScale);
+						if (Time.timeScale != 0.0f)
+								Time.timeScale = 0.0f;
+						else
+								Time.timeScale = 1.0f;
+				}
+		
 				UpdateGrounded ();
 				AdjustJointLength ();
 				
@@ -374,21 +393,19 @@ OuyaSDK.IMenuAppearingListener
 	
 		public void OuyaMenuButtonUp ()
 		{
+				GameLogic.Instance.PausePressed ((int)playerIndex);
 		}
 	
 		public void OuyaMenuAppearing ()
 		{
 		}
 	
-		//NOT TESTED!!!!!!!!!
 		public void OuyaOnPause ()
-		{
-				Time.timeScale = 0.0f;
+		{	
 		}
 	
 		public void OuyaOnResume ()
 		{
-				Time.timeScale = 1.0f;
 		}
 	
 		public void OuyaOnJoystickCalibration ()
@@ -519,24 +536,24 @@ OuyaSDK.IMenuAppearingListener
 		{
 				if (!keyboardDebugMode) {
 						if (!splitController) {
-								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, index) || 
-										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, index) ||
-										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index); // ||
-								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceY);
+								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, playerIndex) || 
+										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, playerIndex) ||
+										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, playerIndex); // ||
+								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex) > debounceY);
 						} else {
 								if (leftSplit) {
-										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, index) ||
-												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, index);// || 
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index) > debounceY);
+										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, playerIndex) ||
+												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, playerIndex);// || 
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex) > debounceY);
 								} else {
-										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, index) || 
-												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, index);// ||
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, index) > debounceY);
+										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, playerIndex) || 
+												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, playerIndex);// ||
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex) > debounceY);
 								}
 						}
-				} else if (index == OuyaSDK.OuyaPlayer.player1)   
+				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
 						return Input.GetKey (KeyCode.W);
-				else if (index == OuyaSDK.OuyaPlayer.player2)   
+				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
 						return Input.GetKey (KeyCode.I);
 				else
 						return false;
@@ -548,12 +565,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index)) > debounceY;
+								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex)) > debounceY;
 						else
-								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, index)) > debounceY;
-				} else if (index == OuyaSDK.OuyaPlayer.player1)   
+								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex)) > debounceY;
+				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
 						increase = Input.GetKey (KeyCode.E);
-				else if (index == OuyaSDK.OuyaPlayer.player2)   
+				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
 						increase = Input.GetKey (KeyCode.O);
 
 		
@@ -566,12 +583,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, index)) < -debounceY;
+								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex)) < -debounceY;
 						else
-								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, index)) < -debounceY;
-				} else if (index == OuyaSDK.OuyaPlayer.player1)   
+								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex)) < -debounceY;
+				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
 						decrease = Input.GetKey (KeyCode.Q);
-				else if (index == OuyaSDK.OuyaPlayer.player2)   
+				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
 						decrease = Input.GetKey (KeyCode.U);
 
 				return decrease;
@@ -583,12 +600,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, index);
+								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, playerIndex);
 						else
-								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, index);
-				} else if (index == OuyaSDK.OuyaPlayer.player2)   
+								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, playerIndex);
+				} else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
 						pressed = Input.GetKey (KeyCode.Space);
-				else if (index == OuyaSDK.OuyaPlayer.player1)   
+				else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
 						pressed = Input.GetKey (KeyCode.LeftShift);
 				
 				if (prevGrabPressed != pressed) {
@@ -607,23 +624,23 @@ OuyaSDK.IMenuAppearingListener
 
 				if (!keyboardDebugMode) {
 						if (!splitController || leftSplit)
-								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, index);
+								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, playerIndex);
 						else
-								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, index);
+								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, playerIndex);
 					
 						if (horizontal == 0.0f && (!splitController || leftSplit)) {
-								if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, index))
+								if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, playerIndex))
 										return - 1.0f;
-								else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, index))
+								else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, playerIndex))
 										return 1.0f;
 						}
-				} else if (Input.GetKey (KeyCode.A) && index == OuyaSDK.OuyaPlayer.player1)
+				} else if (Input.GetKey (KeyCode.A) && playerIndex == OuyaSDK.OuyaPlayer.player1)
 						horizontal = -1.0f;
-				else if (Input.GetKey (KeyCode.D) && index == OuyaSDK.OuyaPlayer.player1)
+				else if (Input.GetKey (KeyCode.D) && playerIndex == OuyaSDK.OuyaPlayer.player1)
 						horizontal = 1.0f;
-				else if (Input.GetKey (KeyCode.J) && index == OuyaSDK.OuyaPlayer.player2)
+				else if (Input.GetKey (KeyCode.J) && playerIndex == OuyaSDK.OuyaPlayer.player2)
 						horizontal = -1.0f;
-				else if (Input.GetKey (KeyCode.L) && index == OuyaSDK.OuyaPlayer.player2)
+				else if (Input.GetKey (KeyCode.L) && playerIndex == OuyaSDK.OuyaPlayer.player2)
 						horizontal = 1.0f;	
 				
 				return horizontal;

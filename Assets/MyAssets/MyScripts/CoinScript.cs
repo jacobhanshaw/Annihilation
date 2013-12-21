@@ -3,25 +3,33 @@ using System.Collections;
 
 public class CoinScript : MonoBehaviour
 {
+		//Achievement info
+		public string[] name;
+		public int[]    points;		
+
+		//Movement Info
 		private float    rotationSpeed = 100.0f;
 
-		public string[] achievementName;
-		public int[]    points;
-		public float[]  seconds;
-		public bool     coinExpires;
-		public bool     startTimerOnStart;
+		//Timer info
+		public bool    timerUsed;
+		public bool    coinExpires;
+		public bool    startTimerOnStart;
 		
-		private bool    timerUsed;
+		public float[]  seconds;
 		private float   startTime = -1.0f;
 		private float   maxTime = 0.0f;
 		
+		//Display Info
 		private GameObject textObject;
 		private TextMesh timeText;
 	
-		// Use this for initialization
-		void Start ()
+		void Awake ()
 		{
 				textObject = transform.Find ("TimeLeft").gameObject;
+		}
+		
+		void Start ()
+		{
 				textObject.SetActive (timerUsed);
 				timeText = textObject.GetComponent<TextMesh> ();
 		
@@ -52,7 +60,7 @@ public class CoinScript : MonoBehaviour
 										Destroy (gameObject);
 								else {
 										timerUsed = false;
-										textObject.SetActive (timerUsed);
+										timeText.text = "00:00:00";
 								}	
 						}
 								
@@ -64,7 +72,7 @@ public class CoinScript : MonoBehaviour
 				int index = getTimedIndex ();
 		
 				Achievement achievement = new Achievement ();
-				achievement.achievementName = achievementName [index];
+				achievement.name = name [index];
 				achievement.points = points [index];
 				
 				return achievement;
