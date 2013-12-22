@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_1;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_WEBPLAYER;WEBPLUG;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_1;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -57,17 +57,21 @@
      <Compile Include="Assets\MyAssets\MyScripts\Achievement.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\CameraFollow.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\CoinScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\EndTimerScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\GameEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\GameLogic.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\GuiCameraLogic.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\LevelLogic.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\MonoBehaviourExtended.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\MoveEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\MultipartEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\MultipartSwitch.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\PlayerController.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\PlayerHealth.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Singleton.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\SpawnScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\StartTimerEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\StickyWall.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\SwitchMoveScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\SwitchStartTimer.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\SwitchScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\TextInfoScript.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButton.cs" />
@@ -133,6 +137,7 @@
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneInit.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneMain.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneSplash.cs" />
+     <Compile Include="Assets\POIScript.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Depth.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />

@@ -65,4 +65,9 @@ public class LevelLogic : MonoBehaviour
 		}
 	
 		//void Update () { }
+		
+		void OnDestroy ()
+		{
+				PlayerController.AchievementReceivedListeners -= guiCameraLogic.UpdateScore;
+		}
 }

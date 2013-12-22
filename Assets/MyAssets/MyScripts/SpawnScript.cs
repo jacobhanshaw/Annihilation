@@ -11,7 +11,6 @@ public class SpawnScript : MonoBehaviour
 		private float lastChangeTime;
 		private float timeBetweenChanges = 1.5f;
 	
-		// Use this for initialization
 		void Start ()
 		{
 				system = gameObject.GetComponentInChildren<ParticleSystem> ();
@@ -19,7 +18,6 @@ public class SpawnScript : MonoBehaviour
 				colors.Add (new Color (1.0f, 1.0f, 1.0f));
 		}
 	
-		// Update is called once per frame
 		void Update ()
 		{
 				if (Time.time - lastChangeTime > timeBetweenChanges) {

@@ -17,6 +17,7 @@ OuyaSDK.IMenuAppearingListener
 		public bool jumpDisabled;
 		public bool jointDisabled;
 		public bool pickUpDisabled;
+		public bool slingShotDisabled;
 		public bool jointLengthChangeDisabled;
 		
 		//Debounce variables
@@ -42,10 +43,8 @@ OuyaSDK.IMenuAppearingListener
 
 		//Jump status variables
 		public bool jump = false;				// Condition for whether the player should jump.
-		public bool jumping = false;
 	
 		//Movement variables
-		public float moveForce = 365f;			// Amount of force added to move the player left and right.
 		public float moveDrag = 0.1f;
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
 		public float backJumpForce = -100.0f;
@@ -63,6 +62,7 @@ OuyaSDK.IMenuAppearingListener
 		public int score;
 		public  List<Achievement> achievements;
 	
+		//Joint variables
 		private float holdingDistance = 4.0f;
 		private float pickUpDistance = 1.5f;
 		private float jointChangeAmount = 0.1f;
@@ -71,6 +71,7 @@ OuyaSDK.IMenuAppearingListener
 		private PlayerController connectedPlayerController;
 		public  bool pickedUp;
 		
+		//Grounding variables
 		public GameObject possibleGroundedByPlayer;
 		public GameObject groundedByPlayer;
 		
@@ -94,6 +95,16 @@ OuyaSDK.IMenuAppearingListener
 				achievements = new List<Achievement> ();
 		}
 	
+		void Start ()
+		{
+				Input.ResetInputAxes ();
+				keyboardDebugMode = OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) == null;
+		
+				Color grabRadiusIndicatorColor = gameObject.renderer.material.color;
+				grabRadiusIndicatorColor.a = 0.5f;
+				grabRadiusIndicator.renderer.material.color = grabRadiusIndicatorColor;
+		}
+	
 		void OnDestroy ()
 		{
 				OuyaSDK.unregisterJoystickCalibrationListener (this);
@@ -102,35 +113,138 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.unregisterPauseListener (this);
 				OuyaSDK.unregisterResumeListener (this);
 		}
-
-		void Start ()
-		{
-				Input.ResetInputAxes ();
-				keyboardDebugMode = OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) == null;
+		
+		void Update ()
+		{		
+				UpdateGrounded ();
+				if (!jointLengthChangeDisabled)
+						AdjustJointLength ();
+				CheckForKeyboardPause ();
 				
-				Color grabRadiusIndicatorColor = gameObject.renderer.material.color;
-				grabRadiusIndicatorColor.a = 0.5f;
-				grabRadiusIndicator.renderer.material.color = grabRadiusIndicatorColor;
-		}
-		/*
-		void OnCollisionStay2D (Collision2D collisionInfo)
-		{
-				foreach (ContactPoint2D contact in collisionInfo.contacts) {
-						Debug.Log (contact);
-						Debug.DrawRay (contact.point, contact.normal, Color.black);
+				bool jumpPressed = JumpPressed () && !jumpDisabled;
+				jumpNotReleased &= jumpPressed;
+				//		jumpPressed &= !jumpNotReleased;
+				
+				pickedUp &= (joint != null && joint.distance < pickUpDistance) || (connectedPlayerController != null && connectedPlayerController.joint.distance < pickUpDistance);
+		
+				if (jumpPressed && grounded && !pickedUp && !jumpNotReleased) {
+						jump = true;
+						jumpNotReleased = true;
+						possibleGroundedByPlayer = groundedByPlayer;
 				}
+		
+				bool grabPressed = GrabPressed () || grabHeld;
+				bool connected = Connected ();
+		
+				if (!connected && (grabPressed || jumpPressed)) {
+						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
+						foreach (Collider2D collider in hitColliders) {
+								if (collider.gameObject != gameObject && collider.gameObject.CompareTag ("Player")) {		
+										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
+					
+										if (playerController.AcceptConnectionOrSlingshot ()) {
+												if (jumpPressed && lastSlingshotId != collider.gameObject.GetInstanceID () && !jumpNotReleased && !slingShotDisabled) {
+														lastSlingshotId = collider.gameObject.GetInstanceID ();
+						
+														jump = true;
+														jumpNotReleased = true;
+														slingshottedByPlayer = collider.gameObject;
+														
+														StopMovement (gameObject);
+														StopMovement (slingshottedByPlayer);
+												} else if (grabPressed && !jointDisabled) {
+														grabIndicator.SetActive (true);
+														grabIndicator.renderer.material.color = collider.gameObject.renderer.material.color;
+														playerController.grabIndicator.SetActive (true);
+														playerController.grabIndicator.renderer.material.color = gameObject.renderer.material.color;
+						
+														joint = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
+														joint.collideConnected = true;
+														joint.connectedBody = collider.gameObject.rigidbody2D;
+														joint.distance = holdingDistance;
+						
+														playerController.connectedPlayerController = this;
+														break;
+												}
+										}
+								}
+						}
+				} else if (connected && !grabPressed) {
+						ThrowPlayer ();
+						DestroyConnection ();
+				}
+		
+				grabIndicator.SetActive (connected);
+				grabRadiusIndicator.SetActive (grabPressed && !connected);
 		}
-	*/
-		Vector3 BottomLeft (GameObject box)
+		
+		void FixedUpdate ()
 		{
-				return box.transform.position - new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.05f, 0);
+				Vector2 velocity = rigidbody2D.velocity;
+		
+				float h = GetHorizontalMovement ();
+		
+				if (grounded)
+						velocity.x = maxSpeed * h;
+				else if (!Connected ()) {
+						float originalSpeed = velocity.x;
+						if (Mathf.Abs (originalSpeed) <= maxSpeed || h * originalSpeed < 0) {
+								velocity.x = originalSpeed + h * maxSpeed;
+								if (Mathf.Abs (velocity.x) > maxSpeed) {
+										if (velocity.x < 0)
+												velocity.x = -maxSpeed;
+										else
+												velocity.x = maxSpeed;
+								} /*else if (h == 0) {
+										if (velocity.x < 0) {
+												velocity.x += moveDrag;
+												if (velocity.x > 0)
+														velocity.x = 0;
+										} else {
+												velocity.x -= moveDrag;
+												if (velocity.x < 0)
+														velocity.x = 0;
+										}
+								} */
+						}
+			
+				}
+		
+				if (jump) {
+						if (slingshottedByPlayer == null) {
+								velocity.y = jumpVelocity;
+								if (groundedByPlayer != null)
+										groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce));
+						} else {
+								float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
+								Vector2 endPosition = slingshottedByPlayer.transform.position;
+								if (direction > 0)
+										endPosition.x += slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+								else if (direction < 0)
+										endPosition.x -= slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+				
+								endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
+				
+								Vector2 forceVector = new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
+								forceVector *= slingShotForce;
+								rigidbody2D.AddForce (forceVector);
+								slingshottedByPlayer.rigidbody2D.AddForce (-forceVector);
+								slingshottedByPlayer = null;                   
+						}
+			
+						jump = false;
+				}
+		
+				rigidbody2D.velocity = velocity;
+		}
+		
+		void StopMovement (GameObject stopObject)
+		{
+				stopObject.rigidbody2D.velocity = Vector2.zero;
+				stopObject.rigidbody2D.angularVelocity = 0.0f;
 		}
 	
-		Vector3 TopRight (GameObject box)
-		{
-				return box.transform.position + new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.0f, 0);
-		}
-	
+		//Adjust joint length
 		void AdjustJointLength ()
 		{
 				if (Connected ()) {
@@ -144,87 +258,54 @@ OuyaSDK.IMenuAppearingListener
 								otherTransform = connectedPlayerController.gameObject.transform;
 						}
 						
-						if (IncreaseJointLength ()) {
-								if (jointToUse.distance < holdingDistance - jointChangeAmount) {
-										Vector3 vectorToOtherPlayer = (otherTransform.position - gameObject.transform.position).normalized;
-										vectorToOtherPlayer *= (jointChangeAmount / 2.0f);
-										Collider2D[] colliders = Physics2D.OverlapAreaAll (BottomLeft (gameObject) - vectorToOtherPlayer, 
-																			       TopRight (gameObject) - vectorToOtherPlayer);
-
-										bool otherObjectFound = false;
-										foreach (Collider2D aCollider in colliders) {
-												if (aCollider.gameObject != gameObject) {
-														otherObjectFound = true;
-														break;
-												}
-										}
-								
-										if (!otherObjectFound) {
-												//	gameObject.transform.position -= vectorToOtherPlayer;
-												jointToUse.distance += jointChangeAmount / 2.0f;
-										}
-								
-										colliders = Physics2D.OverlapAreaAll (BottomLeft (otherTransform.gameObject) + vectorToOtherPlayer, 
-				                                                   TopRight (otherTransform.gameObject) + vectorToOtherPlayer);
-										otherObjectFound = false;
-										foreach (Collider2D aCollider in colliders) {
-												if (aCollider.gameObject != otherTransform.gameObject) {
-														otherObjectFound = true;
-														break;
-												}
-										}
-				
-										if (!otherObjectFound) {
-												//	otherTransform.position += vectorToOtherPlayer;
-												jointToUse.distance += jointChangeAmount / 2.0f;
-										}
-								
-										if (jointToUse.distance > holdingDistance)
-												jointToUse.distance = holdingDistance;
-								}
-						}
-		
-						if (DecreaseJointLength ()) {
-								Vector3 vectorToOtherPlayer = (otherTransform.position - gameObject.transform.position).normalized;
-								vectorToOtherPlayer *= (jointChangeAmount / 2.0f);
-								Collider2D[] colliders = Physics2D.OverlapAreaAll (BottomLeft (gameObject) + vectorToOtherPlayer, 
-				                                                   TopRight (gameObject) + vectorToOtherPlayer);
-								bool otherObjectFound = false;
-								foreach (Collider2D aCollider in colliders) {
-										if (aCollider.gameObject != gameObject) {
-												otherObjectFound = true;
-												break;
-										}
-								}
-				
-								if (!otherObjectFound) {
-										jointToUse.distance -= jointChangeAmount / 2.0f;
-										if (Vector3.SqrMagnitude (otherTransform.position - gameObject.transform.position) > jointToUse.distance * jointToUse.distance)
-												gameObject.transform.position += vectorToOtherPlayer;
-										
-								}
-				
-								colliders = Physics2D.OverlapAreaAll (BottomLeft (otherTransform.gameObject) - vectorToOtherPlayer, 
-				                                      TopRight (otherTransform.gameObject) - vectorToOtherPlayer);
-								otherObjectFound = false;
-								foreach (Collider2D aCollider in colliders) {
-										if (aCollider.gameObject != otherTransform.gameObject) {
-												otherObjectFound = true;
-												break;
-										}
-								}
-				
-								if (!otherObjectFound) {
-										jointToUse.distance -= jointChangeAmount / 2.0f;
-										if (Vector3.SqrMagnitude (otherTransform.position - gameObject.transform.position) > jointToUse.distance * jointToUse.distance)
-												otherTransform.position -= vectorToOtherPlayer;
-
-								}
-		
-								if (jointToUse.distance < pickUpDistance)
-										PickUpPlayer (jointToUse, otherTransform);
-						}
+						bool increase = IncreaseJointLength ();
+						bool decrease = DecreaseJointLength ();
 						
+						if (increase || decrease) {
+						
+								float halfJointDistance = jointChangeAmount / 2.0f;
+								Vector3 originalVectorToOther = otherTransform.position - gameObject.transform.position;
+								Vector3 vectorToOtherPlayer = originalVectorToOther.normalized;
+								vectorToOtherPlayer *= halfJointDistance;
+				
+								if (increase) {
+										if (jointToUse.distance < holdingDistance - jointChangeAmount) {
+												if (!CollisionIfGameObjectMovedAlongVector (gameObject, -vectorToOtherPlayer)) {
+														jointToUse.distance += halfJointDistance;
+														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
+																gameObject.transform.position -= vectorToOtherPlayer;
+												}
+					
+												if (!CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, vectorToOtherPlayer)) {
+														jointToUse.distance += halfJointDistance;
+														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
+																otherTransform.position += vectorToOtherPlayer;
+												}
+				
+												if (jointToUse.distance > holdingDistance)
+														jointToUse.distance = holdingDistance;
+										}
+								}
+		
+								if (decrease) {
+										if (jointToUse.distance > pickUpDistance) {
+												if (!CollisionIfGameObjectMovedAlongVector (gameObject, vectorToOtherPlayer)) {
+														jointToUse.distance -= halfJointDistance;
+														if (Vector3.SqrMagnitude (originalVectorToOther) > jointToUse.distance * jointToUse.distance)
+																gameObject.transform.position += vectorToOtherPlayer;
+												}
+					
+												if (!CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, -vectorToOtherPlayer)) {
+														jointToUse.distance -= halfJointDistance;
+														if (Vector3.SqrMagnitude (originalVectorToOther) > jointToUse.distance * jointToUse.distance)
+																otherTransform.position -= vectorToOtherPlayer;
+												}
+		
+												if (jointToUse.distance <= pickUpDistance && !pickUpDisabled)
+														PickUpPlayer (jointToUse, otherTransform);
+										}
+								}
+						}
 				}	
 		}
 	
@@ -245,9 +326,33 @@ OuyaSDK.IMenuAppearingListener
 						Vector2 forceVector = new Vector2 ((1.0f + fractionX) * throwForceX * direction, (2.0f - fractionX) * throwForceY);
 						OtherPlayer ().rigidbody2D.AddForce (forceVector);
 				}
-			
 		}
 		
+		//Collision check
+		bool CollisionIfGameObjectMovedAlongVector (GameObject movingObject, Vector3 vector)
+		{
+				Collider2D[] colliders = Physics2D.OverlapAreaAll (BottomLeft (movingObject) + vector, 
+		                                                   TopRight (movingObject) + vector);
+		
+				foreach (Collider2D aCollider in colliders) {
+						if (aCollider.gameObject != movingObject)
+								return true;
+				}
+		
+				return false;
+		}
+	
+		//Box corners
+		Vector3 TopRight (GameObject box)
+		{
+				return box.transform.position + new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.0f, 0);
+		}
+	
+		Vector3 BottomLeft (GameObject box)
+		{
+				return box.transform.position - new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.05f, 0);
+		}
+	
 		GameObject OtherPlayer ()
 		{
 				if (joint != null) 
@@ -268,6 +373,7 @@ OuyaSDK.IMenuAppearingListener
 						spawnLocation = other.gameObject;
 				} else if (other.gameObject.CompareTag ("Deadly")) {
 						DestroyConnection ();
+						StopMovement (gameObject);
 						StartCoroutine ("RespawnPlayer");
 				} else if (other.gameObject.CompareTag ("Coin")) {
 						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();
@@ -294,6 +400,11 @@ OuyaSDK.IMenuAppearingListener
 				//			score += Time.deltaTime;
 		}
 		
+		bool AcceptConnectionOrSlingshot ()
+		{
+				return (!Connected () && GrabPressed ());
+		}
+	
 		public bool Connected ()
 		{
 				return (joint != null || connectedPlayerController != null);
@@ -309,86 +420,6 @@ OuyaSDK.IMenuAppearingListener
 						Destroy (joint);
 						joint = null;
 				} 
-		}
-	
-		void Update ()
-		{		
-				if (Input.GetKey (KeyCode.P) && playerIndex == OuyaSDK.OuyaPlayer.player1) {
-						Debug.Log ("Time: " + Time.timeScale);
-						if (Time.timeScale != 0.0f)
-								Time.timeScale = 0.0f;
-						else
-								Time.timeScale = 1.0f;
-				}
-		
-				UpdateGrounded ();
-				AdjustJointLength ();
-				
-				bool jumpPressed = JumpPressed ();
-				jumpNotReleased &= jumpPressed;
-				pickedUp &= (joint != null && joint.distance < pickUpDistance) || (connectedPlayerController != null && connectedPlayerController.joint.distance < pickUpDistance);
-		
-				if (jumpPressed && grounded && !pickedUp && !jumping && !jumpNotReleased) {
-						jump = true;
-						jumpNotReleased = true;
-						possibleGroundedByPlayer = groundedByPlayer;
-				}
-		
-				bool grabPressed = GrabPressed ();
-		
-				if (!Connected () && (grabPressed || jumpPressed)) {
-						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
-						foreach (Collider2D collider in hitColliders) {
-								if (collider.gameObject != gameObject && !Connected () && collider.gameObject.CompareTag ("Player")) {		
-										PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
-										
-										if (playerController.AllowSlingShot () && (lastSlingshotId != collider.gameObject.GetInstanceID ()) && jumpPressed && !jumpNotReleased) {
-												lastSlingshotId = collider.gameObject.GetInstanceID ();
-												
-												jump = true;
-												jumpNotReleased = true;
-												slingshottedByPlayer = collider.gameObject;
-										} else if (playerController.AcceptConnection () && grabPressed) {
-												playerController.jumping = false;
-												jumping = false;
-												grabIndicator.SetActive (true);
-												grabIndicator.renderer.material.color = collider.gameObject.renderer.material.color;
-												playerController.grabIndicator.SetActive (true);
-												playerController.grabIndicator.renderer.material.color = gameObject.renderer.material.color;
-						
-												joint = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
-												joint.collideConnected = true;
-												joint.connectedBody = collider.gameObject.rigidbody2D;
-												joint.distance = holdingDistance;
-												
-												playerController.connectedPlayerController = this;
-												break;
-										}
-								}
-						}
-				} else if (Connected () && !grabPressed) {
-						ThrowPlayer ();
-						DestroyConnection ();
-				}
-				
-				grabIndicator.SetActive (Connected ());
-				grabRadiusIndicator.SetActive (grabPressed && !Connected ());
-		}
-		
-		bool AllowSlingShot ()
-		{
-				return (!Connected () && GrabPressed ());
-		}
-		
-		bool AcceptConnection ()
-		{
-				return (!Connected () && GrabPressed ());
-		}
-	
-		void UpdateGrounded ()
-		{
-				grounded = PlayerIsGrounded (gameObject.GetInstanceID (), true);
-				jumping &= !grounded;
 		}
 	
 		public void OuyaMenuButtonUp ()
@@ -412,124 +443,14 @@ OuyaSDK.IMenuAppearingListener
 		{
 		}
 	
-		private float GetAxis (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
+		void CheckForKeyboardPause ()
 		{
-				// Check if we want the *new* SDK input or the example common
-				if (m_useSDKForInput) {
-						// Get the Unity Axis Name for the Unity API
-						string axisName = OuyaSDK.GetUnityAxisName (keyCode, player);
-			
-						// Check if the axis name is valid
-						if (!string.IsNullOrEmpty (axisName)) {
-								//use the Unity API to get the axis value, raw or otherwise
-								float axisValue = Input.GetAxisRaw (axisName);
-								//check if the axis should be inverted
-								if (OuyaSDK.GetAxisInverted (keyCode, player)) {
-										return -axisValue;
-								} else {
-										return axisValue;
-								}
-						}
+				if (Input.GetKeyUp (KeyCode.P) && playerIndex == OuyaSDK.OuyaPlayer.player1) {
+						if (Time.timeScale != 0.0f)
+								Time.timeScale = 0.0f;
+						else
+								Time.timeScale = 1.0f;
 				}
-		// moving the common code into the sdk via above
-		else {
-						return OuyaExampleCommon.GetAxis (keyCode, player);
-				}
-				return 0f;
-		}
-	
-		private bool GetButton (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
-		{
-				// Check if we want the *new* SDK input or the example common
-				if (m_useSDKForInput) {
-						// Get the Unity KeyCode for the Unity API
-						KeyCode unityKeyCode = OuyaSDK.GetUnityKeyCode (keyCode, player);
-			
-						// Check if the KeyCode is valid
-						if (unityKeyCode != (KeyCode)(-1)) {
-								//use the Unity API to get the button value
-								bool buttonState = Input.GetKey (unityKeyCode);
-								return buttonState;
-						}
-				}
-		// moving the common code into the sdk via aboveUs
-		else {
-						return OuyaExampleCommon.GetButton (keyCode, player);
-				}
-				return false;
-		}
-	
-		void FixedUpdate ()
-		{
-				Vector2 velocity = rigidbody2D.velocity;
-			
-				float h = GetHorizontalMovement ();
-		
-				if (grounded)// || (jumping && !Connected ()))
-						velocity.x = maxSpeed * h;
-				else if (!Connected ()) {
-						float originalSpeed = velocity.x;
-						if (Mathf.Abs (originalSpeed) <= maxSpeed || h * originalSpeed < 0) {
-								velocity.x = originalSpeed + h * maxSpeed;
-								if (Mathf.Abs (velocity.x) > maxSpeed) {
-										if (velocity.x < 0)
-												velocity.x = -maxSpeed;
-										else
-												velocity.x = maxSpeed;
-								} else if (h == 0) {
-										if (velocity.x < 0) {
-												velocity.x += moveDrag;
-												if (velocity.x > 0)
-														velocity.x = 0;
-										} else {
-												velocity.x -= moveDrag;
-												if (velocity.x < 0)
-														velocity.x = 0;
-										}
-								}
-						}
-						
-				}
-	
-				if (jump) {
-						if (slingshottedByPlayer == null) {
-								velocity.y = jumpVelocity;
-								if (groundedByPlayer != null) {
-										//velocity.y = jumpVelocity / 1.1f;
-										groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce));
-								}	
-						} else {
-								
-								float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
-								Vector2 endPosition = slingshottedByPlayer.transform.position;
-								if (direction > 0)
-										endPosition.x += slingshottedByPlayer.transform.localScale.x * 1.5f;
-								else if (direction < 0)
-										endPosition.x -= slingshottedByPlayer.transform.localScale.x * 1.5f;
-										
-								endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
-								
-								float distance = Vector2.Distance (gameObject.transform.position, endPosition);
-								
-						
-								float percentMaxX = (endPosition.x - gameObject.transform.position.x) / distance;
-								float percentMaxY = (endPosition.y - gameObject.transform.position.y) / distance;
-								
-								rigidbody2D.AddForce (new Vector2 (percentMaxX * slingShotForce, 
-				                                   percentMaxY * slingShotForce));
-								slingshottedByPlayer.rigidbody2D.AddForce (new Vector2 (-percentMaxX * slingShotForce, 
-				                                                        -percentMaxY * slingShotForce));
-								slingshottedByPlayer = null;                   
-						}
-
-						// Make sure the player can't jump again until the jump conditions from Update are satisfied.
-						jump = false;
-						jumping = true;
-						
-				}
-
-		
-				rigidbody2D.velocity = velocity;
 		}
 	
 		bool JumpPressed ()
@@ -646,6 +567,11 @@ OuyaSDK.IMenuAppearingListener
 				return horizontal;
 		}
 		
+		void UpdateGrounded ()
+		{
+				grounded = PlayerIsGrounded (gameObject.GetInstanceID (), true);
+		}
+	
 		bool PlayerIsGrounded (int originalId, bool originalCall)
 		{
 				bool playerGrounded = false;
@@ -679,6 +605,49 @@ OuyaSDK.IMenuAppearingListener
 				}
 				
 				return playerGrounded;
+		}
+		
+		private float GetAxis (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
+		{
+				// Check if we want the *new* SDK input or the example common
+				if (m_useSDKForInput) {
+						// Get the Unity Axis Name for the Unity API
+						string axisName = OuyaSDK.GetUnityAxisName (keyCode, player);
+			
+						// Check if the axis name is valid
+						if (!string.IsNullOrEmpty (axisName)) {
+								//use the Unity API to get the axis value, raw or otherwise
+								float axisValue = Input.GetAxisRaw (axisName);
+								//check if the axis should be inverted
+								if (OuyaSDK.GetAxisInverted (keyCode, player)) {
+										return -axisValue;
+								} else {
+										return axisValue;
+								}
+						}
+				}
+				// moving the common code into the sdk via above
+				return OuyaExampleCommon.GetAxis (keyCode, player);
+
+		}
+	
+		private bool GetButton (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
+		{
+				// Check if we want the *new* SDK input or the example common
+				if (m_useSDKForInput) {
+						// Get the Unity KeyCode for the Unity API
+						KeyCode unityKeyCode = OuyaSDK.GetUnityKeyCode (keyCode, player);
+			
+						// Check if the KeyCode is valid
+						if (unityKeyCode != (KeyCode)(-1)) {
+								//use the Unity API to get the button value
+								bool buttonState = Input.GetKey (unityKeyCode);
+								return buttonState;
+						}
+				}
+				// moving the common code into the sdk via aboveUs
+				return OuyaExampleCommon.GetButton (keyCode, player);
+				
 		}
 	
 }

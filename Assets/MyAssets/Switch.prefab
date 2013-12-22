@@ -77,12 +77,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dffd0afebe0ac49c3aa44fd0852dc697, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ef4323415a1c4377bfcaddacc266790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movedItem: {fileID: 0}
-  endPosition: {x: 15.5, y: 8, z: 0}
-  speed: 2
+  minItemsInTrigger: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

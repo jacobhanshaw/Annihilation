@@ -291,21 +291,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c0761bac0ff4bd9858f700ab698690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grabHeld: 0
+  jumpDisabled: 0
+  jointDisabled: 0
+  pickUpDisabled: 0
+  jointLengthChangeDisabled: 0
   spawnColor: {r: 0, g: 0, b: 0, a: 0}
   spawnLocation: {fileID: 0}
-  index: 1
+  playerIndex: 1
   splitController: 0
   leftSplit: 0
   jump: 0
-  jumping: 0
-  moveForce: 100
   moveDrag: .5
   maxSpeed: 5
-  backJumpForce: -50
-  slingShotForce: 80
+  backJumpForce: -100
+  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0
+  pickedUp: 0
   possibleGroundedByPlayer: {fileID: 0}
   groundedByPlayer: {fileID: 0}
 --- !u!1001 &100100000

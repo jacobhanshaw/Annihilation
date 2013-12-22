@@ -43,7 +43,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.9811897, y: 21.1221161, z: 0}
+  m_LocalPosition: {x: -17.5072422, y: 20.9325371, z: 0}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children:
   - {fileID: 400002}
@@ -151,18 +151,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName:
-  - Amazing Teamwork
-  - Nice
-  - Passable...
-  - Were you wathching the same screen?
-  points: 8096980065030000de00000004000000
+  nameCoin:
+  - Nice Teamwork!
+  - Passable
+  - Close One
+  - Do Try Harder
+  pointsCoin: 40420f0065030000de00000004000000
+  timerUsed: 0
+  coinExpires: 1
+  startTimerOnStart: 0
   seconds:
   - 240
   - 360
   - 420
-  coinExpires: 0
-  startTimerOnStart: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

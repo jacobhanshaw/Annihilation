@@ -4,8 +4,8 @@ using System.Collections;
 public class CoinScript : MonoBehaviour
 {
 		//Achievement info
-		public string[] name;
-		public int[]    points;		
+		public string[] nameCoin;
+		public int[]    pointsCoin;		
 
 		//Movement Info
 		private float    rotationSpeed = 100.0f;
@@ -72,8 +72,8 @@ public class CoinScript : MonoBehaviour
 				int index = getTimedIndex ();
 		
 				Achievement achievement = new Achievement ();
-				achievement.name = name [index];
-				achievement.points = points [index];
+				achievement.name = nameCoin [index];
+				achievement.points = pointsCoin [index];
 				
 				return achievement;
 		}
