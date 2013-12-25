@@ -186,33 +186,15 @@ OuyaSDK.IMenuAppearingListener
 		void FixedUpdate ()
 		{
 				Vector2 velocity = rigidbody2D.velocity;
-		
-				float h = GetHorizontalMovement ();
-		
-				if (grounded)
-						velocity.x = maxSpeed * h;
-				else if (!Connected ()) {
-						float originalSpeed = velocity.x;
-						if (Mathf.Abs (originalSpeed) <= maxSpeed || h * originalSpeed < 0) {
-								velocity.x = originalSpeed + h * maxSpeed;
-								if (Mathf.Abs (velocity.x) > maxSpeed) {
-										if (velocity.x < 0)
-												velocity.x = -maxSpeed;
-										else
-												velocity.x = maxSpeed;
-								} /*else if (h == 0) {
-										if (velocity.x < 0) {
-												velocity.x += moveDrag;
-												if (velocity.x > 0)
-														velocity.x = 0;
-										} else {
-												velocity.x -= moveDrag;
-												if (velocity.x < 0)
-														velocity.x = 0;
-										}
-								} */
-						}
-			
+				
+				if (grounded || !Connected ()) {
+						float h = GetHorizontalMovement ();
+						if (grounded)
+								velocity.x = maxSpeed * h;
+						else if (Mathf.Abs (velocity.x) <= maxSpeed)
+								velocity.x = maxSpeed * h;
+						else if (h * velocity.x < 0)
+								velocity.x = velocity.x + h * maxSpeed;
 				}
 		
 				if (jump) {
