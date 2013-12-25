@@ -9,7 +9,7 @@ public class EndTimerScript : MonoBehaviour
 		float timeBetweenCoins = 0.5f;
 		float startTime;
 		bool goodEnding;
-		float goodEndingTime = 1200.0f;
+		float goodEndingTime = 960.0f;
 		bool gameOver;
 		
 		TextMesh timeText;

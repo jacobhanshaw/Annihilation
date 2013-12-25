@@ -1,18 +1,15 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/EndTimerScript.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/SwitchScript.cs">
     <Files>
-      <File FileName="Assets/MyAssets/MyScripts/MoveEvent.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/LevelLogic.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/GameEvent.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/PlayerController.cs" Line="275" Column="19" />
-      <File FileName="Assets/MyAssets/MyScripts/StartTimerEvent.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/SwitchScript.cs" Line="31" Column="28" />
+      <File FileName="Assets/MyAssets/MyScripts/POIScript.cs" Line="14" Column="1" />
+      <File FileName="Assets/MyAssets/MyScripts/CameraFollow.cs" Line="21" Column="30" />
+      <File FileName="Assets/MyAssets/MyScripts/GameLogic.cs" Line="1" Column="1" />
+      <File FileName="Assets/MyAssets/MyScripts/PlayerController.cs" Line="385" Column="1" />
+      <File FileName="Assets/MyAssets/MyScripts/StickyWall.cs" Line="36" Column="24" />
+      <File FileName="Assets/MyAssets/MyScripts/SwitchScript.cs" Line="15" Column="1" />
       <File FileName="Assets/MyAssets/MyScripts/MultipartSwitch.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/CoinScript.cs" Line="50" Column="2" />
-      <File FileName="Assets/MyAssets/MyScripts/EndTimerScript.cs" Line="8" Column="25" />
-      <File FileName="Assets/POIScript.cs" Line="5" Column="2" />
-      <File FileName="Assets/MyAssets/MyScripts/CameraFollow.cs" Line="8" Column="28" />
+      <File FileName="Assets/MyAssets/MyScripts/MultipartEvent.cs" Line="16" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

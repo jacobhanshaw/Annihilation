@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SwitchScript : MonoBehaviour
 {
@@ -7,7 +8,9 @@ public class SwitchScript : MonoBehaviour
 		public int minItemsInTrigger;
 		public bool oneTimeUse;
 		
-		private int currentItemsCount = 0;
+		// 		Can't do this, because parenting switching causes a re-count
+		//		private int playersInTrigger = 0;
+		private List<int> itemsInTrigger;
 		private bool wasTriggered;
 
 		private GameEvent[] gameEvents;
@@ -22,13 +25,15 @@ public class SwitchScript : MonoBehaviour
 				}
 				
 				gameEvents = transform.GetComponents<GameEvent> ();
+				itemsInTrigger = new List<int> ();
 		}
 		
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
-				++currentItemsCount;
-				if (currentItemsCount >= minItemsInTrigger && !wasTriggered) {
+				if (!itemsInTrigger.Contains (other.gameObject.GetInstanceID ()))
+						itemsInTrigger.Add (other.gameObject.GetInstanceID ());
+				if (itemsInTrigger.Count >= minItemsInTrigger && !wasTriggered) {
 						wasTriggered = true;
 						foreach (GameEvent gameEvent in gameEvents)
 								gameEvent.Trigger (wasTriggered);
@@ -39,9 +44,9 @@ public class SwitchScript : MonoBehaviour
 	
 		void OnTriggerExit2D (Collider2D other)
 		{
-				--currentItemsCount;
+				itemsInTrigger.Remove (other.gameObject.GetInstanceID ());
 				if (!oneTimeUse) {
-						if (currentItemsCount < minItemsInTrigger && wasTriggered) {
+						if (itemsInTrigger.Count < minItemsInTrigger && wasTriggered) {
 								wasTriggered = false;
 								foreach (GameEvent gameEvent in gameEvents)
 										gameEvent.Trigger (wasTriggered);

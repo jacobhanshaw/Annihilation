@@ -67,6 +67,7 @@ OuyaSDK.IMenuAppearingListener
 		private float pickUpDistance = 1.5f;
 		private float jointChangeAmount = 0.1f;
 		private  int lastSlingshotId;
+		private  int lastThrowId;
 		private DistanceJoint2D joint;
 		private PlayerController connectedPlayerController;
 		public  bool pickedUp;
@@ -102,7 +103,9 @@ OuyaSDK.IMenuAppearingListener
 		
 				Color grabRadiusIndicatorColor = gameObject.renderer.material.color;
 				grabRadiusIndicatorColor.a = 0.5f;
-				grabRadiusIndicator.renderer.material.color = grabRadiusIndicatorColor;
+				grabRadiusIndicator.renderer.material.color = grabRadiusIndicatorColor; 
+				
+				Debug.Log ("Player Index: " + (int)playerIndex + " has instance id: " + gameObject.GetInstanceID ());
 		}
 	
 		void OnDestroy ()
@@ -135,7 +138,7 @@ OuyaSDK.IMenuAppearingListener
 		
 				bool grabPressed = GrabPressed () || grabHeld;
 				bool connected = Connected ();
-		
+				
 				if (!connected && (grabPressed || jumpPressed)) {
 						Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
 						foreach (Collider2D collider in hitColliders) {
@@ -161,9 +164,10 @@ OuyaSDK.IMenuAppearingListener
 														joint = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
 														joint.collideConnected = true;
 														joint.connectedBody = collider.gameObject.rigidbody2D;
-														joint.distance = holdingDistance;
+														joint.distance = Mathf.Min (Vector2.Distance (gameObject.transform.position, collider.gameObject.transform.position), holdingDistance);
 						
 														playerController.connectedPlayerController = this;
+														PickUpPlayer (joint, collider.gameObject.transform);
 														break;
 												}
 										}
@@ -176,6 +180,7 @@ OuyaSDK.IMenuAppearingListener
 		
 				grabIndicator.SetActive (connected);
 				grabRadiusIndicator.SetActive (grabPressed && !connected);
+				grabRadiusIndicator.transform.localScale = new Vector3 (2 * holdingDistance + gameObject.transform.localScale.x / 2.0f, 0.1f, 2 * holdingDistance + gameObject.transform.localScale.y / 2.0f);
 		}
 		
 		void FixedUpdate ()
@@ -300,9 +305,8 @@ OuyaSDK.IMenuAppearingListener
 														if (Vector3.SqrMagnitude (originalVectorToOther) > jointToUse.distance * jointToUse.distance)
 																otherTransform.position -= vectorToOtherPlayer;
 												}
-		
-												if (jointToUse.distance <= pickUpDistance && !pickUpDisabled)
-														PickUpPlayer (jointToUse, otherTransform);
+												
+												PickUpPlayer (jointToUse, otherTransform);
 										}
 								}
 						}
@@ -311,20 +315,39 @@ OuyaSDK.IMenuAppearingListener
 	
 		void PickUpPlayer (DistanceJoint2D joint, Transform otherPlayer)
 		{
-				otherPlayer.position = gameObject.transform.position + new Vector3 (0.0f, gameObject.transform.localScale.y, 0.0f);
-				joint.distance = gameObject.transform.localScale.y;
-				otherPlayer.GetComponent<PlayerController> ().pickedUp = true;
+				PlayerController otherPlayerController = otherPlayer.GetComponent<PlayerController> ();
+				if (joint.distance <= pickUpDistance && !pickUpDisabled && otherPlayerController.lastThrowId != gameObject.GetInstanceID ()) {
+						otherPlayer.position = gameObject.transform.position + new Vector3 (0.0f, gameObject.transform.localScale.y, 0.0f);
+						joint.distance = gameObject.transform.localScale.y;
+						otherPlayerController.pickedUp = true;
+				}
 		}
 	
 		void ThrowPlayer ()
 		{
-				if ((connectedPlayerController != null && connectedPlayerController.pickedUp) || (joint != null && joint.connectedBody.GetComponent<PlayerController> ().pickedUp)) {
+				bool throwPlayer = false;
+				GameObject otherPlayer = null;
+				PlayerController otherPlayerController = null;
+				if (connectedPlayerController != null && connectedPlayerController.pickedUp) {
+						throwPlayer = true;
+						otherPlayer = connectedPlayerController.gameObject;
+						otherPlayerController = connectedPlayerController;
+				} else if (joint != null) {
+						otherPlayerController = joint.connectedBody.gameObject.GetComponent<PlayerController> ();
+						if (otherPlayerController.pickedUp) {
+								throwPlayer = true;
+								otherPlayer = joint.connectedBody.gameObject;
+						}
+				}
+		
+				if (throwPlayer) {
 						float fractionX = Mathf.Abs (gameObject.rigidbody2D.velocity.x / maxSpeed);//maxSpeed;
 						float direction = gameObject.rigidbody2D.velocity.x < 0 ? -1 : 1;
 						if (fractionX == 0)
 								direction = 0;
 						Vector2 forceVector = new Vector2 ((1.0f + fractionX) * throwForceX * direction, (2.0f - fractionX) * throwForceY);
-						OtherPlayer ().rigidbody2D.AddForce (forceVector);
+						otherPlayer.rigidbody2D.AddForce (forceVector);
+						otherPlayerController.lastThrowId = gameObject.GetInstanceID ();
 				}
 		}
 		
@@ -335,7 +358,7 @@ OuyaSDK.IMenuAppearingListener
 		                                                   TopRight (movingObject) + vector);
 		
 				foreach (Collider2D aCollider in colliders) {
-						if (aCollider.gameObject != movingObject)
+						if (!aCollider.isTrigger && aCollider.gameObject != movingObject)
 								return true;
 				}
 		
@@ -529,12 +552,12 @@ OuyaSDK.IMenuAppearingListener
 				else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
 						pressed = Input.GetKey (KeyCode.LeftShift);
 				
-				if (prevGrabPressed != pressed) {
-						prevGrabPressed = pressed;
-						return !prevGrabPressed;
-				}
+				//	if (prevGrabPressed != pressed) {
+				//			prevGrabPressed = pressed;
+				//			return !prevGrabPressed;
+				//	}
 				
-				prevGrabPressed = pressed;
+				//	prevGrabPressed = pressed;
 				return pressed;
 		}
 		
@@ -588,14 +611,17 @@ OuyaSDK.IMenuAppearingListener
 										playerGrounded = true;		
 										possibleGroundedByPlayer = null;
 										
-										if (!raycastInfo.collider.CompareTag ("Player"))
-												lastSlingshotId = 0;
+										if (!raycastInfo.collider.CompareTag ("Player")) {
+												lastThrowId = 0;
+												lastSlingshotId = 0;	
+										}
 										
 										if (groundedByPlayer != null && colliderInstanceId != groundedByPlayer.GetInstanceID ())
 												groundedByPlayer = null;
 										
 										if (raycastInfo.collider.CompareTag ("Player") && (originalCall || gameObject.GetInstanceID () != originalId) && 
 												raycastInfo.collider.gameObject.GetComponent<PlayerController> ().PlayerIsGrounded (originalId, false)) {
+												lastThrowId = 0;
 												lastSlingshotId = 0;
 												possibleGroundedByPlayer = raycastInfo.collider.gameObject;
 										}

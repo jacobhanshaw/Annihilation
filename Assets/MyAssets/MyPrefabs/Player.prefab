@@ -295,6 +295,7 @@ MonoBehaviour:
   jumpDisabled: 0
   jointDisabled: 0
   pickUpDisabled: 0
+  slingShotDisabled: 0
   jointLengthChangeDisabled: 0
   spawnColor: {r: 0, g: 0, b: 0, a: 0}
   spawnLocation: {fileID: 0}

@@ -22,7 +22,7 @@ public class StickyWall : MonoBehaviour
 								else
 										child.transform.parent = gameObject.transform;
 						}
-				} 
+				}  
 		}
 
 		void OnTriggerEnter2D (Collider2D other)
