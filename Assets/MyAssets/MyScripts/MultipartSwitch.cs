@@ -7,11 +7,17 @@ public class MultipartSwitch : MonoBehaviour
 		public int numSwitchesToTrigger;
 		private bool wasTriggered;
 		
+		private bool force = true;
+		
 		private GameEvent[] gameEvents;
 	
 		void Start ()
 		{
 				gameEvents = transform.GetComponents<GameEvent> ();
+				
+				if (force)
+						foreach (GameEvent gameEvent in gameEvents)
+								gameEvent.Trigger (force);
 		}
 	
 		public void Trigger (bool trigger)

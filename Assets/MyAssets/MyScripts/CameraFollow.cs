@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour
 		
 		private float lastPanTime;
 		private float panSpeed = 15.0f;
-		private float panZoomLLevel = 15.0f;
+		private float panZoomLevel = 15.0f;
 		private bool  paused;
 		
 		private bool zoomOutNecessary = false;
@@ -42,18 +42,20 @@ public class CameraFollow : MonoBehaviour
 						if (!paused) {
 								paused = true;
 								GameLogic.Instance.PausePressed (0);
-								gameObject.camera.orthographicSize = panZoomLLevel;
 						}
 						
 						float deltaTime = Time.realtimeSinceStartup - lastPanTime;
-						lastPanTime = Time.realtimeSinceStartup;
 				
-						Vector2 newPositionVec2 = Vector2.MoveTowards (gameObject.transform.position, panToPois [0].gameObject.transform.position, deltaTime * panSpeed);
+						float usedPanSpeed = panToPois [0].overridePanSpeed == -1.0f ? panSpeed : panToPois [0].overridePanSpeed;
+						float usedPanZoomLevel = panToPois [0].overridePanZoomLevel == -1.0f ? panZoomLevel : panToPois [0].overridePanZoomLevel;
+						gameObject.camera.orthographicSize = usedPanZoomLevel;
+				
+						Vector2 newPositionVec2 = Vector2.MoveTowards (gameObject.transform.position, panToPois [0].gameObject.transform.position, deltaTime * usedPanSpeed);
 						Vector3 newPosition = new Vector3 (newPositionVec2.x, newPositionVec2.y, panToPois [0].transform.position.z);
 																		
 						if (newPosition == panToPois [0].gameObject.transform.position) {
-								panToPois [0].panOnStart = false;
-								panToPois [0].panToItem = false;
+								panToPois [0].forcePan = false;
+								panToPois [0].panOnEnter = false;
 								panToPois.RemoveAt (0);
 						}
 						newPosition.z = gameObject.transform.position.z;
@@ -65,6 +67,8 @@ public class CameraFollow : MonoBehaviour
 						}
 						TrackPlayers ();
 				}
+				
+				lastPanTime = Time.realtimeSinceStartup;
 		}
 		
 		void TrackPlayers ()
@@ -79,13 +83,15 @@ public class CameraFollow : MonoBehaviour
 						POIScript poiScript = poiScripts [i];
 						if (!poiScript)
 								poiScripts.Remove (poiScript);
-						if (poiScript.panOnStart)
-								panToPois.Add (poiScript);
-						if (poiScript.panToItem)
-								panToPois.Add (poiScript);
-						if (poiScript.activeScript) {
-								pois.Add (poiScript.gameObject);
-								poiScript.shown = true;
+						else {
+								if (poiScript.forcePan)
+										panToPois.Add (poiScript);	
+								if (poiScript.activeScript) {
+										if (poiScript.panOnEnter)
+												panToPois.Add (poiScript);
+										pois.Add (poiScript.gameObject);
+										poiScript.shown = true;
+								}
 						}
 				}
 				

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class SwitchScript : MonoBehaviour
 {
-		public bool shouldScale;
+		public bool skipScale;
+		public bool skipRender;
 		public int minItemsInTrigger;
 		public bool oneTimeUse;
 		
@@ -17,7 +18,7 @@ public class SwitchScript : MonoBehaviour
 
 		void Start ()
 		{
-				if (shouldScale) {
+				if (!skipScale && !skipRender) {
 						int yItems = (minItemsInTrigger / 4) + 1;
 						int xItems = minItemsInTrigger % 4;
 						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);
@@ -37,8 +38,8 @@ public class SwitchScript : MonoBehaviour
 						wasTriggered = true;
 						foreach (GameEvent gameEvent in gameEvents)
 								gameEvent.Trigger (wasTriggered);
-				
-						gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
+						if (!skipRender)
+								gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
 				}
 		}
 	
@@ -50,8 +51,8 @@ public class SwitchScript : MonoBehaviour
 								wasTriggered = false;
 								foreach (GameEvent gameEvent in gameEvents)
 										gameEvent.Trigger (wasTriggered);
-								
-								gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
+								if (!skipRender)
+										gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 						}
 				}
 		}
