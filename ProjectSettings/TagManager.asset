@@ -8,7 +8,7 @@ TagManager:
   - Obstacle
   - Coin
   - POI
-  - 
+  - NPC
   - ground
   - 
   Builtin Layer 0: Default
@@ -22,7 +22,7 @@ TagManager:
   User Layer 8: Ground
   User Layer 9: Player
   User Layer 10: GUI
-  User Layer 11: 
+  User Layer 11: NPC
   User Layer 12: 
   User Layer 13: 
   User Layer 14: 

@@ -15,7 +15,7 @@ public class StickyWall : MonoBehaviour
 		void Update ()
 		{
 				foreach (Transform child in transform) {
-						if (child.gameObject.CompareTag ("Player")) {
+						if (child.gameObject.CompareTag ("Player") || child.gameObject.CompareTag ("NPC")) {
 								PlayerController playerController = child.gameObject.GetComponent<PlayerController> ();
 								if (playerController.Connected ())
 										child.transform.parent = null;
