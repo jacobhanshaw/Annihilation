@@ -313,7 +313,7 @@ OuyaSDK.IMenuAppearingListener
 		void PickUpPlayer (DistanceJoint2D joint, Transform otherPlayer)
 		{
 				PlayerController otherPlayerController = otherPlayer.GetComponent<PlayerController> ();
-				if (joint.distance <= pickUpDistance && !pickUpDisabled && otherPlayerController.lastThrowId != gameObject.GetInstanceID ()) {
+				if (joint.distance <= pickUpDistance && !pickUpDisabled && otherPlayerController.lastThrowId != gameObject.GetInstanceID () && !otherPlayerController.isNPC) {
 						otherPlayer.position = gameObject.transform.position + new Vector3 (0.0f, gameObject.transform.localScale.y, 0.0f);
 						joint.distance = gameObject.transform.localScale.y;
 						otherPlayerController.pickedUp = true;
