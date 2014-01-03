@@ -3571,7 +3571,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0
@@ -4153,7 +4152,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0
@@ -4540,7 +4538,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0
@@ -11120,7 +11117,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0
@@ -11283,6 +11279,8 @@ GameObject:
   - 33: {fileID: 1330550937}
   - 23: {fileID: 1330550936}
   - 61: {fileID: 1330550935}
+  - 114: {fileID: 1330550934}
+  - 61: {fileID: 1330550933}
   m_Layer: 8
   m_Name: Wall
   m_TagString: ground
@@ -11290,6 +11288,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!61 &1330550933
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1330550932}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Size: {x: 1, y: .100000001}
+  m_Center: {x: 0, y: .550000012}
+--- !u!114 &1330550934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1330550932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f288653418f4ffc8a2be61e941bb33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!61 &1330550935
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17486,11 +17506,11 @@ Transform:
   m_LocalPosition: {x: 16.0396576, y: 27.4714127, z: -.125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 413835059}
+  - {fileID: 2043568634}
   - {fileID: 463275580}
+  - {fileID: 413835059}
   - {fileID: 1231361992}
   - {fileID: 351088475}
-  - {fileID: 2043568634}
   m_Father: {fileID: 0}
 --- !u!1 &2043568633
 GameObject:
@@ -17584,7 +17604,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0

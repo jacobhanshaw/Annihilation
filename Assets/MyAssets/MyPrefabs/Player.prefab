@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c0761bac0ff4bd9858f700ab698690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNPC: 0
   grabHeld: 0
   jumpDisabled: 0
   jointDisabled: 0
@@ -306,7 +307,6 @@ MonoBehaviour:
   moveDrag: .5
   maxSpeed: 5
   backJumpForce: -100
-  slingShotForce: 130
   jumpVelocity: 8
   grounded: 0
   score: 0

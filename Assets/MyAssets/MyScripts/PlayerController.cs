@@ -51,7 +51,8 @@ OuyaSDK.IMenuAppearingListener
 		public float moveDrag = 0.1f;
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
 		public float backJumpForce = -100.0f;
-		public float slingShotForce = 50.0f;
+		private float slingshotForce = 130.0f; //130.0f
+		private float npcSlingshotForce = 250.0f;
 		private float throwForceX = 100.0f;
 		private float throwForceY = 50.0f;
 		public float jumpVelocity = 7.5f;			// Amount of force added when the player jumps.
@@ -59,7 +60,6 @@ OuyaSDK.IMenuAppearingListener
 		//Grounding variables
 		private Transform[] groundChecks = new Transform[3];			// A position marking where to check if the player is grounded.
 		public  bool grounded = false;			// Whether or not the player is grounded.
-		private GameObject slingshottedByPlayer;
 		
 		//Achievement variables
 		public int score;
@@ -69,6 +69,10 @@ OuyaSDK.IMenuAppearingListener
 		private float holdingDistance = 4.0f;
 		private float pickUpDistance = 1.5f;
 		private float jointChangeAmount = 0.1f;
+		private GameObject slingshottedByPlayer;
+		private GameObject pastSlingshottedByPlayer;
+		private bool  slingshotJoint;
+		private float slingshotDistance = 0.5f;
 		private  int lastSlingshotId;
 		private  int lastThrowId;
 		private DistanceJoint2D joint;
@@ -111,6 +115,7 @@ OuyaSDK.IMenuAppearingListener
 				if (isNPC) {
 						spawnLocation = new GameObject ();
 						spawnLocation.transform.position = gameObject.transform.position;
+						spawnLocation.transform.parent = gameObject.transform;
 				} else
 						Debug.Log ("Player Index: " + (int)playerIndex + " has instance id: " + gameObject.GetInstanceID ());
 		}
@@ -139,7 +144,6 @@ OuyaSDK.IMenuAppearingListener
 						bool jumpPressed = JumpPressed () && !jumpDisabled;
 						jumpNotReleased &= jumpPressed;
 						//		jumpPressed &= !jumpNotReleased;
-				
 		
 						if (jumpPressed && grounded && !pickedUp && !jumpNotReleased) {
 								jump = true;
@@ -148,8 +152,7 @@ OuyaSDK.IMenuAppearingListener
 						}
 		
 						grabPressed = GrabPressed () || grabHeld;
-						
-				
+
 						if (!connected && (grabPressed || jumpPressed)) {
 								Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
 								foreach (Collider2D collider in hitColliders) {
@@ -166,25 +169,15 @@ OuyaSDK.IMenuAppearingListener
 														
 																StopMovement (gameObject);
 																StopMovement (slingshottedByPlayer);
+																break;
 														} else if (grabPressed && !jointDisabled) {
-																grabIndicator.SetActive (true);
-																grabIndicator.renderer.material.color = collider.gameObject.renderer.material.color;
-																playerController.grabIndicator.SetActive (true);
-																playerController.grabIndicator.renderer.material.color = gameObject.renderer.material.color;
-						
-																joint = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
-																joint.collideConnected = true;
-																joint.connectedBody = collider.gameObject.rigidbody2D;
-																joint.distance = Mathf.Min (Vector2.Distance (gameObject.transform.position, collider.gameObject.transform.position), holdingDistance);
-						
-																playerController.connectedPlayerController = this;
-																PickUpPlayer (joint, collider.gameObject.transform);
+																MakeConnection (collider.gameObject, playerController, true);
 																break;
 														}
 												}
 										}
 								}
-						} else if (connected && !grabPressed) {
+						} else if (connected && !grabPressed && (!slingshotJoint || ReleaseSlingshot ())) {
 								ThrowPlayer ();
 								DestroyConnection ();
 						}
@@ -192,6 +185,11 @@ OuyaSDK.IMenuAppearingListener
 				grabIndicator.SetActive (connected);
 				grabRadiusIndicator.SetActive (grabPressed && !connected);
 				grabRadiusIndicator.transform.localScale = new Vector3 (2 * holdingDistance + gameObject.transform.localScale.x / 2.0f, 0.1f, 2 * holdingDistance + gameObject.transform.localScale.y / 2.0f);
+		}
+		
+		bool ReleaseSlingshot ()
+		{
+				return gameObject.transform.position.y > pastSlingshottedByPlayer.transform.position.y && Mathf.Abs (gameObject.transform.position.x - pastSlingshottedByPlayer.transform.position.x) < slingshotDistance;
 		}
 		
 		void FixedUpdate ()
@@ -214,20 +212,10 @@ OuyaSDK.IMenuAppearingListener
 										if (groundedByPlayer != null)
 												groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce));
 								} else {
-										float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
-										Vector2 endPosition = slingshottedByPlayer.transform.position;
-										if (direction > 0)
-												endPosition.x += slingshottedByPlayer.transform.localScale.x;// * 1.5f;
-								else if (direction < 0)
-												endPosition.x -= slingshottedByPlayer.transform.localScale.x;// * 1.5f;
-				
-										endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
-				
-										Vector2 forceVector = new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
-										forceVector *= slingShotForce;
-										rigidbody2D.AddForce (forceVector);
-										slingshottedByPlayer.rigidbody2D.AddForce (-forceVector);
-										slingshottedByPlayer = null;                   
+										if (gameObject.transform.position.y < slingshottedByPlayer.transform.position.y)
+												Slingshot ();
+										pastSlingshottedByPlayer = slingshottedByPlayer;
+										slingshottedByPlayer = null;   
 								}
 			
 								jump = false;
@@ -236,6 +224,55 @@ OuyaSDK.IMenuAppearingListener
 						velocity.x = 0.0f;
 					
 				rigidbody2D.velocity = velocity;
+		}
+		
+		void MakeConnection (GameObject otherPlayer, PlayerController otherController, bool pickUp)
+		{
+				grabIndicator.SetActive (true);
+				grabIndicator.renderer.material.color = otherPlayer.renderer.material.color;
+				otherController.grabIndicator.SetActive (true);
+				otherController.grabIndicator.renderer.material.color = gameObject.renderer.material.color;
+		
+				joint = gameObject.AddComponent ("DistanceJoint2D") as DistanceJoint2D;
+				joint.collideConnected = true;
+				joint.connectedBody = otherPlayer.rigidbody2D;
+				joint.distance = Mathf.Min (Vector2.Distance (gameObject.transform.position, otherPlayer.transform.position), holdingDistance);
+		
+				otherController.connectedPlayerController = this;
+		
+				if (pickUp)
+						PickUpPlayer (joint, otherPlayer.transform);
+		}
+		
+		void Slingshot ()
+		{
+				if (slingshottedByPlayer.GetComponent<PlayerController> ().isNPC) {
+						slingshotJoint = true;
+						MakeConnection (slingshottedByPlayer, slingshottedByPlayer.GetComponent<PlayerController> (), false);
+						float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
+						Vector2 forceVector = new Vector2 (0.0f, 0.5f);
+						if (direction > 0)
+								forceVector.x = 0.5f;
+						else if (direction < 0)
+								forceVector.x = -0.5f;
+		
+						forceVector *= npcSlingshotForce;
+						rigidbody2D.AddForce (forceVector);
+				} else {
+						float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
+						Vector2 endPosition = slingshottedByPlayer.transform.position;
+						if (direction > 0)
+								endPosition.x += slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+						else if (direction < 0)
+								endPosition.x -= slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+			
+						endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
+			
+						Vector2 forceVector = new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
+						forceVector *= slingshotForce;
+						rigidbody2D.AddForce (forceVector);
+						slingshottedByPlayer.rigidbody2D.AddForce (-forceVector);
+				}
 		}
 		
 		void StopMovement (GameObject stopObject)
@@ -440,6 +477,7 @@ OuyaSDK.IMenuAppearingListener
 						Destroy (joint);
 						joint = null;
 				} 
+				slingshotJoint = false;
 		}
 	
 		public void OuyaMenuButtonUp ()
