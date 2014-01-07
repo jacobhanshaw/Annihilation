@@ -12,7 +12,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 61: {fileID: 6100000}
   - 114: {fileID: 11400000}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef4323415a1c4377bfcaddacc266790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shouldScale: 0
+  skipScale: 0
+  skipRender: 0
   minItemsInTrigger: 0
   oneTimeUse: 0
 --- !u!1001 &100100000

@@ -29,11 +29,44 @@ public class CameraFollow : MonoBehaviour
 		{
 				GameObject[] playersArray = GameObject.FindGameObjectsWithTag ("Player");
 				players = new List<GameObject> (playersArray);
+				
+				LayerMask initialPlayerLayer = 0; 
+				LayerMask otherPlayerLayer = 0;
+				LayerMask initialInteractLayer = 0;
+				LayerMask otherInteractLayer = 0;
+				LayerMask combinedInteractLayer = 0;
+				
+				int testNum;
+				string layer = LayerMask.LayerToName (gameObject.layer);
+				string numOne = layer [layer.Length - 2].ToString ();
+				bool validNumOne = int.TryParse (numOne, out testNum);
+				if (validNumOne) {
+						initialPlayerLayer = LayerMask.NameToLayer ("Player" + numOne);
+						initialInteractLayer = LayerMask.NameToLayer ("Interact" + numOne);
+				}
+				string numTwo = layer [layer.Length - 1].ToString ();
+				bool validNumTwo = int.TryParse (numTwo, out testNum);
+				if (validNumTwo) {
+						otherPlayerLayer = LayerMask.NameToLayer ("Player" + numTwo);
+						otherInteractLayer = LayerMask.NameToLayer ("Interact" + numTwo);
+				}
+				
+				if (validNumOne && validNumTwo)
+						combinedInteractLayer = LayerMask.NameToLayer ("Interact" + numOne + numTwo);
+					
+				for (int i = players.Count-1; i >= 0; --i) {
+						if (players [i].layer != initialPlayerLayer && players [i].layer != otherPlayerLayer)
+								players.RemoveAt (i);
+				}
+
 				poiScripts = new List<POIScript> ();
 				panToPois = new List<POIScript> ();
+				
 				GameObject[] pois = GameObject.FindGameObjectsWithTag ("POI");
-				foreach (GameObject poi in pois)
-						poiScripts.Add (poi.GetComponent<POIScript> ());
+				foreach (GameObject poi in pois) {
+						if (poi.layer == initialInteractLayer || poi.layer == otherInteractLayer || poi.layer == combinedInteractLayer)
+								poiScripts.Add (poi.GetComponent<POIScript> ());
+				}
 		}
 		
 		void Update ()

@@ -32,14 +32,15 @@ OuyaSDK.IMenuAppearingListener
 		//Grab indicators
 		private GameObject grabIndicator;
 		private GameObject grabRadiusIndicator;
-		
+
 		//Spawn parameters
 		public  Color spawnColor;
 		public  GameObject spawnLocation;
 	
 		//Controller info
 		private bool keyboardDebugMode = false;
-		public OuyaSDK.OuyaPlayer playerIndex = OuyaSDK.OuyaPlayer.player1;
+		public int playerIndex = 1;
+		public OuyaSDK.OuyaPlayer controllerIndex = OuyaSDK.OuyaPlayer.player1;
 		public bool splitController = false;
 		public bool leftSplit = false;
 		private bool m_useSDKForInput = false;
@@ -67,7 +68,7 @@ OuyaSDK.IMenuAppearingListener
 	
 		//Joint variables
 		private float holdingDistance = 4.0f;
-		private float pickUpDistance = 1.5f;
+		private float pickUpDistance = 1.15f;
 		private float jointChangeAmount = 0.1f;
 		private GameObject slingshottedByPlayer;
 		private GameObject pastSlingshottedByPlayer;
@@ -84,6 +85,9 @@ OuyaSDK.IMenuAppearingListener
 		public GameObject groundedByPlayer;
 		
 		//private bool facingRight = true;			// For determining which way the player is currently facing.
+		
+		private int layerMask;
+		private int groundMask;
 	
 		void Awake ()
 		{
@@ -117,7 +121,23 @@ OuyaSDK.IMenuAppearingListener
 						spawnLocation.transform.position = gameObject.transform.position;
 						spawnLocation.transform.parent = gameObject.transform;
 				} else
-						Debug.Log ("Player Index: " + (int)playerIndex + " has instance id: " + gameObject.GetInstanceID ());
+						Debug.Log ("Player Index: " + playerIndex + " has instance id: " + gameObject.GetInstanceID ());
+				
+				int other;
+				if (playerIndex % 2 == 0) {
+						other = (playerIndex - 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + playerIndex.ToString ());
+				} else {
+						other = (playerIndex + 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString () + other.ToString ());
+				}
+
+				layerMask |= 1 << LayerMask.NameToLayer ("Player" + other.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Player" + playerIndex.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString ());
+				groundMask |= 1 << LayerMask.NameToLayer ("Default");
+				groundMask |= layerMask;
 		}
 	
 		void OnDestroy ()
@@ -154,12 +174,12 @@ OuyaSDK.IMenuAppearingListener
 						grabPressed = GrabPressed () || grabHeld;
 
 						if (!connected && (grabPressed || jumpPressed)) {
-								Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance);
+								Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance, layerMask);
 								foreach (Collider2D collider in hitColliders) {
 										if (collider.gameObject != gameObject && (collider.gameObject.CompareTag ("Player") || collider.gameObject.CompareTag ("NPC"))) {		
 												PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
 					
-												if (playerController.AcceptConnectionOrSlingshot ()) {
+												if (playerController && playerController.AcceptConnectionOrSlingshot ()) {
 														if (jumpPressed && lastSlingshotId != collider.gameObject.GetInstanceID () && !jumpNotReleased && !slingShotDisabled) {
 																lastSlingshotId = collider.gameObject.GetInstanceID ();
 						
@@ -182,6 +202,7 @@ OuyaSDK.IMenuAppearingListener
 								DestroyConnection ();
 						}
 				}
+				
 				grabIndicator.SetActive (connected);
 				grabRadiusIndicator.SetActive (grabPressed && !connected);
 				grabRadiusIndicator.transform.localScale = new Vector3 (2 * holdingDistance + gameObject.transform.localScale.x / 2.0f, 0.1f, 2 * holdingDistance + gameObject.transform.localScale.y / 2.0f);
@@ -308,7 +329,7 @@ OuyaSDK.IMenuAppearingListener
 								vectorToOtherPlayer *= halfJointDistance;
 				
 								if (increase) {
-										if (jointToUse.distance < holdingDistance - jointChangeAmount) {
+										if (jointToUse.distance < holdingDistance - halfJointDistance) {
 												if (!CollisionIfGameObjectMovedAlongVector (gameObject, -vectorToOtherPlayer)) {
 														jointToUse.distance += halfJointDistance;
 														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
@@ -389,7 +410,7 @@ OuyaSDK.IMenuAppearingListener
 		bool CollisionIfGameObjectMovedAlongVector (GameObject movingObject, Vector3 vector)
 		{
 				Collider2D[] colliders = Physics2D.OverlapAreaAll (BottomLeft (movingObject) + vector, 
-		                                                   TopRight (movingObject) + vector);
+		                                                   TopRight (movingObject) + vector, groundMask);
 		
 				foreach (Collider2D aCollider in colliders) {
 						if (!aCollider.isTrigger && aCollider.gameObject != movingObject)
@@ -437,7 +458,7 @@ OuyaSDK.IMenuAppearingListener
 						achievements.Add (newAchievement);
 						score += newAchievement.points;
 						if (AchievementReceivedListeners != null)
-								AchievementReceivedListeners (newAchievement, (int)playerIndex, score);
+								AchievementReceivedListeners (newAchievement, playerIndex, score);
 						Destroy (other.gameObject);
 				}
 		}
@@ -482,7 +503,7 @@ OuyaSDK.IMenuAppearingListener
 	
 		public void OuyaMenuButtonUp ()
 		{
-				GameLogic.Instance.PausePressed ((int)playerIndex);
+				GameLogic.Instance.PausePressed (playerIndex);
 		}
 	
 		public void OuyaMenuAppearing ()
@@ -503,7 +524,7 @@ OuyaSDK.IMenuAppearingListener
 	
 		void CheckForKeyboardPause ()
 		{
-				if (Input.GetKeyUp (KeyCode.P) && playerIndex == OuyaSDK.OuyaPlayer.player1) {
+				if (Input.GetKeyUp (KeyCode.P) && controllerIndex == OuyaSDK.OuyaPlayer.player1) {
 						if (Time.timeScale != 0.0f)
 								Time.timeScale = 0.0f;
 						else
@@ -515,24 +536,24 @@ OuyaSDK.IMenuAppearingListener
 		{
 				if (!keyboardDebugMode) {
 						if (!splitController) {
-								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, playerIndex) || 
-										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, playerIndex) ||
-										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, playerIndex); // ||
-								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex) > debounceY);
+								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
+										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex) ||
+										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex); // ||
+								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex) > debounceY);
 						} else {
 								if (leftSplit) {
-										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, playerIndex) ||
-												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, playerIndex);// || 
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex) > debounceY);
+										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, controllerIndex) ||
+												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);// || 
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex) > debounceY);
 								} else {
-										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, playerIndex) || 
-												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, playerIndex);// ||
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex) > debounceY);
+										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
+												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex);// ||
+										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex) > debounceY);
 								}
 						}
-				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
+				} else if (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3)   
 						return Input.GetKey (KeyCode.W);
-				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
+				else if (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4)   
 						return Input.GetKey (KeyCode.I);
 				else
 						return false;
@@ -544,12 +565,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex)) > debounceY;
+								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex)) > debounceY;
 						else
-								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex)) > debounceY;
-				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
+								increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex)) > debounceY;
+				} else if (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3)   
 						increase = Input.GetKey (KeyCode.E);
-				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
+				else if (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4)   
 						increase = Input.GetKey (KeyCode.O);
 
 		
@@ -562,12 +583,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, playerIndex)) < -debounceY;
+								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex)) < -debounceY;
 						else
-								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, playerIndex)) < -debounceY;
-				} else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
+								decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex)) < -debounceY;
+				} else if (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3)   
 						decrease = Input.GetKey (KeyCode.Q);
-				else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
+				else if (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4)   
 						decrease = Input.GetKey (KeyCode.U);
 
 				return decrease;
@@ -579,12 +600,12 @@ OuyaSDK.IMenuAppearingListener
 		
 				if (!keyboardDebugMode) {
 						if (leftSplit)
-								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, playerIndex);
+								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, controllerIndex);
 						else
-								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, playerIndex);
-				} else if (playerIndex == OuyaSDK.OuyaPlayer.player2)   
+								pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, controllerIndex);
+				} else if (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4)   
 						pressed = Input.GetKey (KeyCode.Space);
-				else if (playerIndex == OuyaSDK.OuyaPlayer.player1)   
+				else if (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3)   
 						pressed = Input.GetKey (KeyCode.LeftShift);
 				
 				//	if (prevGrabPressed != pressed) {
@@ -603,23 +624,23 @@ OuyaSDK.IMenuAppearingListener
 
 				if (!keyboardDebugMode) {
 						if (!splitController || leftSplit)
-								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, playerIndex);
+								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, controllerIndex);
 						else
-								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, playerIndex);
+								horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, controllerIndex);
 					
 						if (horizontal == 0.0f && (!splitController || leftSplit)) {
-								if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, playerIndex))
+								if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, controllerIndex))
 										return - 1.0f;
-								else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, playerIndex))
+								else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, controllerIndex))
 										return 1.0f;
 						}
-				} else if (Input.GetKey (KeyCode.A) && playerIndex == OuyaSDK.OuyaPlayer.player1)
+				} else if (Input.GetKey (KeyCode.A) && (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3))
 						horizontal = -1.0f;
-				else if (Input.GetKey (KeyCode.D) && playerIndex == OuyaSDK.OuyaPlayer.player1)
+				else if (Input.GetKey (KeyCode.D) && (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3))
 						horizontal = 1.0f;
-				else if (Input.GetKey (KeyCode.J) && playerIndex == OuyaSDK.OuyaPlayer.player2)
+				else if (Input.GetKey (KeyCode.J) && (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4))
 						horizontal = -1.0f;
-				else if (Input.GetKey (KeyCode.L) && playerIndex == OuyaSDK.OuyaPlayer.player2)
+				else if (Input.GetKey (KeyCode.L) && (controllerIndex == OuyaSDK.OuyaPlayer.player2 || controllerIndex == OuyaSDK.OuyaPlayer.player4))
 						horizontal = 1.0f;	
 				
 				return horizontal;
@@ -633,14 +654,11 @@ OuyaSDK.IMenuAppearingListener
 		bool PlayerIsGrounded (int originalId, bool originalCall)
 		{
 				bool playerGrounded = false;
-				int layerMask = 1 << LayerMask.NameToLayer ("Ground");
-				layerMask |= 1 << LayerMask.NameToLayer ("Player");
-				layerMask |= 1 << LayerMask.NameToLayer ("NPC");
 				Vector3 startRaycast = transform.position;
 				startRaycast.y -= transform.localScale.y / 1.99f;
 		
 				foreach (Transform groundCheck in groundChecks) {
-						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, layerMask);
+						RaycastHit2D[] hits = Physics2D.LinecastAll (startRaycast, groundCheck.position, groundMask);
 						foreach (RaycastHit2D raycastInfo in hits) {
 								if (!(raycastInfo.collider.isTrigger || raycastInfo.collider.gameObject == gameObject)) {
 										int colliderInstanceId = raycastInfo.collider.gameObject.GetInstanceID ();

@@ -9,7 +9,6 @@ TagManager:
   - Coin
   - POI
   - NPC
-  - ground
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
@@ -19,19 +18,19 @@ TagManager:
   Builtin Layer 5: 
   Builtin Layer 6: 
   Builtin Layer 7: 
-  User Layer 8: Ground
-  User Layer 9: Player
-  User Layer 10: GUI
-  User Layer 11: NPC
-  User Layer 12: 
-  User Layer 13: 
-  User Layer 14: 
-  User Layer 15: 
-  User Layer 16: 
-  User Layer 17: 
-  User Layer 18: 
-  User Layer 19: 
-  User Layer 20: 
+  User Layer 8: GUI
+  User Layer 9: GUI12
+  User Layer 10: GUI34
+  User Layer 11: Player1
+  User Layer 12: Player2
+  User Layer 13: Player3
+  User Layer 14: Player4
+  User Layer 15: Interact1
+  User Layer 16: Interact2
+  User Layer 17: Interact3
+  User Layer 18: Interact4
+  User Layer 19: Interact12
+  User Layer 20: Interact34
   User Layer 21: 
   User Layer 22: 
   User Layer 23: 

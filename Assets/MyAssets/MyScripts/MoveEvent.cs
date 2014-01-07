@@ -5,7 +5,8 @@ public class MoveEvent : GameEvent
 {
 
 		public bool       ignorePause;
-		public GameObject movedItem;
+		public string      movedItemName;
+		private GameObject movedItem;
 		private Vector3   startPosition;
 		public Vector3    endPosition;
 		public float      speed = 3.0f;
@@ -15,6 +16,15 @@ public class MoveEvent : GameEvent
 		
 		void Start ()
 		{
+				GameObject potentialItem = GameObject.Find (movedItemName);
+				if (gameObject.layer == potentialItem.layer)
+						movedItem = potentialItem;
+				else
+						movedItem = GameObject.Find (movedItemName + "(Clone)");
+				
+				if (!movedItem)
+						Debug.Log ("Name: " + movedItemName);
+						
 				startPosition = movedItem.transform.position;
 		}
 	

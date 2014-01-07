@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   - 61: {fileID: 6100000}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PointOfInterest
   m_TagString: POI
   m_Icon: {fileID: 266726316, guid: 0000000000000000d000000000000000, type: 0}
@@ -50,10 +50,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e478384c9bb465e8e898aad07428f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panOnStart: 1
-  panToItem: 0
   shown: 0
   activeScript: 0
+  forcePan: 0
+  panOnEnter: 0
+  overridePanSpeed: -1
+  overridePanZoomLevel: -1
+  ignoreCollider: 0
   relevantDuration: -1
 --- !u!1001 &100100000
 Prefab:

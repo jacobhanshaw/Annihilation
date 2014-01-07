@@ -19,7 +19,7 @@ using UnityEngine;
 public class OuyaSceneMain : MonoBehaviour
 {		
 		private int splitControllers = -1;
-
+		private int splitScreen = -1;
 		private int selectedNumPlayers = 0;
 		private int   availablePlayers = 2;
 		private float maxNumPlayers = 4.0f;
@@ -35,16 +35,29 @@ public class OuyaSceneMain : MonoBehaviour
 						SetUpSplitControllerButtons ();
 				else if (selectedNumPlayers == 0)
 						SetUpPlayerButtons ();
+				else if (splitScreen == -1 && selectedNumPlayers == 2)
+						SetUpSplitScreenButtons ();
 				else if (storyMiniMode.Equals (""))
 						SetUpStoryMiniButtons ();
 				else if (levelNumber == -1)
 						SetUpSceneSelectButtons ();
 				else {
+				
+						Debug.Log ("Original: " + GameLogic.Instance.splitScreen.ToString ());
+						GameLogic.Instance.splitScreen = splitScreen != 0 || selectedNumPlayers > 2;
+						Debug.Log ("After: " + GameLogic.Instance.splitScreen.ToString ());
+						Debug.Log ("Original: " + GameLogic.Instance.numPlayers.ToString ());
 						GameLogic.Instance.numPlayers = selectedNumPlayers;
+						Debug.Log ("After: " + GameLogic.Instance.numPlayers.ToString ());
+						Debug.Log ("Original: " + GameLogic.Instance.splitControllers.ToString ());
 						GameLogic.Instance.splitControllers = splitControllers != 0;
-						
+						Debug.Log ("After: " + GameLogic.Instance.splitControllers.ToString ());	
+						//	Debug.Log ("Original: " + GameLogic.Instance.currentLevelType.ToString ());	
 						GameLogic.Instance.currentLevelType = storyMiniMode;
+						Debug.Log ("After: " + GameLogic.Instance.currentLevelType.ToString ());
+						Debug.Log ("Original: " + GameLogic.Instance.currentLevelNumber.ToString ());
 						GameLogic.Instance.currentLevelNumber = levelNumber;
+						Debug.Log ("After: " + GameLogic.Instance.currentLevelNumber.ToString ());
 						
 						Application.LoadLevel (storyMiniMode + levelNumber.ToString ());
 				}
@@ -54,7 +67,6 @@ public class OuyaSceneMain : MonoBehaviour
 		{
 				CheckNumAvailablePlayers ();
 		}
-		
 		
 		void SetUpSplitControllerButtons ()
 		{
@@ -77,7 +89,6 @@ public class OuyaSceneMain : MonoBehaviour
 				
 						if (GUI.Button (new Rect (Screen.width / 2.0f - buttonWidth / 2.0f, startHeight + verticalSpace, buttonWidth, buttonHeight), buttonName, myButtonStyle)) {		
 								splitControllers = 1 - i;
-								maxNumPlayers *= (splitControllers + 1);
 						}
 						startHeight += (verticalSpace + buttonHeight);
 				}
@@ -88,7 +99,7 @@ public class OuyaSceneMain : MonoBehaviour
 		{
 				CheckNumAvailablePlayers ();
 		
-				float numPlayerButtons = maxNumPlayers - 1.0f;
+				float numPlayerButtons = maxNumPlayers;
 				GUIStyle myButtonStyle = new GUIStyle (GUI.skin.button);
 				myButtonStyle.fontSize = 50;
 		
@@ -103,7 +114,7 @@ public class OuyaSceneMain : MonoBehaviour
 				float startHeight = 0.0f;
 				for (int i = 0; i < numPlayerButtons; ++i) {
 						
-						if (availablePlayers >= (i + 2)) {
+						if (availablePlayers >= (i + 1)) {
 								myButtonStyle.normal.textColor = Color.white;
 								myButtonStyle.hover.textColor = Color.white;
 						} else {
@@ -111,10 +122,35 @@ public class OuyaSceneMain : MonoBehaviour
 								myButtonStyle.hover.textColor = Color.red;
 						}
 			
-						if (GUI.Button (new Rect (Screen.width / 2.0f - buttonWidth / 2.0f, startHeight + verticalSpace, buttonWidth, buttonHeight), (i + 2) + " Player", myButtonStyle)) {
-								if (availablePlayers >= (i + 2))
-										selectedNumPlayers = i + 2;
+						if (GUI.Button (new Rect (Screen.width / 2.0f - buttonWidth / 2.0f, startHeight + verticalSpace, buttonWidth, buttonHeight), (i + 1) + " Player", myButtonStyle)) {
+								if (availablePlayers >= (i + 1))
+										selectedNumPlayers = i + 1;
 						}
+						startHeight += (verticalSpace + buttonHeight);
+				}
+		}
+		
+		void SetUpSplitScreenButtons ()
+		{
+				float numButtons = 2.0f;
+				GUIStyle myButtonStyle = new GUIStyle (GUI.skin.button);
+				myButtonStyle.fontSize = 50;
+		
+				// Load and set Font
+				//	Font myFont = (Font)Resources.Load("Fonts/comic", typeof(Font));
+				//	myButtonStyle.font = myFont;
+		
+				float buttonWidth = Screen.width / 2.0f;
+				float buttonHeight = Screen.height / 4.0f;
+				float verticalSpace = (Screen.height - buttonHeight * numButtons) / (numButtons + 1.0f);
+		
+				float startHeight = 0.0f;
+				string[] coopVersus = { "Co-operative", "Versus" };
+				for (int i = 0; i < numButtons; ++i) {
+						string buttonName = coopVersus [i];
+			
+						if (GUI.Button (new Rect (Screen.width / 2.0f - buttonWidth / 2.0f, startHeight + verticalSpace, buttonWidth, buttonHeight), buttonName, myButtonStyle))
+								splitScreen = i;
 						startHeight += (verticalSpace + buttonHeight);
 				}
 		}
@@ -188,13 +224,13 @@ public class OuyaSceneMain : MonoBehaviour
 		
 				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player1) != null)
 						availablePlayers = 1;
-				else if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player2) != null)
+				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player2) != null)
 						availablePlayers = 2;
-				else if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player3) != null)
+				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player3) != null)
 						availablePlayers = 3;
-				else if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player4) != null)
+				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player4) != null)
 						availablePlayers = 4;
-				else if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player5) != null)
+				if (OuyaSDK.GetSupportedController (OuyaSDK.OuyaPlayer.player5) != null)
 						availablePlayers = 5;
 						
 				availablePlayers *= (splitControllers + 1);
