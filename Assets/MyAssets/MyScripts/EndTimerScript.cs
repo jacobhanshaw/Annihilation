@@ -52,7 +52,7 @@ public class EndTimerScript : MonoBehaviour
 				++currentItemsCount;
 				if (currentItemsCount == minItemsInTrigger) {
 						gameOver = true;
-						goodEnding = Time.time - startTime < goodEndingTime;
+						goodEnding = GameLogic.Instance.splitScreen ? GameLogic.Instance.firstToFinish () : Time.time - startTime < goodEndingTime;
 						if (!goodEnding) {
 								foreach (GameObject eye in bummerEyes)
 										eye.SetActive (true);

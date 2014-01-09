@@ -122,20 +122,23 @@ OuyaSDK.IMenuAppearingListener
 						spawnLocation.transform.parent = gameObject.transform;
 				} else
 						Debug.Log ("Player Index: " + playerIndex + " has instance id: " + gameObject.GetInstanceID ());
+						
+				int localPlayerIndex = playerIndex;
+				if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen && playerIndex == 2)
+						++localPlayerIndex;
 				
 				int other;
-				if (playerIndex % 2 == 0) {
-						other = (playerIndex - 1);
-						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + playerIndex.ToString ());
+				if (localPlayerIndex % 2 == 0) {
+						other = (localPlayerIndex - 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + localPlayerIndex.ToString ());
 				} else {
-						other = (playerIndex + 1);
-						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString () + other.ToString ());
+						other = (localPlayerIndex + 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + localPlayerIndex.ToString () + other.ToString ());
 				}
 
 				layerMask |= 1 << LayerMask.NameToLayer ("Player" + other.ToString ());
-				layerMask |= 1 << LayerMask.NameToLayer ("Player" + playerIndex.ToString ());
-				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString ());
-				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Player" + localPlayerIndex.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + localPlayerIndex.ToString ());
 				groundMask |= 1 << LayerMask.NameToLayer ("Default");
 				groundMask |= layerMask;
 		}
@@ -154,16 +157,15 @@ OuyaSDK.IMenuAppearingListener
 				UpdateGrounded ();
 				pickedUp &= (joint != null && joint.distance < pickUpDistance) || (connectedPlayerController != null && connectedPlayerController.joint.distance < pickUpDistance);
 				bool connected = Connected ();
-				bool grabPressed = true;
+				bool grabPressed = grabHeld;
 				
-				if (!isNPC) {
+				if (!isNPC && !GameLogic.Instance.paused) {
 						if (!jointLengthChangeDisabled)
 								AdjustJointLength ();
 						CheckForKeyboardPause ();
 				
 						bool jumpPressed = JumpPressed () && !jumpDisabled;
 						jumpNotReleased &= jumpPressed;
-						//		jumpPressed &= !jumpNotReleased;
 		
 						if (jumpPressed && grounded && !pickedUp && !jumpNotReleased) {
 								jump = true;
@@ -171,7 +173,7 @@ OuyaSDK.IMenuAppearingListener
 								possibleGroundedByPlayer = groundedByPlayer;
 						}
 		
-						grabPressed = GrabPressed () || grabHeld;
+						grabPressed |= GrabPressed ();
 
 						if (!connected && (grabPressed || jumpPressed)) {
 								Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance, layerMask);
@@ -180,7 +182,7 @@ OuyaSDK.IMenuAppearingListener
 												PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
 					
 												if (playerController && playerController.AcceptConnectionOrSlingshot ()) {
-														if (jumpPressed && lastSlingshotId != collider.gameObject.GetInstanceID () && !jumpNotReleased && !slingShotDisabled) {
+														if (jumpPressed && lastSlingshotId != collider.gameObject.GetInstanceID () && !jumpNotReleased && !slingShotDisabled && !playerController.slingShotDisabled) {
 																lastSlingshotId = collider.gameObject.GetInstanceID ();
 						
 																jump = true;
@@ -480,7 +482,7 @@ OuyaSDK.IMenuAppearingListener
 		
 		bool AcceptConnectionOrSlingshot ()
 		{
-				return (!Connected () && (GrabPressed () || isNPC));
+				return (!Connected () && (GrabPressed () || grabHeld));
 		}
 	
 		public bool Connected ()
@@ -614,7 +616,7 @@ OuyaSDK.IMenuAppearingListener
 				//	}
 				
 				//	prevGrabPressed = pressed;
-				return pressed;
+				return pressed && !isNPC;
 		}
 		
 		float GetHorizontalMovement ()

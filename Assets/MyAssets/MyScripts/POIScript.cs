@@ -11,6 +11,8 @@ public class POIScript : MonoBehaviour
 		[HideInInspector]
 		public bool
 				activeScript;
+				
+		public int   priorityIndex;
 	
 		public bool  forcePan;
 		public bool  panOnEnter;

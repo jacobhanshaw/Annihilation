@@ -4,10 +4,10 @@ using System.Collections;
 public class GameLogic : Singleton<GameLogic>
 {
 		//Players and controls
-		public int  numPlayers = 4;  //debug number
+		public int  numPlayers = 2;  //debug number
 		private bool first = true;
 		public bool splitScreen = true;
-		public bool splitControllers;
+		public bool splitControllers = true;
 		
 		public Color[] colors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
@@ -36,7 +36,7 @@ public class GameLogic : Singleton<GameLogic>
 		public int    currentLevelNumber;
 		
 		//Pause Logic
-		private bool paused = false;
+		public bool paused = false;
 		private int  pausingPlayer = -1;
 		
 		protected GameLogic ()

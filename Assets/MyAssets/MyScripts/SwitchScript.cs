@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class SwitchScript : MonoBehaviour
 {
-		public bool skipScale;
 		public bool skipRender;
 		public int minItemsInTrigger;
 		public bool oneTimeUse;
@@ -18,7 +17,10 @@ public class SwitchScript : MonoBehaviour
 
 		void Start ()
 		{
-				if (!skipScale && !skipRender) {
+				int playersPerScreen = GameLogic.Instance.numPlayers / (1 + (GameLogic.Instance.splitScreen ? 1 : 0));
+				minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersPerScreen);
+		
+				if (!skipRender) {
 						int yItems = (minItemsInTrigger / 4) + 1;
 						int xItems = minItemsInTrigger % 4;
 						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);

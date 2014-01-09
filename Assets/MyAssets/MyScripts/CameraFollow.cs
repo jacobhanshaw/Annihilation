@@ -146,6 +146,14 @@ public class CameraFollow : MonoBehaviour
 				transform.position = new Vector3 (Mathf.Lerp (transform.position.x, centroid.x, Time.deltaTime * xSmooth), 
 										  Mathf.Lerp (transform.position.y, centroid.y, Time.deltaTime * ySmooth), 
 										  transform.position.z);
+										  
+				if (panToPois.Count > 0)
+						panToPois.Sort (ByPriorityIndex);
+		}
+		
+		int ByPriorityIndex (POIScript leftPOI, POIScript rightPOI)
+		{
+				return leftPOI.priorityIndex - rightPOI.priorityIndex;
 		}
 		
 		Vector3 CentroidFromList (List<GameObject> trackedItems)

@@ -42,22 +42,11 @@ public class OuyaSceneMain : MonoBehaviour
 				else if (levelNumber == -1)
 						SetUpSceneSelectButtons ();
 				else {
-				
-						Debug.Log ("Original: " + GameLogic.Instance.splitScreen.ToString ());
 						GameLogic.Instance.splitScreen = splitScreen != 0 || selectedNumPlayers > 2;
-						Debug.Log ("After: " + GameLogic.Instance.splitScreen.ToString ());
-						Debug.Log ("Original: " + GameLogic.Instance.numPlayers.ToString ());
 						GameLogic.Instance.numPlayers = selectedNumPlayers;
-						Debug.Log ("After: " + GameLogic.Instance.numPlayers.ToString ());
-						Debug.Log ("Original: " + GameLogic.Instance.splitControllers.ToString ());
 						GameLogic.Instance.splitControllers = splitControllers != 0;
-						Debug.Log ("After: " + GameLogic.Instance.splitControllers.ToString ());	
-						//	Debug.Log ("Original: " + GameLogic.Instance.currentLevelType.ToString ());	
 						GameLogic.Instance.currentLevelType = storyMiniMode;
-						Debug.Log ("After: " + GameLogic.Instance.currentLevelType.ToString ());
-						Debug.Log ("Original: " + GameLogic.Instance.currentLevelNumber.ToString ());
 						GameLogic.Instance.currentLevelNumber = levelNumber;
-						Debug.Log ("After: " + GameLogic.Instance.currentLevelNumber.ToString ());
 						
 						Application.LoadLevel (storyMiniMode + levelNumber.ToString ());
 				}
