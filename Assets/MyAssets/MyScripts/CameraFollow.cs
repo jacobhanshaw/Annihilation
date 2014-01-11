@@ -20,7 +20,6 @@ public class CameraFollow : MonoBehaviour
 		private float lastPanTime;
 		private float panSpeed = 15.0f;
 		private float panZoomLevel = 15.0f;
-		private bool  paused;
 		
 		private bool zoomOutNecessary = false;
 		private bool zoomInNecessary = true;
@@ -72,10 +71,8 @@ public class CameraFollow : MonoBehaviour
 		void Update ()
 		{
 				if (panToPois.Count > 0) {
-						if (!paused) {
-								paused = true;
+						if (!GameLogic.Instance.paused)
 								GameLogic.Instance.PausePressed (0);
-						}
 						
 						float deltaTime = Time.realtimeSinceStartup - lastPanTime;
 				
@@ -94,10 +91,9 @@ public class CameraFollow : MonoBehaviour
 						newPosition.z = gameObject.transform.position.z;
 						gameObject.transform.position = newPosition;
 				} else {
-						if (paused) {
-								paused = false;
+						if (GameLogic.Instance.paused)
 								GameLogic.Instance.PausePressed (0);
-						}
+						
 						TrackPlayers ();
 				}
 				

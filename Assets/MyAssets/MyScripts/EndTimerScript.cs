@@ -24,6 +24,9 @@ public class EndTimerScript : MonoBehaviour
 				timeText = gameObject.GetComponent<TextMesh> ();
 				foreach (GameObject eye in bummerEyes)
 						eye.SetActive (false);
+						
+				int playersPerScreen = GameLogic.Instance.numPlayers / (1 + (GameLogic.Instance.splitScreen ? 1 : 0));
+				minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersPerScreen);
 		}
 	
 		// Update is called once per frame

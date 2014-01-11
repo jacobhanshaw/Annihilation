@@ -25,7 +25,6 @@ public class LevelLogic : MonoBehaviour
 		
 		void Start ()
 		{
-				Debug.Log ("LEvel STart: " + Time.time);
 				GameLogic.Instance.resetFirstToFinish ();
 		
 				playerControllers = new List<PlayerController> ();
@@ -55,6 +54,8 @@ public class LevelLogic : MonoBehaviour
 				}
 				
 				if (GameLogic.Instance.splitScreen) {
+						GameObject.Find ("Versus").SetActive (true);
+				
 						GameObject[] allObjectsArray = (GameObject[])FindObjectsOfType (typeof(GameObject));
 						List<GameObject> allObjects = new List<GameObject> (allObjectsArray);
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Interact12"), LayerMask.NameToLayer ("Interact34"));
@@ -129,6 +130,6 @@ public class LevelLogic : MonoBehaviour
 		
 		void OnDestroy ()
 		{
-				Debug.Log ("End: " + Time.time);
+				//Potentially remove listeners here
 		}
 }

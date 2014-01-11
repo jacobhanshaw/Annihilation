@@ -12,11 +12,16 @@ OuyaSDK.IMenuAppearingListener
 		public delegate void AchievementReceived (Achievement achievement,int playerIndex,int newScore);
 		public static AchievementReceived AchievementReceivedListeners; //check if null
 		
+		public delegate void PlayerDied (int layer);
+		public static PlayerDied PlayerDiedListeners; //check if null
+		
 		//Type
 		public bool isNPC = false;
 		
 		//Control variables
 		public bool grabHeld;
+		public bool respawnWithPlayer;
+		public bool positionLocked;
 		public bool jumpDisabled;
 		public bool jointDisabled;
 		public bool pickUpDisabled;
@@ -122,25 +127,23 @@ OuyaSDK.IMenuAppearingListener
 						spawnLocation.transform.position = gameObject.transform.position;
 				} else
 						Debug.Log ("Player Index: " + playerIndex + " has instance id: " + gameObject.GetInstanceID ());
-						
-				int localPlayerIndex = playerIndex;
-				//	if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen && playerIndex == 2)
-				//			++localPlayerIndex;
 				
 				int other;
-				if (localPlayerIndex % 2 == 0) {
-						other = (localPlayerIndex - 1);
-						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + localPlayerIndex.ToString ());
+				if (playerIndex % 2 == 0) {
+						other = (playerIndex - 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + playerIndex.ToString ());
 				} else {
-						other = (localPlayerIndex + 1);
-						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + localPlayerIndex.ToString () + other.ToString ());
+						other = (playerIndex + 1);
+						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString () + other.ToString ());
 				}
 
 				layerMask |= 1 << LayerMask.NameToLayer ("Player" + other.ToString ());
-				layerMask |= 1 << LayerMask.NameToLayer ("Player" + localPlayerIndex.ToString ());
-				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + localPlayerIndex.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Player" + playerIndex.ToString ());
+				layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString ());
 				groundMask |= 1 << LayerMask.NameToLayer ("Default");
 				groundMask |= layerMask;
+				
+				PlayerDiedListeners += PlayerDiedEvent;
 		}
 	
 		void OnDestroy ()
@@ -150,6 +153,12 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.unregisterMenuAppearingListener (this);
 				OuyaSDK.unregisterPauseListener (this);
 				OuyaSDK.unregisterResumeListener (this);
+		}
+		
+		void PlayerDiedEvent (int layer)
+		{
+				if (respawnWithPlayer && (layer & gameObject.layer) != 0)
+						KillPlayer ();
 		}
 		
 		void Update ()
@@ -311,6 +320,7 @@ OuyaSDK.IMenuAppearingListener
 						DistanceJoint2D jointToUse;
 						Transform otherTransform;
 						bool otherPlayerIsNPC = false;
+						bool otherPlayerLocked = false;
 						if (joint != null) {
 								jointToUse = joint;
 								otherTransform = joint.connectedBody.gameObject.transform;
@@ -319,7 +329,10 @@ OuyaSDK.IMenuAppearingListener
 								otherTransform = connectedPlayerController.gameObject.transform;
 						}
 						
-						otherPlayerIsNPC = otherTransform.gameObject.GetComponent<PlayerController> ().isNPC;
+						PlayerController otherController = otherTransform.gameObject.GetComponent<PlayerController> ();
+						
+						otherPlayerIsNPC = otherController.isNPC;
+						otherPlayerLocked = otherController.positionLocked;
 						bool increase = IncreaseJointLength ();
 						bool decrease = DecreaseJointLength ();
 						
@@ -337,8 +350,8 @@ OuyaSDK.IMenuAppearingListener
 														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
 																gameObject.transform.position -= vectorToOtherPlayer;
 												}
-					
-												if (!otherPlayerIsNPC && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, vectorToOtherPlayer)) {
+																								
+												if (!(otherPlayerIsNPC && otherPlayerLocked) && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, vectorToOtherPlayer)) {
 														jointToUse.distance += halfJointDistance;
 														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
 																otherTransform.position += vectorToOtherPlayer;
@@ -357,7 +370,7 @@ OuyaSDK.IMenuAppearingListener
 																gameObject.transform.position += vectorToOtherPlayer;
 												}
 					
-												if (!otherPlayerIsNPC && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, -vectorToOtherPlayer)) {
+												if (!(otherPlayerIsNPC && otherPlayerLocked) && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, -vectorToOtherPlayer)) {
 														jointToUse.distance -= halfJointDistance;
 														if (Vector3.SqrMagnitude (originalVectorToOther) > jointToUse.distance * jointToUse.distance)
 																otherTransform.position -= vectorToOtherPlayer;
@@ -452,9 +465,8 @@ OuyaSDK.IMenuAppearingListener
 								newSpawnScript.addColor (spawnColor);
 						spawnLocation = other.gameObject;
 				} else if (other.gameObject.CompareTag ("Deadly")) {
-						DestroyConnection ();
-						StopMovement (gameObject);
-						StartCoroutine ("RespawnPlayer");
+						PlayerDiedListeners (gameObject.layer);
+						KillPlayer ();
 				} else if (other.gameObject.CompareTag ("Coin")) {
 						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();
 						achievements.Add (newAchievement);
@@ -463,6 +475,13 @@ OuyaSDK.IMenuAppearingListener
 								AchievementReceivedListeners (newAchievement, playerIndex, score);
 						Destroy (other.gameObject);
 				}
+		}
+		
+		void KillPlayer ()
+		{
+				DestroyConnection ();
+				StopMovement (gameObject);
+				StartCoroutine ("RespawnPlayer");
 		}
 
 		IEnumerator RespawnPlayer ()

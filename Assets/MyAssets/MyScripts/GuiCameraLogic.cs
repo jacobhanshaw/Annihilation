@@ -12,10 +12,8 @@ public class GuiCameraLogic : MonoBehaviour
 		void Start ()
 		{
 				string layer = LayerMask.LayerToName (gameObject.layer);
-				Debug.Log ("Layer: " + layer);
 				int initialPlayer = int.Parse (layer [layer.Length - 2].ToString ());
 				int otherPlayer = int.Parse (layer [layer.Length - 1].ToString ());	
-				Debug.Log ("Parsed: " + initialPlayer + " " + otherPlayer);
 				minPlayerNumber = initialPlayer;
 				maxPlayerNumber = otherPlayer;
 				
