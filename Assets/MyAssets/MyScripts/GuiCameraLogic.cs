@@ -52,8 +52,8 @@ public class GuiCameraLogic : MonoBehaviour
 		public void UpdateScore (Achievement achievement, int playerIndex, int newScore)
 		{
 				int localPlayerIndex = playerIndex;
-				if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen && playerIndex == 2)
-						++localPlayerIndex;
+				//		if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen && playerIndex == 2)
+				//				++localPlayerIndex;
 		
 				if (localPlayerIndex >= minPlayerNumber && localPlayerIndex <= maxPlayerNumber) {
 						//	if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen)

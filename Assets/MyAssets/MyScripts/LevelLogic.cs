@@ -36,7 +36,7 @@ public class LevelLogic : MonoBehaviour
 						PlayerController controller = playerObj.GetComponent<PlayerController> ();
 						playerControllers.Add (controller);
 						controller.spawnLocation = spawnLocations [(i - 1) % 2];
-						controller.playerIndex = i;
+						
 						controller.controllerIndex = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
 						controller.splitController = GameLogic.Instance.splitControllers;
 						controller.leftSplit = ((i % 2) != 0);
@@ -44,10 +44,12 @@ public class LevelLogic : MonoBehaviour
 						if (i == 2 && GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen) {
 								SetLayerRecursively (playerObj, LayerMask.NameToLayer ("Player3"));	
 								playerObj.renderer.material.color = GameLogic.Instance.colors [1];
+								controller.playerIndex = 3;
 								controller.spawnColor = GameLogic.Instance.spawnColors [1];
 						} else {						
 								SetLayerRecursively (playerObj, LayerMask.NameToLayer ("Player" + i.ToString ()));				
 								playerObj.renderer.material.color = GameLogic.Instance.colors [i - 1];
+								controller.playerIndex = i;
 								controller.spawnColor = GameLogic.Instance.spawnColors [i - 1];
 						}
 				}
