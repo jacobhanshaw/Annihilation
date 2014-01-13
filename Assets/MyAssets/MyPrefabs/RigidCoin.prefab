@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 61: {fileID: 6100000}
   - 50: {fileID: 5000000}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: RigidCoin
   m_TagString: Coin
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ GameObject:
   - 4: {fileID: 400002}
   - 23: {fileID: 2300002}
   - 102: {fileID: 10200000}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: TimeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}

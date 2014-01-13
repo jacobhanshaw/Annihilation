@@ -34,6 +34,7 @@ public class CameraFollow : MonoBehaviour
 				LayerMask initialInteractLayer = 0;
 				LayerMask otherInteractLayer = 0;
 				LayerMask combinedInteractLayer = 0;
+				LayerMask combinedVersusLayer = 0;
 				
 				int testNum;
 				string layer = LayerMask.LayerToName (gameObject.layer);
@@ -50,8 +51,10 @@ public class CameraFollow : MonoBehaviour
 						otherInteractLayer = LayerMask.NameToLayer ("Interact" + numTwo);
 				}
 				
-				if (validNumOne && validNumTwo)
+				if (validNumOne && validNumTwo) {
 						combinedInteractLayer = LayerMask.NameToLayer ("Interact" + numOne + numTwo);
+						combinedVersusLayer = LayerMask.NameToLayer ("Versus" + numOne + numTwo);
+				}
 					
 				for (int i = players.Count-1; i >= 0; --i) {
 						if (players [i].layer != initialPlayerLayer && players [i].layer != otherPlayerLayer)
@@ -63,7 +66,7 @@ public class CameraFollow : MonoBehaviour
 				
 				GameObject[] pois = GameObject.FindGameObjectsWithTag ("POI");
 				foreach (GameObject poi in pois) {
-						if (poi.layer == initialInteractLayer || poi.layer == otherInteractLayer || poi.layer == combinedInteractLayer)
+						if (poi.layer == initialInteractLayer || poi.layer == otherInteractLayer || poi.layer == combinedInteractLayer || poi.layer == combinedVersusLayer) 
 								poiScripts.Add (poi.GetComponent<POIScript> ());
 				}
 		}

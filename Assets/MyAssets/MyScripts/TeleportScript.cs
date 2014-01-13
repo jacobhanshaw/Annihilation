@@ -10,7 +10,7 @@ public class TeleportScript : MonoBehaviour
 
 		void Start ()
 		{
-				if (gameObject.layer == LayerMask.NameToLayer ("Interact12") || gameObject.layer == LayerMask.NameToLayer ("Interact1") || gameObject.layer == LayerMask.NameToLayer ("Interact2"))
+				if (gameObject.layer == LayerMask.NameToLayer ("Interact12") || gameObject.layer == LayerMask.NameToLayer ("Interact1") || gameObject.layer == LayerMask.NameToLayer ("Interact2") || gameObject.layer == LayerMask.NameToLayer ("Versus12"))
 						screen = 0;
 				else
 						screen = 1;

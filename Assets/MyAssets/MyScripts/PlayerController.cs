@@ -54,7 +54,6 @@ OuyaSDK.IMenuAppearingListener
 		public bool jump = false;				// Condition for whether the player should jump.
 	
 		//Movement variables
-		public float moveDrag = 0.1f;
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
 		public float backJumpForce = -100.0f;
 		private float slingshotForce = 130.0f; //130.0f
@@ -132,9 +131,11 @@ OuyaSDK.IMenuAppearingListener
 				if (playerIndex % 2 == 0) {
 						other = (playerIndex - 1);
 						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + other.ToString () + playerIndex.ToString ());
+						layerMask |= 1 << LayerMask.NameToLayer ("Versus" + other.ToString () + playerIndex.ToString ());
 				} else {
 						other = (playerIndex + 1);
 						layerMask |= 1 << LayerMask.NameToLayer ("Interact" + playerIndex.ToString () + other.ToString ());
+						layerMask |= 1 << LayerMask.NameToLayer ("Versus" + playerIndex.ToString () + other.ToString ());
 				}
 
 				layerMask |= 1 << LayerMask.NameToLayer ("Player" + other.ToString ());
@@ -155,9 +156,9 @@ OuyaSDK.IMenuAppearingListener
 				OuyaSDK.unregisterResumeListener (this);
 		}
 		
-		void PlayerDiedEvent (int layer)
+		void PlayerDiedEvent (int layerMask)
 		{
-				if (respawnWithPlayer && (layer & gameObject.layer) != 0)
+				if (respawnWithPlayer && (layerMask & 1 << gameObject.layer) != 0 && gameObject.activeInHierarchy)
 						KillPlayer ();
 		}
 		
@@ -228,15 +229,18 @@ OuyaSDK.IMenuAppearingListener
 		{
 				Vector2 velocity = rigidbody2D.velocity;
 				if (!isNPC) {
-						if (grounded || !Connected ()) {
-								float h = GetHorizontalMovement ();
-								if (grounded)
-										velocity.x = maxSpeed * h;
-								else if (Mathf.Abs (velocity.x) <= maxSpeed)
+						float h = GetHorizontalMovement ();
+						
+						if (grounded)
+								velocity.x = maxSpeed * h;
+						else if (!Connected ()) {
+								if (Mathf.Abs (velocity.x) <= maxSpeed)
 										velocity.x = maxSpeed * h;
 								else if (h * velocity.x < 0)
 										velocity.x = velocity.x + h * maxSpeed;
-						}
+						} else if (Mathf.Abs (velocity.x) <= maxSpeed || h * velocity.x < 0)
+								rigidbody2D.AddForce (new Vector2 (h * 1.0f, 0.0f));
+						
 		
 						if (jump) {
 								if (slingshottedByPlayer == null) {
@@ -300,7 +304,7 @@ OuyaSDK.IMenuAppearingListener
 			
 						endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
 			
-						Vector2 forceVector = new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
+						Vector2 forceVector = new Vector2 (0.0f, 1.0f);//new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
 						forceVector *= slingshotForce;
 						rigidbody2D.AddForce (forceVector);
 						slingshottedByPlayer.rigidbody2D.AddForce (-forceVector);
@@ -386,7 +390,7 @@ OuyaSDK.IMenuAppearingListener
 		void PickUpPlayer (DistanceJoint2D joint, Transform otherPlayer)
 		{
 				PlayerController otherPlayerController = otherPlayer.GetComponent<PlayerController> ();
-				if (joint.distance <= pickUpDistance && !pickUpDisabled && otherPlayerController.lastThrowId != gameObject.GetInstanceID () && !otherPlayerController.isNPC) {
+				if (joint.distance <= pickUpDistance && !pickUpDisabled && otherPlayerController.lastThrowId != gameObject.GetInstanceID () && !otherPlayerController.pickUpDisabled) {
 						otherPlayer.position = gameObject.transform.position + new Vector3 (0.0f, gameObject.transform.localScale.y, 0.0f);
 						joint.distance = gameObject.transform.localScale.y;
 						otherPlayerController.pickedUp = true;
@@ -465,7 +469,7 @@ OuyaSDK.IMenuAppearingListener
 								newSpawnScript.addColor (spawnColor);
 						spawnLocation = other.gameObject;
 				} else if (other.gameObject.CompareTag ("Deadly")) {
-						PlayerDiedListeners (gameObject.layer);
+						PlayerDiedListeners (layerMask);
 						KillPlayer ();
 				} else if (other.gameObject.CompareTag ("Coin")) {
 						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();

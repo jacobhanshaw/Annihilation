@@ -74,7 +74,7 @@ public class GameLogic : Singleton<GameLogic>
 		
 		public void resetFirstToFinish ()
 		{
-				first = false;
+				first = true;
 		}
 		
 }

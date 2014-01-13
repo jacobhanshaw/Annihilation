@@ -4,6 +4,7 @@ using System.Collections;
 public class MoveEvent : GameEvent
 {
 
+		public bool       inverted;
 		public bool       ignorePause;
 		public string      movedItemName;
 		private GameObject movedItem;
@@ -17,7 +18,7 @@ public class MoveEvent : GameEvent
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (movedItemName);
-				if (gameObject.layer == potentialItem.layer)
+				if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
 						movedItem = potentialItem;
 				else
 						movedItem = GameObject.Find (movedItemName + "(Clone)");

@@ -14,19 +14,43 @@ public class EndTimerScript : MonoBehaviour
 		
 		TextMesh timeText;
 		
-		public GameObject[] bummerEyes;
-		public GameObject rigidCoin;
+		public GameObject     regularCoin;
+		public Vector3[]      bummerEyesLocations;
+		private GameObject[]   bummerEyes;
+		public GameObject     rigidCoin;
 
 		// Use this for initialization
 		void Start ()
 		{
 				startTime = Time.time;
 				timeText = gameObject.GetComponent<TextMesh> ();
-				foreach (GameObject eye in bummerEyes)
-						eye.SetActive (false);
+				bummerEyes = new GameObject[bummerEyesLocations.Length];
+				for (int i = 0; i < bummerEyesLocations.Length; ++i) {
+						GameObject coin = (GameObject)Instantiate (regularCoin, bummerEyesLocations [i], Quaternion.identity);
+						coin.layer = gameObject.layer;
+						coin.SetActive (false);
+						bummerEyes [i] = coin;
+				}
 						
-				int playersPerScreen = GameLogic.Instance.numPlayers / (1 + (GameLogic.Instance.splitScreen ? 1 : 0));
-				minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersPerScreen);
+				if (GameLogic.Instance.splitScreen) {
+						bool topScreen = false;
+			
+						string layer = LayerMask.LayerToName (gameObject.layer);
+						string numOne = layer [layer.Length - 2].ToString ();
+						if (numOne.Equals ("1"))
+								topScreen = true;
+						string numTwo = layer [layer.Length - 1].ToString ();
+						if (numTwo.Equals ("1") || numTwo.Equals ("2"))
+								topScreen = true;
+			
+						int playersInScreen = int.MaxValue;
+						if (!topScreen && GameLogic.Instance.numPlayers <= 3)
+								playersInScreen = 1;
+						else if (topScreen && GameLogic.Instance.numPlayers <= 2)
+								playersInScreen = 1;
+			
+						minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersInScreen);
+				}
 		}
 	
 		// Update is called once per frame
@@ -44,6 +68,7 @@ public class EndTimerScript : MonoBehaviour
 								if (Time.time - startTime > timeBetweenCoins) {
 										Vector3 location = new Vector3 (73.0f + Random.Range (-5.0f, 5.0f), -19.5f - Random.Range (0.0f, 1.5f), 0.0f);
 										GameObject coin = (GameObject)Instantiate (rigidCoin, location, Quaternion.identity);
+										coin.layer = gameObject.layer;
 										Destroy (coin, coinLifetime);
 								}
 						}
@@ -53,7 +78,7 @@ public class EndTimerScript : MonoBehaviour
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				++currentItemsCount;
-				if (currentItemsCount == minItemsInTrigger) {
+				if (currentItemsCount == minItemsInTrigger && !gameOver) {
 						gameOver = true;
 						goodEnding = GameLogic.Instance.splitScreen ? GameLogic.Instance.firstToFinish () : Time.time - startTime < goodEndingTime;
 						if (!goodEnding) {

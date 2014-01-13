@@ -23,6 +23,13 @@ public class LevelLogic : MonoBehaviour
 		
 		bool shown;
 		
+		private GameObject versus;
+		
+		void Awake ()
+		{
+				versus = GameObject.Find ("Versus");
+		}
+		
 		void Start ()
 		{
 				GameLogic.Instance.resetFirstToFinish ();
@@ -53,15 +60,17 @@ public class LevelLogic : MonoBehaviour
 						}
 				}
 				
-				if (GameLogic.Instance.splitScreen) {
-						GameObject.Find ("Versus").SetActive (true);
+				versus.SetActive (GameLogic.Instance.splitScreen && GameLogic.Instance.numPlayers % 2 == 1);
 				
+				if (GameLogic.Instance.splitScreen) {
 						GameObject[] allObjectsArray = (GameObject[])FindObjectsOfType (typeof(GameObject));
 						List<GameObject> allObjects = new List<GameObject> (allObjectsArray);
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Interact12"), LayerMask.NameToLayer ("Interact34"));
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("GUI12"), LayerMask.NameToLayer ("GUI34"));
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Interact1"), LayerMask.NameToLayer ("Interact3"));
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Interact2"), LayerMask.NameToLayer ("Interact4"));
+						if (GameLogic.Instance.numPlayers == 2)
+								DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Versus34"), LayerMask.NameToLayer ("Versus12"));
 				} 	
 		}
 		
@@ -104,11 +113,13 @@ public class LevelLogic : MonoBehaviour
 						mask &= ~(1 << LayerMask.NameToLayer ("Interact1"));
 						mask &= ~(1 << LayerMask.NameToLayer ("Interact2"));
 						mask &= ~(1 << LayerMask.NameToLayer ("Interact12"));
+						mask &= ~(1 << LayerMask.NameToLayer ("Versus12"));
 						mask |= 1 << LayerMask.NameToLayer ("Player3");
 						mask |= 1 << LayerMask.NameToLayer ("Player4");
 						mask |= 1 << LayerMask.NameToLayer ("Interact3");
 						mask |= 1 << LayerMask.NameToLayer ("Interact4");
 						mask |= 1 << LayerMask.NameToLayer ("Interact34");
+						mask |= 1 << LayerMask.NameToLayer ("Versus34");
 						cameraComponent.cullingMask = mask;
 				}
 		}

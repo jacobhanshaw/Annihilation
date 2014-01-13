@@ -3,6 +3,7 @@ using System.Collections;
 
 public class StartTimerEvent : GameEvent
 {
+		public bool   inverted;
 		public string timedObjectName;
 		private GameObject timedObject;
 	
@@ -11,7 +12,7 @@ public class StartTimerEvent : GameEvent
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (timedObjectName);
-				if (gameObject.layer == potentialItem.layer)
+				if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
 						timedObject = potentialItem;
 				else
 						timedObject = GameObject.Find (timedObjectName + "(Clone)");

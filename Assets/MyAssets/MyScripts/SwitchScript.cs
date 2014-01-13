@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SwitchScript : MonoBehaviour
 {
-		public bool skipRender;
+		public bool invisible;
 		public int minItemsInTrigger;
 		public bool oneTimeUse;
 		
@@ -17,10 +17,28 @@ public class SwitchScript : MonoBehaviour
 
 		void Start ()
 		{
-				int playersPerScreen = GameLogic.Instance.numPlayers / (1 + (GameLogic.Instance.splitScreen ? 1 : 0));
-				minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersPerScreen);
 		
-				if (!skipRender) {
+				if (GameLogic.Instance.splitScreen) {
+						bool topScreen = false;
+				
+						string layer = LayerMask.LayerToName (gameObject.layer);
+						string numOne = layer [layer.Length - 2].ToString ();
+						if (numOne.Equals ("1"))
+								topScreen = true;
+						string numTwo = layer [layer.Length - 1].ToString ();
+						if (numTwo.Equals ("1") || numTwo.Equals ("2"))
+								topScreen = true;
+						
+						int playersInScreen = int.MaxValue;
+						if (!topScreen && GameLogic.Instance.numPlayers <= 3)
+								playersInScreen = 1;
+						else if (topScreen && GameLogic.Instance.numPlayers <= 2)
+								playersInScreen = 1;
+		
+						minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersInScreen);
+				}
+		
+				if (!invisible) {
 						int yItems = (minItemsInTrigger / 4) + 1;
 						int xItems = minItemsInTrigger % 4;
 						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);
@@ -40,7 +58,7 @@ public class SwitchScript : MonoBehaviour
 						wasTriggered = true;
 						foreach (GameEvent gameEvent in gameEvents)
 								gameEvent.Trigger (wasTriggered);
-						if (!skipRender)
+						if (!invisible)
 								gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
 				}
 		}
@@ -53,7 +71,7 @@ public class SwitchScript : MonoBehaviour
 								wasTriggered = false;
 								foreach (GameEvent gameEvent in gameEvents)
 										gameEvent.Trigger (wasTriggered);
-								if (!skipRender)
+								if (!invisible)
 										gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 						}
 				}

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PanEvent : GameEvent
 {
+		public bool       inverted;
 		public string     poiScriptObjectName;
 		public float      overridePanSpeed = -1.0f;
 		public float      overridePanZoomLevel = -1.0f;
@@ -12,7 +13,7 @@ public class PanEvent : GameEvent
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (poiScriptObjectName);
-				if (gameObject.layer == potentialItem.layer)
+				if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
 						poiScript = potentialItem.GetComponent<POIScript> ();
 				else
 						poiScript = GameObject.Find (poiScriptObjectName + "(Clone)").GetComponent<POIScript> ();
