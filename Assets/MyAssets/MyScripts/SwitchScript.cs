@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class SwitchScript : MonoBehaviour
 {
 		public bool invisible;
+		public bool ignoreAutoColor;
 		public int minItemsInTrigger;
 		public bool oneTimeUse;
 		
@@ -58,7 +59,7 @@ public class SwitchScript : MonoBehaviour
 						wasTriggered = true;
 						foreach (GameEvent gameEvent in gameEvents)
 								gameEvent.Trigger (wasTriggered);
-						if (!invisible)
+						if (!invisible && !ignoreAutoColor)
 								gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
 				}
 		}
@@ -71,9 +72,17 @@ public class SwitchScript : MonoBehaviour
 								wasTriggered = false;
 								foreach (GameEvent gameEvent in gameEvents)
 										gameEvent.Trigger (wasTriggered);
-								if (!invisible)
+								if (!invisible && !ignoreAutoColor)
 										gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 						}
 				}
+		}
+		
+		public void ShowButtonAsActivated (bool activated)
+		{
+				if (activated)
+						gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
+				else
+						gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 		}
 }

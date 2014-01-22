@@ -22,9 +22,6 @@ public class MoveEvent : GameEvent
 						movedItem = potentialItem;
 				else
 						movedItem = GameObject.Find (movedItemName + "(Clone)");
-				
-				if (!movedItem)
-						Debug.Log ("Name: " + movedItemName);
 						
 				startPosition = movedItem.transform.position;
 		}

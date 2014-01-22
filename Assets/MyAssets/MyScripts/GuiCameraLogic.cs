@@ -45,19 +45,11 @@ public class GuiCameraLogic : MonoBehaviour
 
 		}
 	
-		//void Update () { }
-		
 		public void UpdateScore (Achievement achievement, int playerIndex, int newScore)
 		{
 				int localPlayerIndex = playerIndex;
-				//		if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen && playerIndex == 2)
-				//				++localPlayerIndex;
 		
-				if (localPlayerIndex >= minPlayerNumber && localPlayerIndex <= maxPlayerNumber) {
-						//	if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen)
-						//			playerScores [0].text = newScore.ToString ();
-						//	else 
+				if (localPlayerIndex >= minPlayerNumber && localPlayerIndex <= maxPlayerNumber)
 						playerScores [(localPlayerIndex - 1) % 2].text = newScore.ToString ();
-				}
 		}
 }

@@ -355,7 +355,7 @@ OuyaSDK.IMenuAppearingListener
 																gameObject.transform.position -= vectorToOtherPlayer;
 												}
 																								
-												if (!(otherPlayerIsNPC && otherPlayerLocked) && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, vectorToOtherPlayer)) {
+												if (!otherPlayerLocked && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, vectorToOtherPlayer)) {
 														jointToUse.distance += halfJointDistance;
 														if (Vector3.SqrMagnitude (originalVectorToOther) < jointToUse.distance * jointToUse.distance)
 																otherTransform.position += vectorToOtherPlayer;
@@ -374,7 +374,7 @@ OuyaSDK.IMenuAppearingListener
 																gameObject.transform.position += vectorToOtherPlayer;
 												}
 					
-												if (!(otherPlayerIsNPC && otherPlayerLocked) && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, -vectorToOtherPlayer)) {
+												if (!otherPlayerLocked && !CollisionIfGameObjectMovedAlongVector (otherTransform.gameObject, -vectorToOtherPlayer)) {
 														jointToUse.distance -= halfJointDistance;
 														if (Vector3.SqrMagnitude (originalVectorToOther) > jointToUse.distance * jointToUse.distance)
 																otherTransform.position -= vectorToOtherPlayer;
@@ -415,7 +415,7 @@ OuyaSDK.IMenuAppearingListener
 				}
 		
 				if (throwPlayer) {
-						float fractionX = Mathf.Abs (gameObject.rigidbody2D.velocity.x / maxSpeed);//maxSpeed;
+						float fractionX = Mathf.Abs (gameObject.rigidbody2D.velocity.x / maxSpeed);
 						float direction = gameObject.rigidbody2D.velocity.x < 0 ? -1 : 1;
 						if (fractionX == 0)
 								direction = 0;
@@ -563,17 +563,14 @@ OuyaSDK.IMenuAppearingListener
 						if (!splitController) {
 								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
 										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex) ||
-										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex); // ||
-								//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex) > debounceY);
+										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);
 						} else {
 								if (leftSplit) {
 										return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, controllerIndex) ||
-												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);// || 
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex) > debounceY);
+												GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);
 								} else {
 										return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
-												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex);// ||
-										//	(-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex) > debounceY);
+												GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex);
 								}
 						}
 				} else if (controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3)   
@@ -639,7 +636,7 @@ OuyaSDK.IMenuAppearingListener
 				//	}
 				
 				//	prevGrabPressed = pressed;
-				return pressed && !isNPC;
+				return pressed;
 		}
 		
 		float GetHorizontalMovement ()
@@ -733,7 +730,6 @@ OuyaSDK.IMenuAppearingListener
 				}
 				// moving the common code into the sdk via above
 				return OuyaExampleCommon.GetAxis (keyCode, player);
-
 		}
 	
 		private bool GetButton (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
@@ -751,8 +747,7 @@ OuyaSDK.IMenuAppearingListener
 						}
 				}
 				// moving the common code into the sdk via aboveUs
-				return OuyaExampleCommon.GetButton (keyCode, player);
-				
+				return OuyaExampleCommon.GetButton (keyCode, player);	
 		}
 	
 }

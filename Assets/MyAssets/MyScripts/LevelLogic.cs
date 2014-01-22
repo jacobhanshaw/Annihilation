@@ -13,6 +13,14 @@ public class LevelLogic : MonoBehaviour
 	
 		//Player variables
 		public GameObject playerPrefab;
+		public bool[]       playersGrabHeld;
+		public bool[]       playersPositionLocked;
+		public bool[]       playersJumpDisabled;
+		public bool[]       playersJointDisabled;
+		public bool[]       playersPickUpDisabled;
+		public bool[]       playersSlingShotDisabled;
+		public bool[]       playersJointLengthChangeDisabled;
+		
 		private List<PlayerController> playerControllers;
 		
 		//Spawn variables
@@ -47,16 +55,34 @@ public class LevelLogic : MonoBehaviour
 						controller.splitController = GameLogic.Instance.splitControllers;
 						controller.leftSplit = ((i % 2) != 0);
 						
-						if (i == 2 && GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen) {
-								SetLayerRecursively (playerObj, LayerMask.NameToLayer ("Player3"));	
-								playerObj.renderer.material.color = GameLogic.Instance.colors [1];
-								controller.playerIndex = 3;
-								controller.spawnColor = GameLogic.Instance.spawnColors [1];
+						if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen) {
+								controller.grabHeld = playersGrabHeld [0] && playersGrabHeld [1];
+								controller.positionLocked = playersPositionLocked [0] && playersPositionLocked [1];
+								controller.jumpDisabled = playersJumpDisabled [0] && playersJumpDisabled [1];
+								controller.jointDisabled = playersJointDisabled [0] && playersJointDisabled [1];
+								controller.pickUpDisabled = playersPickUpDisabled [0] && playersPickUpDisabled [1];
+								controller.slingShotDisabled = playersPickUpDisabled [0] && playersPickUpDisabled [1];
+								controller.jointLengthChangeDisabled = playersJointLengthChangeDisabled [0] && playersJointLengthChangeDisabled [0];
+						
+								if (i == 2) {
+										SetLayerRecursively (playerObj, LayerMask.NameToLayer ("Player3"));	
+										playerObj.renderer.material.color = GameLogic.Instance.colors [1];
+										controller.playerIndex = 3;
+										controller.spawnColor = GameLogic.Instance.spawnColors [1];
+								}
 						} else {						
 								SetLayerRecursively (playerObj, LayerMask.NameToLayer ("Player" + i.ToString ()));				
 								playerObj.renderer.material.color = GameLogic.Instance.colors [i - 1];
 								controller.playerIndex = i;
 								controller.spawnColor = GameLogic.Instance.spawnColors [i - 1];
+								
+								controller.grabHeld = playersGrabHeld [(i - 1) % 2];
+								controller.positionLocked = playersPositionLocked [(i - 1) % 2];
+								controller.jumpDisabled = playersJumpDisabled [(i - 1) % 2];
+								controller.jointDisabled = playersJointDisabled [(i - 1) % 2];
+								controller.pickUpDisabled = playersPickUpDisabled [(i - 1) % 2];
+								controller.slingShotDisabled = playersSlingShotDisabled [(i - 1) % 2];
+								controller.jointLengthChangeDisabled = playersJointLengthChangeDisabled [(i - 1) % 2];
 						}
 				}
 				
@@ -71,7 +97,9 @@ public class LevelLogic : MonoBehaviour
 						DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Interact2"), LayerMask.NameToLayer ("Interact4"));
 						if (GameLogic.Instance.numPlayers == 2)
 								DuplicateGameObjectsInLayerToLayer (allObjects, LayerMask.NameToLayer ("Versus34"), LayerMask.NameToLayer ("Versus12"));
-				} 	
+				} else
+						PlayerController.AchievementReceivedListeners += GameObject.Find ("GuiCamera").GetComponent<GuiCameraLogic> ().UpdateScore;
+	
 		}
 		
 		void DuplicateGameObjectsInLayerToLayer (List<GameObject> gameObjects, int fromLayer, int toLayer)

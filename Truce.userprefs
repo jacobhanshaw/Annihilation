@@ -1,11 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/PlayerController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/ShowButtonActive.cs">
     <Files>
-      <File FileName="Assets/MyAssets/MyScripts/PlayerController.cs" Line="57" Column="24" />
-      <File FileName="Assets/MyAssets/MyScripts/GameLogic.cs" Line="1" Column="1" />
+      <File FileName="Assets/MyAssets/MyScripts/CameraFollow.cs" Line="1" Column="1" />
       <File FileName="Assets/MyAssets/MyScripts/LevelLogic.cs" Line="1" Column="1" />
-      <File FileName="Assets/MyAssets/MyScripts/PlayerController.cs" Line="1" Column="1" />
+      <File FileName="Assets/MyAssets/MyScripts/SwitchScript.cs" Line="86" Column="73" />
+      <File FileName="Assets/MyAssets/MyScripts/MultipartSwitch.cs" Line="18" Column="4" />
+      <File FileName="Assets/MyAssets/MyScripts/MoveEvent.cs" Line="24" Column="63" />
+      <File FileName="Assets/MyAssets/MyScripts/ShowButtonActive.cs" Line="22" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

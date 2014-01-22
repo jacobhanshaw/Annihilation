@@ -27,6 +27,8 @@ public class CameraFollow : MonoBehaviour
 		void Start ()
 		{
 				GameObject[] playersArray = GameObject.FindGameObjectsWithTag ("Player");
+				
+				Debug.Log ("Players: " + playersArray.Length.ToString ());
 				players = new List<GameObject> (playersArray);
 				
 				LayerMask initialPlayerLayer = 0; 
@@ -135,7 +137,7 @@ public class CameraFollow : MonoBehaviour
 						centroid = playerCentroid;
 				
 				if (zoomOutNecessary)
-						gameObject.camera.orthographicSize += standardZoomAmount;
+						gameObject.camera.orthographicSize += standardZoomAmount * 2.0f;
 				else if (zoomInNecessary) {
 						gameObject.camera.orthographicSize -= standardZoomAmount;
 						if (gameObject.camera.orthographicSize < minCameraSize)
