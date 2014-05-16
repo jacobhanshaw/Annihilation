@@ -31,7 +31,7 @@ OuyaSDK.IMenuAppearingListener
 		//Debounce variables
 		// public int jumpDebounce;
 		private float debounceY = 0.85f;
-		private bool jumpNotReleased;
+		private bool jumpReleased;
 		private bool prevGrabPressed;
 	
 		//Grab indicators
@@ -51,13 +51,14 @@ OuyaSDK.IMenuAppearingListener
 		private bool m_useSDKForInput = false;
 
 		//Jump status variables
-		public bool jump = false;				// Condition for whether the player should jump.
-	
+		//public bool jump = false;				// Condition for whether the player should jump.
+		public bool jumping = false;  
+		
 		//Movement variables
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
 		public float backJumpForce = -100.0f;
-		private float slingshotForce = 130.0f; //130.0f
-		private float npcSlingshotForce = 250.0f;
+		private float slingShotForce = 130.0f; //130.0f
+		private float npcslingShotForce = 250.0f;
 		private float throwForceX = 100.0f;
 		private float throwForceY = 50.0f;
 		public float jumpVelocity = 7.5f;			// Amount of force added when the player jumps.
@@ -74,11 +75,11 @@ OuyaSDK.IMenuAppearingListener
 		private float holdingDistance = 4.0f;
 		private float pickUpDistance = 1.15f;
 		private float jointChangeAmount = 0.1f;
-		private GameObject slingshottedByPlayer;
-		private GameObject pastSlingshottedByPlayer;
-		private bool  slingshotJoint;
-		private float slingshotDistance = 0.5f;
-		private  int lastSlingshotId;
+		private GameObject slingShottedByPlayer;
+		private GameObject pastslingShottedByPlayer;
+		private bool  slingShotJoint;
+		private float slingShotDistance = 0.5f;
+		private  int lastslingShotId;
 		private  int lastThrowId;
 		private DistanceJoint2D joint;
 		private PlayerController connectedPlayerController;
@@ -175,11 +176,14 @@ OuyaSDK.IMenuAppearingListener
 						CheckForKeyboardPause ();
 				
 						bool jumpPressed = JumpPressed () && !jumpDisabled;
-						jumpNotReleased &= jumpPressed;
+						jumpReleased |= !jumpPressed;
+						jumping &= !jumpReleased;
+						if (!jumping)
+								slingShottedByPlayer = null;
 		
-						if (jumpPressed && grounded && !pickedUp && !jumpNotReleased) {
-								jump = true;
-								jumpNotReleased = true;
+						if (jumpPressed && grounded && !pickedUp && jumpReleased && !jumping) {
+								jumping = true;
+								jumpReleased = false;
 								possibleGroundedByPlayer = groundedByPlayer;
 						}
 		
@@ -191,16 +195,16 @@ OuyaSDK.IMenuAppearingListener
 										if (collider.gameObject != gameObject && (collider.gameObject.CompareTag ("Player") || collider.gameObject.CompareTag ("NPC"))) {		
 												PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
 					
-												if (playerController && playerController.AcceptConnectionOrSlingshot ()) {
-														if (jumpPressed && lastSlingshotId != collider.gameObject.GetInstanceID () && !jumpNotReleased && !slingShotDisabled && !playerController.slingShotDisabled) {
-																lastSlingshotId = collider.gameObject.GetInstanceID ();
+												if (playerController && playerController.AcceptConnectionOrslingShot ()) {
+														if (jumpPressed && lastslingShotId != collider.gameObject.GetInstanceID () && !jumping && jumpReleased && !slingShotDisabled && !playerController.slingShotDisabled) {
+																lastslingShotId = collider.gameObject.GetInstanceID ();
 						
-																jump = true;
-																jumpNotReleased = true;
-																slingshottedByPlayer = collider.gameObject;
+																jumping = true;
+																jumpReleased = false;
+																slingShottedByPlayer = collider.gameObject;
 														
 																StopMovement (gameObject);
-																StopMovement (slingshottedByPlayer);
+																StopMovement (slingShottedByPlayer);
 																break;
 														} else if (grabPressed && !jointDisabled) {
 																MakeConnection (collider.gameObject, playerController, true);
@@ -209,7 +213,7 @@ OuyaSDK.IMenuAppearingListener
 												}
 										}
 								}
-						} else if (connected && !grabPressed && (!slingshotJoint || ReleaseSlingshot ())) {
+						} else if (connected && !grabPressed && (!slingShotJoint || ReleaseslingShot ())) {
 								ThrowPlayer ();
 								DestroyConnection ();
 						}
@@ -220,9 +224,9 @@ OuyaSDK.IMenuAppearingListener
 				grabRadiusIndicator.transform.localScale = new Vector3 (2 * holdingDistance + gameObject.transform.localScale.x / 2.0f, 0.1f, 2 * holdingDistance + gameObject.transform.localScale.y / 2.0f);
 		}
 		
-		bool ReleaseSlingshot ()
+		bool ReleaseslingShot ()
 		{
-				return gameObject.transform.position.y > pastSlingshottedByPlayer.transform.position.y && Mathf.Abs (gameObject.transform.position.x - pastSlingshottedByPlayer.transform.position.x) < slingshotDistance;
+				return gameObject.transform.position.y > pastslingShottedByPlayer.transform.position.y && Mathf.Abs (gameObject.transform.position.x - pastslingShottedByPlayer.transform.position.x) < slingShotDistance;
 		}
 		
 		void FixedUpdate ()
@@ -233,7 +237,7 @@ OuyaSDK.IMenuAppearingListener
 						
 						if (grounded)
 								velocity.x = maxSpeed * h;
-						else if (!Connected ()) {
+						else if (!Connected () && slingShottedByPlayer == null) {
 								if (Mathf.Abs (velocity.x) <= maxSpeed)
 										velocity.x = maxSpeed * h;
 								else if (h * velocity.x < 0)
@@ -242,24 +246,45 @@ OuyaSDK.IMenuAppearingListener
 								rigidbody2D.AddForce (new Vector2 (h * 1.0f, 0.0f));
 						
 		
-						if (jump) {
-								if (slingshottedByPlayer == null) {
-										velocity.y = jumpVelocity;
+						if (jumping) {
+								if (slingShottedByPlayer == null) {
+										if (gameObject.rigidbody2D.velocity.y < 7) {
+												gameObject.rigidbody2D.AddForce (Vector2.up * (20 - gameObject.rigidbody2D.velocity.y));
+												if (groundedByPlayer != null)
+														groundedByPlayer.transform.rigidbody2D.AddForce (Vector2.up * -(20 - gameObject.rigidbody2D.velocity.y));
+										} else
+												jumping = false;
+										/*velocity.y = jumpVelocity;
 										if (groundedByPlayer != null)
-												groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce));
-								} else {
-										if (gameObject.transform.position.y < slingshottedByPlayer.transform.position.y)
-												Slingshot ();
-										pastSlingshottedByPlayer = slingshottedByPlayer;
-										slingshottedByPlayer = null;   
+												groundedByPlayer.transform.rigidbody2D.AddForce (new Vector2 (0f, backJumpForce)); */
+								} else {								
+										if (gameObject.transform.position.y < slingShottedByPlayer.transform.position.y + gameObject.transform.localScale.y)
+												gameObject.rigidbody2D.AddForce (PerpendicularUpVector ((slingShottedByPlayer.transform.position - gameObject.transform.position).normalized * 5));
+										else {
+												jumping = false;
+												slingShottedByPlayer = null; 
+										}
+										//		slingShot ();
+										pastslingShottedByPlayer = slingShottedByPlayer;
+  
 								}
 			
-								jump = false;
 						}		
 				} else if (grounded)
 						velocity.x = 0.0f;
 					
 				rigidbody2D.velocity = velocity;
+		}
+		
+		Vector2 PerpendicularUpVector (Vector2 vector)
+		{
+				Vector2 flop = new Vector2 (vector.y, vector.x);
+				if (flop.y < 0)
+						return new Vector2 (flop.x, flop.y * -1);
+				else if (flop.y > 0)
+						return new Vector2 (flop.x * -1, flop.y);
+				
+				return new Vector2 (gameObject.rigidbody2D.velocity.x, 0);
 		}
 		
 		void MakeConnection (GameObject otherPlayer, PlayerController otherController, bool pickUp)
@@ -280,34 +305,34 @@ OuyaSDK.IMenuAppearingListener
 						PickUpPlayer (joint, otherPlayer.transform);
 		}
 		
-		void Slingshot ()
+		void slingShot ()
 		{
-				if (slingshottedByPlayer.GetComponent<PlayerController> ().isNPC) {
-						slingshotJoint = true;
-						MakeConnection (slingshottedByPlayer, slingshottedByPlayer.GetComponent<PlayerController> (), false);
-						float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
+				if (slingShottedByPlayer.GetComponent<PlayerController> ().isNPC) {
+						slingShotJoint = true;
+						MakeConnection (slingShottedByPlayer, slingShottedByPlayer.GetComponent<PlayerController> (), false);
+						float direction = gameObject.transform.position.x - slingShottedByPlayer.transform.position.x;
 						Vector2 forceVector = new Vector2 (0.0f, 0.5f);
 						if (direction > 0)
 								forceVector.x = 0.5f;
 						else if (direction < 0)
 								forceVector.x = -0.5f;
 		
-						forceVector *= npcSlingshotForce;
+						forceVector *= npcslingShotForce;
 						rigidbody2D.AddForce (forceVector);
 				} else {
-						float direction = gameObject.transform.position.x - slingshottedByPlayer.transform.position.x;
-						Vector2 endPosition = slingshottedByPlayer.transform.position;
+						float direction = gameObject.transform.position.x - slingShottedByPlayer.transform.position.x;
+						Vector2 endPosition = slingShottedByPlayer.transform.position;
 						if (direction > 0)
-								endPosition.x += slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+								endPosition.x += slingShottedByPlayer.transform.localScale.x;// * 1.5f;
 						else if (direction < 0)
-								endPosition.x -= slingshottedByPlayer.transform.localScale.x;// * 1.5f;
+								endPosition.x -= slingShottedByPlayer.transform.localScale.x;// * 1.5f;
 			
-						endPosition.y += slingshottedByPlayer.transform.localScale.y * 2.0f;
+						endPosition.y += slingShottedByPlayer.transform.localScale.y * 2.0f;
 			
 						Vector2 forceVector = new Vector2 (0.0f, 1.0f);//new Vector2 ((endPosition.x - gameObject.transform.position.x), (endPosition.y - gameObject.transform.position.y)).normalized;
-						forceVector *= slingshotForce;
+						forceVector *= slingShotForce;
 						rigidbody2D.AddForce (forceVector);
-						slingshottedByPlayer.rigidbody2D.AddForce (-forceVector);
+						slingShottedByPlayer.rigidbody2D.AddForce (-forceVector);
 				}
 		}
 		
@@ -503,7 +528,7 @@ OuyaSDK.IMenuAppearingListener
 				//			score += Time.deltaTime;
 		}
 		
-		bool AcceptConnectionOrSlingshot ()
+		bool AcceptConnectionOrslingShot ()
 		{
 				return (!Connected () && (GrabPressed () || grabHeld));
 		}
@@ -523,7 +548,7 @@ OuyaSDK.IMenuAppearingListener
 						Destroy (joint);
 						joint = null;
 				} 
-				slingshotJoint = false;
+				slingShotJoint = false;
 		}
 	
 		public void OuyaMenuButtonUp ()
@@ -689,7 +714,7 @@ OuyaSDK.IMenuAppearingListener
 										
 										if (!raycastInfo.collider.CompareTag ("Player") && !raycastInfo.collider.CompareTag ("NPC")) {
 												lastThrowId = 0;
-												lastSlingshotId = 0;	
+												lastslingShotId = 0;	
 										}
 										
 										if (groundedByPlayer != null && colliderInstanceId != groundedByPlayer.GetInstanceID ())
@@ -698,7 +723,7 @@ OuyaSDK.IMenuAppearingListener
 										if ((raycastInfo.collider.CompareTag ("Player") || raycastInfo.collider.CompareTag ("NPC")) && (originalCall || gameObject.GetInstanceID () != originalId) && 
 												raycastInfo.collider.gameObject.GetComponent<PlayerController> ().PlayerIsGrounded (originalId, false)) {
 												lastThrowId = 0;
-												lastSlingshotId = 0;
+												lastslingShotId = 0;
 												possibleGroundedByPlayer = raycastInfo.collider.gameObject;
 										}
 	

@@ -12,7 +12,7 @@ public class LevelLogic : MonoBehaviour
 	EnergyTypeClickHandler.EnergyChange -= EnergyChange;  */
 	
 		//Player variables
-		public GameObject playerPrefab;
+		public GameObject   playerPrefab;
 		public bool[]       playersGrabHeld;
 		public bool[]       playersPositionLocked;
 		public bool[]       playersJumpDisabled;
