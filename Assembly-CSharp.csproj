@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_2;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX;UNITY_TEAM_LICENSE</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_3;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -54,29 +54,29 @@
      <Compile Include="Assets\LitJson\JsonWriter.cs" />
      <Compile Include="Assets\LitJson\Lexer.cs" />
      <Compile Include="Assets\LitJson\ParserToken.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\Achievement.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\CameraFollow.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\CoinScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\EndTimerScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\GameEvent.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\GameLogic.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\GuiCameraLogic.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\LevelLogic.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\MonoBehaviourExtended.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\MoveEvent.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\MultipartEvent.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\MultipartSwitch.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\POIScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\PanEvent.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\PlayerController.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\ShowButtonActive.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\Singleton.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\SpawnScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\StartTimerEvent.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\StickyWall.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\SwitchScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\TeleportScript.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\TextInfoScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Camera\CameraFollow.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Camera\GuiCameraLogic.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Camera\POIScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Core\GameLogic.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Core\LevelLogic.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Core\PlayerController.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Environment\StickyWall.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Environment\TextInfoScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\GameEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\MoveEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\MultipartEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\PanEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\ShowButtonActive.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\StartTimerEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Libraries\MonoBehaviourExtended.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Libraries\Singleton.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Objects\Achievement.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Objects\CoinScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Objects\EndTimerScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Objects\SpawnScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Objects\TeleportScript.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Switch\MultipartSwitch.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Switch\SwitchScript.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButton.cs" />
      <Compile Include="Assets\NGUI\Scripts\Interaction\UIButtonColor.cs" />
@@ -155,8 +155,8 @@
      <None Include="Assets\Plugins\Android\res\layout\main.xml" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
- <Reference Include="Assets\NGUI\DLLs\NGUI">
- <HintPath>Assets\NGUI\DLLs\NGUI.dll</HintPath>
+ <Reference Include="NGUI">
+ <HintPath>/Users/computer/Desktop/Projects/Unity/Truce/Assets/NGUI/DLLs/NGUI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
