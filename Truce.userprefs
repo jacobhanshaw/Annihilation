@@ -1,6 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/Core/LevelLogic.cs">
+    <Files>
+      <File FileName="Assets/MyAssets/MyScripts/Core/GameLogic.cs" Line="41" Column="36" />
+      <File FileName="Assets/MyAssets/MyScripts/Core/LevelLogic.cs" Line="90" Column="90" />
+      <File FileName="Assets/MyAssets/MyScripts/Objects/EndTimerScript.cs" Line="83" Column="97" />
+      <File FileName="Assets/MyAssets/MyScripts/Objects/TeleportScript.cs" Line="23" Column="30" />
+      <File FileName="Assets/MyAssets/MyScripts/Core/PlayerController.cs" Line="129" Column="44" />
+      <File FileName="Assets/Ouya/StarterKit/Scripts/OuyaSceneMain.cs" Line="45" Column="37" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
