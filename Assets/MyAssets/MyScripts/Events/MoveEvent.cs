@@ -18,7 +18,9 @@ public class MoveEvent : GameEvent
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (movedItemName);
-				if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
+				if (inverted && gameObject.layer == potentialItem.layer)
+						movedItem = GameObject.Find (movedItemName.Replace ("(Clone)", ""));
+				else if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
 						movedItem = potentialItem;
 				else
 						movedItem = GameObject.Find (movedItemName + "(Clone)");

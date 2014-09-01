@@ -70,7 +70,7 @@ public class CoinScript : MonoBehaviour
 		public Achievement getAchievement ()
 		{
 				int index = getTimedIndex ();
-		
+				Debug.Log ("Index: " + index + " Versus: " + nameCoin.Length);
 				Achievement achievement = new Achievement ();
 				achievement.name = nameCoin [index];
 				achievement.points = pointsCoin [index];

@@ -80,7 +80,7 @@ public class SwitchScript : MonoBehaviour
 		
 		public void ShowButtonAsActivated (bool activated)
 		{
-				if (activated)
+				if (activated && !invisible && !ignoreAutoColor)
 						gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
 				else
 						gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);

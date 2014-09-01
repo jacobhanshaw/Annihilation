@@ -13,7 +13,9 @@ public class PanEvent : GameEvent
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (poiScriptObjectName);
-				if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
+				if (inverted && gameObject.layer == potentialItem.layer)
+						poiScript = GameObject.Find (poiScriptObjectName.Replace ("(Clone)", "")).GetComponent<POIScript> ();
+				else if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default"))
 						poiScript = potentialItem.GetComponent<POIScript> ();
 				else
 						poiScript = GameObject.Find (poiScriptObjectName + "(Clone)").GetComponent<POIScript> ();
