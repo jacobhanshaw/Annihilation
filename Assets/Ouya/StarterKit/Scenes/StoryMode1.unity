@@ -418,6 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall1
   endPosition: {x: 21.5, y: -17.5, z: 0}
@@ -2761,6 +2762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 1
   ignorePause: 0
   movedItemName: StickyElevator
   endPosition: {x: 9, y: -30, z: 0}
@@ -9580,6 +9582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall2
   endPosition: {x: 42.5, y: -17.5, z: 0}
@@ -15860,6 +15863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformRightSplit
   endPosition: {x: 5, y: -4, z: 0}
@@ -15876,6 +15880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformLeftSplit
   endPosition: {x: -5, y: -4, z: 0}
@@ -15892,6 +15897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 0
   ignorePause: 1
   movedItemName: RightSpikes
   endPosition: {x: 50, y: -8, z: 0}
@@ -15908,6 +15914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 0
   ignorePause: 1
   movedItemName: LeftSpikes
   endPosition: {x: -50, y: -8, z: 0}
@@ -18252,6 +18259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall
   endPosition: {x: 15.5, y: 8, z: 0}

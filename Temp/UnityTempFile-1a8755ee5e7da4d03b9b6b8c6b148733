@@ -55,6 +55,7 @@
 'Assets/MyAssets/MyScripts/Environment/StickyWall.cs'
 'Assets/MyAssets/MyScripts/Environment/TextInfoScript.cs'
 'Assets/MyAssets/MyScripts/Events/GameEvent.cs'
+'Assets/MyAssets/MyScripts/Events/LoopEvent.cs'
 'Assets/MyAssets/MyScripts/Events/MoveEvent.cs'
 'Assets/MyAssets/MyScripts/Events/MultipartEvent.cs'
 'Assets/MyAssets/MyScripts/Events/PanEvent.cs'

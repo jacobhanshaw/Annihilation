@@ -53,29 +53,37 @@ public class SwitchScript : MonoBehaviour
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
-				if (!itemsInTrigger.Contains (other.gameObject.GetInstanceID ()))
-						itemsInTrigger.Add (other.gameObject.GetInstanceID ());
-				if (itemsInTrigger.Count >= minItemsInTrigger && !wasTriggered) {
-						wasTriggered = true;
-						foreach (GameEvent gameEvent in gameEvents)
-								gameEvent.Trigger (wasTriggered);
-						if (!invisible && !ignoreAutoColor)
-								gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
+
+				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
+						if (!itemsInTrigger.Contains (other.GetInstanceID ()))
+								itemsInTrigger.Add (other.GetInstanceID ());
+						if (itemsInTrigger.Count >= minItemsInTrigger && !wasTriggered) {
+								wasTriggered = true;
+								foreach (GameEvent gameEvent in gameEvents)
+										gameEvent.Trigger (wasTriggered);
+								if (!invisible && !ignoreAutoColor)
+										gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
+						}
 				}
+
 		}
 	
 		void OnTriggerExit2D (Collider2D other)
 		{
-				itemsInTrigger.Remove (other.gameObject.GetInstanceID ());
-				if (!oneTimeUse) {
-						if (itemsInTrigger.Count < minItemsInTrigger && wasTriggered) {
-								wasTriggered = false;
-								foreach (GameEvent gameEvent in gameEvents)
-										gameEvent.Trigger (wasTriggered);
-								if (!invisible && !ignoreAutoColor)
-										gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
+				Debug.Log ("FAIL");
+				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
+						itemsInTrigger.Remove (other.GetInstanceID ());
+						if (!oneTimeUse) {
+								if (itemsInTrigger.Count < minItemsInTrigger && wasTriggered) {
+										wasTriggered = false;
+										foreach (GameEvent gameEvent in gameEvents)
+												gameEvent.Trigger (wasTriggered);
+										if (!invisible && !ignoreAutoColor)
+												gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
+								}
 						}
 				}
+				
 		}
 		
 		public void ShowButtonAsActivated (bool activated)

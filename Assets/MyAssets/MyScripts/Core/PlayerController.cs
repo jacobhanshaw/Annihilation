@@ -187,7 +187,7 @@ OuyaSDK.IMenuAppearingListener
 								possibleGroundedByPlayer = groundedByPlayer;
 						}
 		
-						grabPressed |= GrabPressed ();
+						grabPressed |= GrabPressed () && (!jointDisabled || !slingShotDisabled);
 
 						if (!connected && (grabPressed || jumpPressed)) {
 								Collider2D[] hitColliders = Physics2D.OverlapCircleAll (gameObject.transform.position, holdingDistance, layerMask);

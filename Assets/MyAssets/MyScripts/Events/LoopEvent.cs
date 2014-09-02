@@ -1,21 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class MoveEvent : GameEvent
+public class LoopEvent : GameEvent
 {
+
 		public bool       inverted;
-		public float      moveDelay;
-		public bool       shouldReverse;
+		public bool       reverses;
 		public bool       ignorePause;
 		public string      movedItemName;
 		private GameObject movedItem;
 		private Vector3   startPosition;
 		public Vector3    endPosition;
 		public float      speed = 3.0f;
-		
+	
 		private bool      triggered = false;
+		private bool      reversing = false;
 		private float     lastTime;
-		
+	
 		void Start ()
 		{
 				GameObject potentialItem = GameObject.Find (movedItemName);
@@ -25,10 +26,10 @@ public class MoveEvent : GameEvent
 						movedItem = potentialItem;
 				else
 						movedItem = GameObject.Find (movedItemName + "(Clone)");
-						
+		
 				startPosition = movedItem.transform.position;
 		}
-	
+
 		void Update ()
 		{
 				float deltaTime;
@@ -37,20 +38,24 @@ public class MoveEvent : GameEvent
 				else
 						deltaTime = Time.deltaTime;
 
+				if (movedItem.transform.position == startPosition)
+						reversing = false;
+				if (movedItem.transform.position == endPosition)
+						reversing = true;
+
 				if (triggered) {
-						if (moveDelay > 0.0f) 
-								moveDelay -= deltaTime;
+						if (reversing)
+								movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, startPosition, deltaTime * speed);
 						else
 								movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, endPosition, deltaTime * speed);
-				} else if (shouldReverse)
+				} else if (reverses)
 						movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, startPosition, deltaTime * speed);
-				
+		
 				lastTime = Time.realtimeSinceStartup;
 		}
-		
+
 		override public void Trigger (bool trigger)
 		{
 				triggered = trigger;
 		}
-		
 }
