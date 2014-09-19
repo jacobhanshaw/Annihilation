@@ -826,7 +826,7 @@ GameObject:
   - 114: {fileID: 333068261}
   m_Layer: 19
   m_Name: Switch2Top
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -971,9 +971,11 @@ GameObject:
   - 114: {fileID: 363175135}
   - 114: {fileID: 363175134}
   - 114: {fileID: 363175156}
+  - 114: {fileID: 363175158}
+  - 114: {fileID: 363175157}
   m_Layer: 19
-  m_Name: Switch4Top
-  m_TagString: Untagged
+  m_Name: Switch5
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

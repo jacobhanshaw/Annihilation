@@ -10,13 +10,14 @@ public class CameraFollow : MonoBehaviour
 		private float standardZoomAmount = 0.1f;
 		private float frameEdgeGap = 0.1f;
 		private float zoomEdgeGap = 0.25f;
+
 		private List<GameObject> players;
-		private List<POIScript> poiScripts;
-		
+	
 		private List<GameObject> pois;
-		
 		private List<POIScript> panToPois;
-		
+		private List<POIScript> poiScripts;
+
+		private bool  poiPause;
 		private float lastPanTime;
 		private float panSpeed = 15.0f;
 		private float panZoomLevel = 15.0f;
@@ -38,6 +39,8 @@ public class CameraFollow : MonoBehaviour
 				LayerMask combinedInteractLayer = 0;
 				LayerMask combinedVersusLayer = 0;
 				
+				//Gets Layer Numbers from Camera labels GUI12 - (1 &  2)
+
 				int testNum;
 				string layer = LayerMask.LayerToName (gameObject.layer);
 				string numOne = layer [layer.Length - 2].ToString ();
@@ -63,6 +66,9 @@ public class CameraFollow : MonoBehaviour
 								players.RemoveAt (i);
 				}
 
+
+				//Get all Poi's
+
 				poiScripts = new List<POIScript> ();
 				panToPois = new List<POIScript> ();
 				
@@ -75,9 +81,11 @@ public class CameraFollow : MonoBehaviour
 		
 		void Update ()
 		{
+				//Pan to Pois (Gets var from 0 position as only 0 is used each loop)
+
 				if (panToPois.Count > 0) {
 						if (!GameLogic.Instance.paused)
-								GameLogic.Instance.PausePressed (0);
+								poiPause = GameLogic.Instance.PausePressed (0);
 						
 						float deltaTime = Time.realtimeSinceStartup - lastPanTime;
 				
@@ -96,7 +104,7 @@ public class CameraFollow : MonoBehaviour
 						newPosition.z = gameObject.transform.position.z;
 						gameObject.transform.position = newPosition;
 				} else {
-						if (GameLogic.Instance.paused)
+						if (GameLogic.Instance.paused && poiPause)
 								GameLogic.Instance.PausePressed (0);
 						
 						TrackPlayers ();

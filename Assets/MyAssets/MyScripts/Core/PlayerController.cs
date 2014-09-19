@@ -250,9 +250,9 @@ OuyaSDK.IMenuAppearingListener
 						if (jumping) {
 								if (slingShottedByPlayer == null) {
 										if (gameObject.rigidbody2D.velocity.y < 7) {
-												gameObject.rigidbody2D.AddForce (Vector2.up * (20 - gameObject.rigidbody2D.velocity.y));
+												gameObject.rigidbody2D.AddForce (Vector2.up * (0.5f + gameObject.rigidbody2D.velocity.y)); //(20 -
 												if (groundedByPlayer != null)
-														groundedByPlayer.transform.rigidbody2D.AddForce (Vector2.up * -(20 - gameObject.rigidbody2D.velocity.y));
+														groundedByPlayer.transform.rigidbody2D.AddForce (Vector2.up * - (gameObject.rigidbody2D.velocity.y - 0.5f)); //20 -s
 										} else
 												jumping = false;
 										/*velocity.y = jumpVelocity;

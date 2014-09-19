@@ -5,11 +5,12 @@ public class LoopEvent : GameEvent
 {
 
 		public bool       inverted;
-		public bool       reverses;
+		public bool       shouldReverse;
 		public bool       ignorePause;
 		public string      movedItemName;
 		private GameObject movedItem;
 		private Vector3   startPosition;
+		public bool       relativeEndPosition;
 		public Vector3    endPosition;
 		public float      speed = 3.0f;
 	
@@ -28,6 +29,8 @@ public class LoopEvent : GameEvent
 						movedItem = GameObject.Find (movedItemName + "(Clone)");
 		
 				startPosition = movedItem.transform.position;
+				if (relativeEndPosition) 
+						endPosition += startPosition;
 		}
 
 		void Update ()
@@ -48,7 +51,7 @@ public class LoopEvent : GameEvent
 								movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, startPosition, deltaTime * speed);
 						else
 								movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, endPosition, deltaTime * speed);
-				} else if (reverses)
+				} else if (shouldReverse)
 						movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, startPosition, deltaTime * speed);
 		
 				lastTime = Time.realtimeSinceStartup;

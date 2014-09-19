@@ -10,6 +10,7 @@ public class MoveEvent : GameEvent
 		public string      movedItemName;
 		private GameObject movedItem;
 		private Vector3   startPosition;
+		public bool       relativeEndPosition;
 		public Vector3    endPosition;
 		public float      speed = 3.0f;
 		
@@ -27,6 +28,8 @@ public class MoveEvent : GameEvent
 						movedItem = GameObject.Find (movedItemName + "(Clone)");
 						
 				startPosition = movedItem.transform.position;
+				if (relativeEndPosition) 
+						endPosition += startPosition;
 		}
 	
 		void Update ()

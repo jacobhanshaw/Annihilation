@@ -48,39 +48,45 @@ public class SwitchScript : MonoBehaviour
 				
 				gameEvents = transform.GetComponents<GameEvent> ();
 				itemsInTrigger = new List<int> ();
+
+				if (minItemsInTrigger <= 0)
+						Trigger (true);
 		}
 		
-	
+		void Trigger (bool trigger)
+		{
+				wasTriggered = trigger;
+				foreach (GameEvent gameEvent in gameEvents)
+						gameEvent.Trigger (wasTriggered);
+				if (!invisible && !ignoreAutoColor) {
+						if (wasTriggered)
+								gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
+						else
+								gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
+				}
+		}
+
 		void OnTriggerEnter2D (Collider2D other)
 		{
-
+				Debug.Log ("Switch Enter: " + other.ToString ());
 				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
 						if (!itemsInTrigger.Contains (other.GetInstanceID ()))
 								itemsInTrigger.Add (other.GetInstanceID ());
-						if (itemsInTrigger.Count >= minItemsInTrigger && !wasTriggered) {
-								wasTriggered = true;
-								foreach (GameEvent gameEvent in gameEvents)
-										gameEvent.Trigger (wasTriggered);
-								if (!invisible && !ignoreAutoColor)
-										gameObject.renderer.material.color = new Color (0.0f, 1.0f, 0.0f);
-						}
+
+						if (itemsInTrigger.Count >= minItemsInTrigger && !wasTriggered) 
+								Trigger (true);
 				}
 
 		}
-	
+
 		void OnTriggerExit2D (Collider2D other)
 		{
-				Debug.Log ("FAIL");
+				Debug.Log ("Switch Exit: " + other.ToString ());
 				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
 						itemsInTrigger.Remove (other.GetInstanceID ());
 						if (!oneTimeUse) {
-								if (itemsInTrigger.Count < minItemsInTrigger && wasTriggered) {
-										wasTriggered = false;
-										foreach (GameEvent gameEvent in gameEvents)
-												gameEvent.Trigger (wasTriggered);
-										if (!invisible && !ignoreAutoColor)
-												gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
-								}
+								if (itemsInTrigger.Count < minItemsInTrigger && wasTriggered)
+										Trigger (false);
 						}
 				}
 				

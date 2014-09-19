@@ -51,14 +51,20 @@ public class GameLogic : Singleton<GameLogic>
 		//void Start () { }
 		//void Update () { }
 		
-		public void PausePressed (int playerIndex)
+		public bool PausePressed (int playerIndex)
 		{
+				//if(playerIndex != 0)
+				//ShowMenu()
+
 				if (!paused || playerIndex == pausingPlayer) {
 						paused = !paused;
 						pausingPlayer = playerIndex;
 	
 						Time.timeScale = paused ? 0 : 1;
+						return true;
 				}
+
+				return false;
 		}
 		
 		//Methods to track podium placement for races
