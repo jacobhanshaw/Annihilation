@@ -385,7 +385,7 @@ GameObject:
   - 114: {fileID: 26456310}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -418,9 +418,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall1
+  relativeEndPosition: 0
   endPosition: {x: 21.5, y: -17.5, z: 0}
   speed: 3
 --- !u!61 &26456312
@@ -566,7 +568,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -2729,7 +2731,7 @@ GameObject:
   - 114: {fileID: 178266605}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2762,9 +2764,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 1
   ignorePause: 0
   movedItemName: StickyElevator
+  relativeEndPosition: 0
   endPosition: {x: 9, y: -30, z: 0}
   speed: 3
 --- !u!61 &178266607
@@ -3097,7 +3101,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -6446,7 +6450,7 @@ GameObject:
   - 114: {fileID: 455425471}
   m_Layer: 19
   m_Name: InvisibleSwitch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7781,6 +7785,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
   m_RootGameObject: {fileID: 37719003}
@@ -7812,7 +7820,7 @@ Transform:
   m_PrefabInternal: {fileID: 1650388952}
   m_GameObject: {fileID: 604736379}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.5062256, y: 30.7321625, z: 0}
+  m_LocalPosition: {x: 11.5, y: 31, z: 0}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children:
   - {fileID: 1113372195}
@@ -7849,7 +7857,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -9537,7 +9545,7 @@ GameObject:
   - 114: {fileID: 688084826}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9582,9 +9590,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall2
+  relativeEndPosition: 0
   endPosition: {x: 42.5, y: -17.5, z: 0}
   speed: 3
 --- !u!61 &688084828
@@ -10760,6 +10770,10 @@ Prefab:
       propertyPath: m_Layer
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
+      propertyPath: m_TagString
+      value: Switch
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11400000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
@@ -11137,7 +11151,7 @@ GameObject:
   - 114: {fileID: 983835643}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11634,6 +11648,10 @@ Prefab:
       propertyPath: m_Layer
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
+      propertyPath: m_TagString
+      value: Switch
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
   m_RootGameObject: {fileID: 1886783540}
@@ -11824,7 +11842,7 @@ GameObject:
   - 114: {fileID: 1078981858}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15100,6 +15118,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
   m_RootGameObject: {fileID: 1964974925}
@@ -15294,7 +15316,7 @@ MonoBehaviour:
   - Close One
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
-  timerUsed: 0
+  timerUsed: 1
   coinExpires: 1
   startTimerOnStart: 0
   seconds:
@@ -15819,7 +15841,7 @@ GameObject:
   - 114: {fileID: 1420125928}
   m_Layer: 19
   m_Name: MultipartSwitch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15863,9 +15885,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformRightSplit
+  relativeEndPosition: 0
   endPosition: {x: 5, y: -4, z: 0}
   speed: 2
 --- !u!114 &1420125925
@@ -15880,9 +15904,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformLeftSplit
+  relativeEndPosition: 0
   endPosition: {x: -5, y: -4, z: 0}
   speed: 2
 --- !u!114 &1420125926
@@ -15897,9 +15923,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 0
   ignorePause: 1
   movedItemName: RightSpikes
+  relativeEndPosition: 0
   endPosition: {x: 50, y: -8, z: 0}
   speed: 3
 --- !u!114 &1420125927
@@ -15914,9 +15942,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 0
   ignorePause: 1
   movedItemName: LeftSpikes
+  relativeEndPosition: 0
   endPosition: {x: -50, y: -8, z: 0}
   speed: 3
 --- !u!114 &1420125928
@@ -16272,6 +16302,10 @@ Prefab:
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
@@ -18241,7 +18275,7 @@ GameObject:
   - 114: {fileID: 1590550811}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18259,9 +18293,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
+  moveDelay: 0
   shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall
+  relativeEndPosition: 0
   endPosition: {x: 15.5, y: 8, z: 0}
   speed: 2
 --- !u!61 &1590550807
@@ -18837,11 +18873,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 11.5062256
+      value: 11.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 30.7321625
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalPosition.z
@@ -18862,6 +18898,14 @@ Prefab:
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
@@ -20962,7 +21006,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -21130,6 +21174,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
   m_RootGameObject: {fileID: 2078895171}
@@ -21181,6 +21229,10 @@ Prefab:
     - target: {fileID: 100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_Name
       value: TimedCoin
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: timerUsed
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
@@ -21366,6 +21418,10 @@ Prefab:
     - target: {fileID: 11400000, guid: 538532d4b0be24187b944190757724c1, type: 2}
       propertyPath: invisible
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 538532d4b0be24187b944190757724c1, type: 2}
+      propertyPath: m_TagString
+      value: Switch
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 538532d4b0be24187b944190757724c1, type: 2}
@@ -21947,7 +22003,7 @@ GameObject:
   - 114: {fileID: 1886783542}
   m_Layer: 19
   m_Name: Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22825,7 +22881,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -24892,6 +24948,10 @@ Prefab:
       propertyPath: m_Layer
       value: 19
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
+      propertyPath: m_TagString
+      value: Switch
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 685d0f93592ff419ca819f966be29b26, type: 2}
   m_RootGameObject: {fileID: 983835641}
@@ -25009,7 +25069,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2073943385
 Transform:
   m_ObjectHideFlags: 0
@@ -25161,7 +25221,7 @@ MonoBehaviour:
   - Do Try Harder
   pointsCoin: 40420f0065030000de00000004000000
   timerUsed: 0
-  coinExpires: 1
+  coinExpires: 0
   startTimerOnStart: 0
   seconds:
   - 240
@@ -25290,6 +25350,10 @@ Prefab:
     - target: {fileID: 400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}
+      propertyPath: coinExpires
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9461ea9c2ae834feab71c60d69817908, type: 2}

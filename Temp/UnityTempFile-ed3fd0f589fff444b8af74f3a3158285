@@ -48,6 +48,7 @@
 'Assets/LitJson/ParserToken.cs'
 'Assets/MyAssets/MyScripts/Camera/CameraFollow.cs'
 'Assets/MyAssets/MyScripts/Camera/GuiCameraLogic.cs'
+'Assets/MyAssets/MyScripts/Camera/MenuCameraScript.cs'
 'Assets/MyAssets/MyScripts/Camera/POIScript.cs'
 'Assets/MyAssets/MyScripts/Core/GameLogic.cs'
 'Assets/MyAssets/MyScripts/Core/LevelLogic.cs'
