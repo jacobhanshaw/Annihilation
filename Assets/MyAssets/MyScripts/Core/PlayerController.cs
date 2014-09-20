@@ -235,7 +235,7 @@ OuyaSDK.IMenuAppearingListener
 				Vector2 velocity = rigidbody2D.velocity;
 				if (!isNPC) {
 						float h = GetHorizontalMovement ();
-						//faewaewfa
+
 						if (grounded)
 								velocity.x = maxSpeed * h;
 						else if (!Connected () && slingShottedByPlayer == null) {
