@@ -39,26 +39,24 @@ public class CameraFollow : MonoBehaviour
 				LayerMask combinedInteractLayer = 0;
 				LayerMask combinedVersusLayer = 0;
 				
-				//Gets Layer Numbers from Camera labels GUI12 - (1 &  2)
+				//Gets Layer Numbers from Camera labels, Example: GUI12 - (1 &  2)
 
 				int testNum;
 				string layer = LayerMask.LayerToName (gameObject.layer);
-				string numOne = layer [layer.Length - 2].ToString ();
-				bool validNumOne = int.TryParse (numOne, out testNum);
-				if (validNumOne) {
-						initialPlayerLayer = LayerMask.NameToLayer ("Player" + numOne);
-						initialInteractLayer = LayerMask.NameToLayer ("Interact" + numOne);
+				int numOne = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
+				if (numOne != -1) {
+						initialPlayerLayer = LayerMask.NameToLayer ("Player" + numOne.ToString ());
+						initialInteractLayer = LayerMask.NameToLayer ("Interact" + numOne.ToString ());
 				}
-				string numTwo = layer [layer.Length - 1].ToString ();
-				bool validNumTwo = int.TryParse (numTwo, out testNum);
-				if (validNumTwo) {
-						otherPlayerLayer = LayerMask.NameToLayer ("Player" + numTwo);
-						otherInteractLayer = LayerMask.NameToLayer ("Interact" + numTwo);
+				int numTwo = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
+				if (numTwo != -1) {
+						otherPlayerLayer = LayerMask.NameToLayer ("Player" + numTwo.ToString ());
+						otherInteractLayer = LayerMask.NameToLayer ("Interact" + numTwo.ToString ());
 				}
 				
-				if (validNumOne && validNumTwo) {
-						combinedInteractLayer = LayerMask.NameToLayer ("Interact" + numOne + numTwo);
-						combinedVersusLayer = LayerMask.NameToLayer ("Versus" + numOne + numTwo);
+				if (numOne != -1 && numTwo != -1) {
+						combinedInteractLayer = LayerMask.NameToLayer ("Interact" + numOne.ToString () + numTwo.ToString ());
+						combinedVersusLayer = LayerMask.NameToLayer ("Versus" + numOne.ToString () + numTwo.ToString ());
 				}
 					
 				for (int i = players.Count-1; i >= 0; --i) {

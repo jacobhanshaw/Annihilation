@@ -8,34 +8,36 @@ public class GuiCameraLogic : MonoBehaviour
 		
 		private int minPlayerNumber;
 		private int maxPlayerNumber;
+
+		private const string LEFT_SCORE_NAME = "Player1Name";
+		private const string LEFT_SCORE_POINTS = "Player1Points";
+		private const string RIGHT_SCORE_NAME = "Player2Name";
+		private const string RIGHT_SCORE_POINTS = "Player2Points";
 	
 		void Start ()
 		{
-				string layer = LayerMask.LayerToName (gameObject.layer);
-				int initialPlayer = int.Parse (layer [layer.Length - 2].ToString ());
-				int otherPlayer = int.Parse (layer [layer.Length - 1].ToString ());	
-				minPlayerNumber = initialPlayer;
-				maxPlayerNumber = otherPlayer;
+				minPlayerNumber = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
+				maxPlayerNumber = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
 				
 				playerScores = new List<TextMesh> ();
 				
-				TextMesh player1Name = transform.FindChild ("Player1Name").GetComponent<TextMesh> ();
-				TextMesh player1Points = transform.FindChild ("Player1Points").GetComponent<TextMesh> ();
+				TextMesh player1Name = transform.FindChild (LEFT_SCORE_NAME).GetComponent<TextMesh> ();
+				TextMesh player1Points = transform.FindChild (LEFT_SCORE_POINTS).GetComponent<TextMesh> ();
 				playerScores.Add (player1Points);
 		
-				int trueNumber = initialPlayer;
-				if (initialPlayer == 3 && GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen)
+				int trueNumber = minPlayerNumber;
+				if (minPlayerNumber == 3 && GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen)
 						trueNumber = 2;
 					
 				player1Name.text = "Player" + trueNumber.ToString ();
 				player1Name.color = GameLogic.Instance.colors [trueNumber - 1];
 				player1Points.color = player1Name.color;
 
-				if (!((otherPlayer > GameLogic.Instance.numPlayers) || (GameLogic.Instance.splitScreen && GameLogic.Instance.numPlayers == 2))) {
-						TextMesh player2Name = transform.FindChild ("Player2Name").GetComponent<TextMesh> ();
-						player2Name.text = "Player" + otherPlayer.ToString ();
-						player2Name.color = GameLogic.Instance.colors [otherPlayer - 1];
-						TextMesh player2Points = transform.FindChild ("Player2Points").GetComponent<TextMesh> ();
+				if (!((maxPlayerNumber > GameLogic.Instance.numPlayers) || (GameLogic.Instance.splitScreen && GameLogic.Instance.numPlayers == 2))) {
+						TextMesh player2Name = transform.FindChild (RIGHT_SCORE_NAME).GetComponent<TextMesh> ();
+						player2Name.text = "Player" + maxPlayerNumber.ToString ();
+						player2Name.color = GameLogic.Instance.colors [maxPlayerNumber - 1];
+						TextMesh player2Points = transform.FindChild (RIGHT_SCORE_POINTS).GetComponent<TextMesh> ();
 						player2Points.color = player2Name.color;
 						playerScores.Add (player2Points);
 				} else {
@@ -47,9 +49,7 @@ public class GuiCameraLogic : MonoBehaviour
 	
 		public void UpdateScore (Achievement achievement, int playerIndex, int newScore)
 		{
-				int localPlayerIndex = playerIndex;
-		
-				if (localPlayerIndex >= minPlayerNumber && localPlayerIndex <= maxPlayerNumber)
-						playerScores [(localPlayerIndex - 1) % 2].text = newScore.ToString ();
+				if (playerIndex >= minPlayerNumber && playerIndex <= maxPlayerNumber)
+						playerScores [(playerIndex - 1) % 2].text = newScore.ToString ();
 		}
 }

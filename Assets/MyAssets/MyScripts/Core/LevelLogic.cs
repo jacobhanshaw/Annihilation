@@ -51,11 +51,11 @@ public class LevelLogic : MonoBehaviour
 						PlayerController controller = playerObj.GetComponent<PlayerController> ();
 						playerControllers.Add (controller);
 						controller.spawnLocation = spawnLocations [(i - 1) % 2];
-						
 						controller.controllerIndex = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
+#if OUYA						
 						controller.splitController = GameLogic.Instance.splitControllers;
 						controller.leftSplit = ((i % 2) != 0);
-						
+#endif						
 						if (GameLogic.Instance.numPlayers == 2 && GameLogic.Instance.splitScreen) {
 								controller.grabHeld = playersGrabHeld [0] || playersGrabHeld [1];
 								controller.positionLocked = playersPositionLocked [0] || playersPositionLocked [1];

@@ -30,18 +30,17 @@ public class POIScript : MonoBehaviour
 		{
 				Vector2 position2d = gameObject.transform.position;
 				if (!ignoreCollider) {
-						bottomLeft = position2d + ((BoxCollider2D)gameObject.collider2D).center - ((BoxCollider2D)gameObject.collider2D).size / 2.0f;
-						topRight = position2d + ((BoxCollider2D)gameObject.collider2D).center + ((BoxCollider2D)gameObject.collider2D).size / 2.0f;
+						bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
+						topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
 				}
 				
 				string layer = LayerMask.LayerToName (gameObject.layer);
-				int firstNum;
-				bool validNum = int.TryParse (layer [layer.Length - 2].ToString (), out firstNum);
-				if (validNum)
+				int firstNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
+				if (firstNum != -1)
 						layerMask |= 1 << LayerMask.NameToLayer ("Player" + firstNum);
 				int secondNum;
-				validNum = int.TryParse (layer [layer.Length - 1].ToString (), out secondNum);
-				if (validNum)
+				secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
+				if (secondNum != -1)
 						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
 		}
 

@@ -1,9 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/Core/PlayerController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MyAssets/MyScripts/Environment/StickyWall.cs">
     <Files>
-      <File FileName="Assets/MyAssets/MyScripts/Core/PlayerController.cs" Line="255" Column="122" />
-      <File FileName="Assets/MyAssets/MyScripts/Objects/CoinScript.cs" Line="59" Column="24" />
+      <File FileName="Assets/MyAssets/MyScripts/Camera/POIScript.cs" Line="42" Column="76" />
+      <File FileName="Assets/MyAssets/MyScripts/Core/HelperFunction.cs" Line="11" Column="56" />
+      <File FileName="Assets/MyAssets/MyScripts/Environment/StickyWall.cs" Line="35" Column="5" />
+      <File FileName="Assets/MyAssets/MyScripts/Camera/CameraFollow.cs" Line="46" Column="79" />
+      <File FileName="Assets/MyAssets/MyScripts/Camera/GuiCameraLogic.cs" Line="19" Column="47" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
