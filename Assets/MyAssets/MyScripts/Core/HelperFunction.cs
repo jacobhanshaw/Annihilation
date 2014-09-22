@@ -30,4 +30,15 @@ public class HelperFunction : Singleton<HelperFunction>
 				return position + collider.center + collider.size / 2.0f;
 		}
 
+		public GameObject FindBasedOnLayer (string objectName, LayerMask layer, bool inverted)
+		{
+				GameObject potentialItem = GameObject.Find (objectName);
+				if (inverted && layer == potentialItem.layer)
+						return GameObject.Find (objectName.Replace ("(Clone)", ""));
+				else if (layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
+						return potentialItem;
+			
+				return GameObject.Find (objectName + "(Clone)");
+		}
+
 }

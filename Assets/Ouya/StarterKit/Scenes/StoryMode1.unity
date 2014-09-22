@@ -164,8 +164,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -5868,8 +5866,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -6326,8 +6322,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -6600,8 +6594,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -7208,8 +7200,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -7982,8 +7972,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -10225,8 +10213,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -11787,8 +11773,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -14531,8 +14515,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -22706,8 +22688,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -23077,8 +23057,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -23409,8 +23387,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -24624,8 +24600,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100
@@ -24786,8 +24760,6 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
-  splitController: 0
-  leftSplit: 0
   jumping: 0
   maxSpeed: 5
   backJumpForce: -100

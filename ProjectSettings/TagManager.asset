@@ -10,12 +10,14 @@ TagManager:
   - POI
   - NPC
   - 
+  - Switch
+  - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
   Builtin Layer 2: Ignore Raycast
   Builtin Layer 3: 
   Builtin Layer 4: Water
-  Builtin Layer 5: 
+  Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
   User Layer 8: GUI
@@ -33,10 +35,10 @@ TagManager:
   User Layer 20: Interact34
   User Layer 21: Versus12
   User Layer 22: Versus34
-  User Layer 23: 
-  User Layer 24: 
-  User Layer 25: 
-  User Layer 26: 
+  User Layer 23: Versus1
+  User Layer 24: Versus2
+  User Layer 25: Versus3
+  User Layer 26: Versus4
   User Layer 27: 
   User Layer 28: 
   User Layer 29: 

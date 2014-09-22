@@ -5,28 +5,24 @@ public class LoopEvent : GameEvent
 {
 
 		public bool       inverted;
-		public bool       shouldReverse;
 		public bool       ignorePause;
+
 		public string      movedItemName;
 		private GameObject movedItem;
+
 		private Vector3   startPosition;
 		public bool       relativeEndPosition;
 		public Vector3    endPosition;
+
 		public float      speed = 3.0f;
-	
+		public bool       shouldReverse;
 		private bool      triggered = false;
 		private bool      reversing = false;
 		private float     lastTime;
 	
 		void Start ()
 		{
-				GameObject potentialItem = GameObject.Find (movedItemName);
-				if (inverted && gameObject.layer == potentialItem.layer)
-						movedItem = GameObject.Find (movedItemName.Replace ("(Clone)", ""));
-				else if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
-						movedItem = potentialItem;
-				else
-						movedItem = GameObject.Find (movedItemName + "(Clone)");
+				movedItem = HelperFunction.Instance.FindBasedOnLayer (movedItemName, gameObject.layer, inverted);
 		
 				startPosition = movedItem.transform.position;
 				if (relativeEndPosition) 

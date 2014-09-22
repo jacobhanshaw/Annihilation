@@ -11,13 +11,7 @@ public class StartTimerEvent : GameEvent
 		
 		void Start ()
 		{
-				GameObject potentialItem = GameObject.Find (timedObjectName);
-				if (inverted && gameObject.layer == potentialItem.layer)
-						timedObject = GameObject.Find (timedObjectName.Replace ("(Clone)", ""));
-				else if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
-						timedObject = potentialItem;
-				else
-						timedObject = GameObject.Find (timedObjectName + "(Clone)");
+				timedObject = HelperFunction.Instance.FindBasedOnLayer (timedObjectName, gameObject.layer, inverted);
 		}
 
 		override public void Trigger (bool trigger)

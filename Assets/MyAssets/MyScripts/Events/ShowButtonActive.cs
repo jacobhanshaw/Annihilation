@@ -10,13 +10,7 @@ public class ShowButtonActive : GameEvent
 	
 		void Start ()
 		{
-				GameObject potentialItem = GameObject.Find (shownSwitchName);
-				if (inverted && gameObject.layer == potentialItem.layer)
-						shownSwitchScript = GameObject.Find (shownSwitchName.Replace ("(Clone)", "")).GetComponent<SwitchScript> ();
-				else if (gameObject.layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
-						shownSwitchScript = potentialItem.GetComponent<SwitchScript> ();
-				else
-						shownSwitchScript = GameObject.Find (shownSwitchName + "(Clone)").GetComponent<SwitchScript> ();
+				shownSwitchScript = HelperFunction.Instance.FindBasedOnLayer (shownSwitchName, gameObject.layer, inverted).GetComponent<SwitchScript> ();
 		}
 	
 		override public void Trigger (bool trigger)
