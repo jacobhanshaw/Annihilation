@@ -41,8 +41,6 @@ public class CameraFollow : MonoBehaviour
 				
 				//Gets Layer Numbers from Camera labels, Example: GUI12 - (1 &  2)
 
-				int testNum;
-				string layer = LayerMask.LayerToName (gameObject.layer);
 				int numOne = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
 				if (numOne != -1) {
 						initialPlayerLayer = LayerMask.NameToLayer ("Player" + numOne.ToString ());

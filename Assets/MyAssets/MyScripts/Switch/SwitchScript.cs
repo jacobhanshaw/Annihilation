@@ -11,23 +11,30 @@ public class SwitchScript : MonoBehaviour
 		
 		// 		Can't do this, because parenting switching causes a re-count
 		//		private int playersInTrigger = 0;
-		private List<int> itemsInTrigger;
+		//	private List<int> itemsInTrigger;
 		private bool wasTriggered;
+
+		private Vector2 bottomLeft;
+		private Vector2 topRight;
+	
+		private int layerMask = 0;
 
 		private GameEvent[] gameEvents;
 
 		void Start ()
 		{
-		
+
+				int firstNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
+				if (firstNum != -1)
+						layerMask |= 1 << LayerMask.NameToLayer ("Player" + firstNum);
+				int secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
+				if (secondNum != -1)
+						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
+
 				if (GameLogic.Instance.splitScreen) {
 						bool topScreen = false;
-				
-						string layer = LayerMask.LayerToName (gameObject.layer);
-						string numOne = layer [layer.Length - 2].ToString ();
-						if (numOne.Equals ("1"))
-								topScreen = true;
-						string numTwo = layer [layer.Length - 1].ToString ();
-						if (numTwo.Equals ("1") || numTwo.Equals ("2"))
+
+						if (firstNum == 1 || secondNum == 1 || secondNum == 2)
 								topScreen = true;
 						
 						int playersInScreen = int.MaxValue;
@@ -47,10 +54,26 @@ public class SwitchScript : MonoBehaviour
 				}
 				
 				gameEvents = transform.GetComponents<GameEvent> ();
-				itemsInTrigger = new List<int> ();
+				//itemsInTrigger = new List<int> ();
+
+				Vector2 position2d = gameObject.transform.position;
+
+				bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
+				topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
 
 				if (minItemsInTrigger <= 0)
 						Trigger (true);
+		}
+
+		void Update ()
+		{
+				Collider2D[] colliders = Physics2D.OverlapAreaAll (bottomLeft, 
+		                                                   topRight, layerMask);
+
+				if (colliders.Length >= minItemsInTrigger && !wasTriggered)
+						Trigger (true);
+				else if (!oneTimeUse && colliders.Length < minItemsInTrigger && wasTriggered)
+						Trigger (false);
 		}
 		
 		void Trigger (bool trigger)
@@ -65,7 +88,7 @@ public class SwitchScript : MonoBehaviour
 								gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 				}
 		}
-
+/*
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				Debug.Log ("Switch Enter: " + other.ToString ());
@@ -91,7 +114,7 @@ public class SwitchScript : MonoBehaviour
 				}
 				
 		}
-		
+*/		
 		public void ShowButtonAsActivated (bool activated)
 		{
 				if (activated && !invisible && !ignoreAutoColor)

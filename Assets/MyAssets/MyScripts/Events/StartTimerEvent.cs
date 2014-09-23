@@ -3,7 +3,7 @@ using System.Collections;
 
 public class StartTimerEvent : GameEvent
 {
-		public bool   inverted;
+		public bool       inverted;
 		public string timedObjectName;
 		private GameObject timedObject;
 	

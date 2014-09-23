@@ -30,7 +30,7 @@ public class CoinScript : MonoBehaviour
 		
 		void Start ()
 		{
-				textObject.SetActive (timerUsed);
+				
 				timeText = textObject.GetComponent<TextMesh> ();
 		
 				if (seconds.Length > 0)
@@ -38,9 +38,10 @@ public class CoinScript : MonoBehaviour
 						
 				if (startTimerOnStart)
 						startTimer ();
+				else
+						textObject.SetActive (false);
 		}
-	
-		// Update is called once per frame
+
 		void Update ()
 		{
 				gameObject.transform.Rotate (Vector3.up * Time.deltaTime * rotationSpeed);

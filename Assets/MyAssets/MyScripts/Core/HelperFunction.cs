@@ -33,9 +33,10 @@ public class HelperFunction : Singleton<HelperFunction>
 		public GameObject FindBasedOnLayer (string objectName, LayerMask layer, bool inverted)
 		{
 				GameObject potentialItem = GameObject.Find (objectName);
-				if (inverted && layer == potentialItem.layer)
+				bool inSameLayer = layer == potentialItem.layer;
+				if (inSameLayer && inverted)
 						return GameObject.Find (objectName.Replace ("(Clone)", ""));
-				else if (layer == potentialItem.layer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
+				else if (inSameLayer || potentialItem.layer == LayerMask.NameToLayer ("Default") || inverted)
 						return potentialItem;
 			
 				return GameObject.Find (objectName + "(Clone)");

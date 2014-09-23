@@ -4,11 +4,13 @@ using System.Collections;
 public class MoveEvent : GameEvent
 {
 		public bool       inverted;
+		public bool       ignorePause;
+	
+		public string      movedItemName;
+		protected GameObject movedItem;
+	
 		public float      moveDelay;
 		public bool       shouldReverse;
-		public bool       ignorePause;
-		public string      movedItemName;
-		private GameObject movedItem;
 		private Vector3   startPosition;
 		public bool       relativeEndPosition;
 		public Vector3    endPosition;

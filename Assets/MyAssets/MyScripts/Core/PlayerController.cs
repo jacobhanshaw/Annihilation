@@ -329,7 +329,7 @@ OuyaSDK.IMenuAppearingListener
 				if (slingShottedByPlayer.GetComponent<PlayerController> ().isNPC) {
 						slingShotJoint = true;
 						//MakeConnection (slingShottedByPlayer, slingShottedByPlayer.GetComponent<PlayerController> (), false); //Temp Connection to make the player rotate around
-						float direction = gameObject.transform.position.x - slingShottedByPlayer.transform.position.x;
+						//float direction = gameObject.transform.position.x - slingShottedByPlayer.transform.position.x;
 						//	Vector2 forceVector = new Vector2 (0.0f, 0.5f);
 						//	if (direction > 0)
 						//			forceVector.x = 0.5f;

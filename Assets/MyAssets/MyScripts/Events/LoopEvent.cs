@@ -3,13 +3,12 @@ using System.Collections;
 
 public class LoopEvent : GameEvent
 {
-
 		public bool       inverted;
 		public bool       ignorePause;
-
+	
 		public string      movedItemName;
-		private GameObject movedItem;
-
+		protected GameObject movedItem;
+	
 		private Vector3   startPosition;
 		public bool       relativeEndPosition;
 		public Vector3    endPosition;
@@ -23,7 +22,7 @@ public class LoopEvent : GameEvent
 		void Start ()
 		{
 				movedItem = HelperFunction.Instance.FindBasedOnLayer (movedItemName, gameObject.layer, inverted);
-		
+
 				startPosition = movedItem.transform.position;
 				if (relativeEndPosition) 
 						endPosition += startPosition;

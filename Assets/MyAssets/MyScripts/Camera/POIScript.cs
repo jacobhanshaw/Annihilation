@@ -33,13 +33,11 @@ public class POIScript : MonoBehaviour
 						bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
 						topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
 				}
-				
-				string layer = LayerMask.LayerToName (gameObject.layer);
+
 				int firstNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
 				if (firstNum != -1)
 						layerMask |= 1 << LayerMask.NameToLayer ("Player" + firstNum);
-				int secondNum;
-				secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
+				int secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
 				if (secondNum != -1)
 						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
 		}

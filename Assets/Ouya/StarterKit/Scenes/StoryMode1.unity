@@ -416,10 +416,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall1
+  moveDelay: 0
+  shouldReverse: 1
   relativeEndPosition: 0
   endPosition: {x: 21.5, y: -17.5, z: 0}
   speed: 3
@@ -2503,7 +2503,6 @@ GameObject:
   - 4: {fileID: 157734209}
   - 23: {fileID: 157734208}
   - 102: {fileID: 157734207}
-  - 114: {fileID: 157734206}
   m_Layer: 19
   m_Name: EndTextA
   m_TagString: Untagged
@@ -2511,18 +2510,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &157734206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 78286ca7118ab4b3bb19d9bcff6743b6,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 157734205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da43f3d3ce50491b9f1526c2015e8f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &157734207
 TextMesh:
   serializedVersion: 3
@@ -2588,7 +2575,6 @@ GameObject:
   - 4: {fileID: 164638922}
   - 23: {fileID: 164638921}
   - 102: {fileID: 164638920}
-  - 114: {fileID: 164638923}
   m_Layer: 9
   m_Name: InfoTextB
   m_TagString: Untagged
@@ -2651,18 +2637,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1743046840}
   m_RootOrder: 1
---- !u!114 &164638923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 8768ea67e63fb4b23a65cb200f483d6d,
-    type: 2}
-  m_PrefabInternal: {fileID: 1359187683}
-  m_GameObject: {fileID: 164638919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da43f3d3ce50491b9f1526c2015e8f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &170266088
 GameObject:
   m_ObjectHideFlags: 0
@@ -2762,10 +2736,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: StickyElevator
+  moveDelay: 0
+  shouldReverse: 1
   relativeEndPosition: 0
   endPosition: {x: 9, y: -30, z: 0}
   speed: 3
@@ -9578,10 +9552,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall2
+  moveDelay: 0
+  shouldReverse: 1
   relativeEndPosition: 0
   endPosition: {x: 42.5, y: -17.5, z: 0}
   speed: 3
@@ -11303,7 +11277,6 @@ GameObject:
   - 4: {fileID: 1007372870}
   - 23: {fileID: 1007372873}
   - 102: {fileID: 1007372872}
-  - 114: {fileID: 1007372871}
   m_Layer: 9
   m_Name: InfoTextA
   m_TagString: Untagged
@@ -11323,18 +11296,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1743046840}
   m_RootOrder: 0
---- !u!114 &1007372871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400004, guid: 8768ea67e63fb4b23a65cb200f483d6d,
-    type: 2}
-  m_PrefabInternal: {fileID: 1359187683}
-  m_GameObject: {fileID: 1007372869}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da43f3d3ce50491b9f1526c2015e8f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1007372872
 TextMesh:
   serializedVersion: 3
@@ -15204,7 +15165,8 @@ Prefab:
       propertyPath: spawnLocations.Array.data[1]
       value: 
       objectReference: {fileID: 1952544578}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: 8768ea67e63fb4b23a65cb200f483d6d, type: 2}
   m_RootGameObject: {fileID: 110053138}
   m_IsPrefabParent: 0
@@ -15867,10 +15829,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformRightSplit
+  moveDelay: 0
+  shouldReverse: 0
   relativeEndPosition: 0
   endPosition: {x: 5, y: -4, z: 0}
   speed: 2
@@ -15886,10 +15848,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 1
   movedItemName: PlatformLeftSplit
+  moveDelay: 0
+  shouldReverse: 0
   relativeEndPosition: 0
   endPosition: {x: -5, y: -4, z: 0}
   speed: 2
@@ -15905,10 +15867,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 1
   movedItemName: RightSpikes
+  moveDelay: 0
+  shouldReverse: 0
   relativeEndPosition: 0
   endPosition: {x: 50, y: -8, z: 0}
   speed: 3
@@ -15924,10 +15886,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 1
   movedItemName: LeftSpikes
+  moveDelay: 0
+  shouldReverse: 0
   relativeEndPosition: 0
   endPosition: {x: -50, y: -8, z: 0}
   speed: 3
@@ -15956,7 +15918,6 @@ GameObject:
   - 4: {fileID: 1424203446}
   - 23: {fileID: 1424203445}
   - 102: {fileID: 1424203444}
-  - 114: {fileID: 1424203443}
   - 61: {fileID: 1424203442}
   - 114: {fileID: 1424203441}
   m_Layer: 19
@@ -15999,18 +15960,6 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_Size: {x: 10, y: 3}
   m_Center: {x: 0, y: -9}
---- !u!114 &1424203443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 78286ca7118ab4b3bb19d9bcff6743b6,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1424203440}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3da43f3d3ce50491b9f1526c2015e8f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!102 &1424203444
 TextMesh:
   serializedVersion: 3
@@ -18275,10 +18224,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: MoveWall
+  moveDelay: 0
+  shouldReverse: 1
   relativeEndPosition: 0
   endPosition: {x: 15.5, y: 8, z: 0}
   speed: 2
@@ -25041,7 +24990,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2073943385
 Transform:
   m_ObjectHideFlags: 0
