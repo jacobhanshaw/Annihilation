@@ -11,7 +11,7 @@ public class SwitchScript : MonoBehaviour
 		
 		// 		Can't do this, because parenting switching causes a re-count
 		//		private int playersInTrigger = 0;
-		//	private List<int> itemsInTrigger;
+		private List<int> itemsInTrigger;
 		private bool wasTriggered;
 
 		private Vector2 bottomLeft;
@@ -54,7 +54,7 @@ public class SwitchScript : MonoBehaviour
 				}
 				
 				gameEvents = transform.GetComponents<GameEvent> ();
-				//itemsInTrigger = new List<int> ();
+				itemsInTrigger = new List<int> ();
 
 				Vector2 position2d = gameObject.transform.position;
 
@@ -67,13 +67,13 @@ public class SwitchScript : MonoBehaviour
 
 		void Update ()
 		{
-				Collider2D[] colliders = Physics2D.OverlapAreaAll (bottomLeft, 
+				/*		Collider2D[] colliders = Physics2D.OverlapAreaAll (bottomLeft, 
 		                                                   topRight, layerMask);
 
 				if (colliders.Length >= minItemsInTrigger && !wasTriggered)
 						Trigger (true);
 				else if (!oneTimeUse && colliders.Length < minItemsInTrigger && wasTriggered)
-						Trigger (false);
+						Trigger (false); */
 		}
 		
 		void Trigger (bool trigger)
@@ -88,7 +88,7 @@ public class SwitchScript : MonoBehaviour
 								gameObject.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 				}
 		}
-/*
+
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				Debug.Log ("Switch Enter: " + other.ToString ());
@@ -114,7 +114,7 @@ public class SwitchScript : MonoBehaviour
 				}
 				
 		}
-*/		
+		
 		public void ShowButtonAsActivated (bool activated)
 		{
 				if (activated && !invisible && !ignoreAutoColor)

@@ -707,7 +707,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 272251348}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.6603489, y: 7.5, z: 0}
+  m_LocalPosition: {x: -5, y: 7.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1749964306}
@@ -855,10 +855,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator1Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 0, y: -3.99900007, z: 0}
   speed: 3
 --- !u!114 &333068257
@@ -930,10 +931,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Barrier2Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 7, y: -5.00099993, z: 0}
   speed: 3
 --- !u!1 &363175128
@@ -971,8 +973,6 @@ GameObject:
   - 114: {fileID: 363175135}
   - 114: {fileID: 363175134}
   - 114: {fileID: 363175156}
-  - 114: {fileID: 363175158}
-  - 114: {fileID: 363175157}
   m_Layer: 19
   m_Name: Switch5
   m_TagString: Switch
@@ -1061,10 +1061,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit11Bottom
+  moveDelay: 5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 35, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175135
@@ -1079,10 +1080,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 4.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit10Bottom
+  moveDelay: 4.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 34, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175136
@@ -1097,10 +1099,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 4
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit9Bottom
+  moveDelay: 4
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 33, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175137
@@ -1115,10 +1118,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 3.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit8Bottom
+  moveDelay: 3.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 32, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175138
@@ -1133,10 +1137,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 3
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit7Bottom
+  moveDelay: 3
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 31, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175139
@@ -1151,10 +1156,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 2.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit6Bottom
+  moveDelay: 2.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 30, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175140
@@ -1169,10 +1175,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 2
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit5Bottom
+  moveDelay: 2
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 29, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175141
@@ -1187,10 +1194,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 1.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit4Bottom
+  moveDelay: 1.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 28, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175142
@@ -1205,10 +1213,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 1
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit3Bottom
+  moveDelay: 1
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 27, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175143
@@ -1223,10 +1232,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: .5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit2Bottom
+  moveDelay: .5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 26, y: -3.5, z: 0}
   speed: 3
 --- !u!114 &363175144
@@ -1241,10 +1251,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit1Bottom
+  moveDelay: 0
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 25, y: -3.5, z: 0}
   speed: 3.25
 --- !u!114 &363175145
@@ -1259,10 +1270,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit11Top
+  moveDelay: 5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 35, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175146
@@ -1277,10 +1289,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 4.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit10Top
+  moveDelay: 4.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 34, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175147
@@ -1295,10 +1308,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 4
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit9Top
+  moveDelay: 4
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 33, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175148
@@ -1313,10 +1327,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 3.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit8Top
+  moveDelay: 3.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 32, y: 13.5, z: 0}
   speed: 3
 --- !u!114 &363175149
@@ -1331,10 +1346,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 3
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit7Top
+  moveDelay: 3
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 31, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175150
@@ -1349,10 +1365,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 2.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit6Top
+  moveDelay: 2.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 30, y: 13.5, z: 0}
   speed: 3
 --- !u!114 &363175151
@@ -1367,10 +1384,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 2
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit5Top
+  moveDelay: 2
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 29, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175152
@@ -1385,10 +1403,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 1.5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit4Top
+  moveDelay: 1.5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 28, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175153
@@ -1403,10 +1422,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 1
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit3Top
+  moveDelay: 1
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 27, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175154
@@ -1421,10 +1441,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: .5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit2Top
+  moveDelay: .5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 26, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175155
@@ -1439,10 +1460,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: SpikesSplit1Top
+  moveDelay: 0
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: 25, y: 13.5, z: 0}
   speed: 3.25
 --- !u!114 &363175156
@@ -1457,10 +1479,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 5
-  shouldReverse: 0
   ignorePause: 0
   movedItemName: EndSpikes
+  moveDelay: 5
+  shouldReverse: 0
+  relativeEndPosition: 0
   endPosition: {x: -12, y: 5, z: 0}
   speed: 3.25
 --- !u!1001 &373998424
@@ -1907,10 +1930,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator4Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 16.25, y: 5.50099993, z: 0}
   speed: 3
 --- !u!114 &557143522
@@ -2358,10 +2382,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Barrier1Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 1, y: -5.00099993, z: 0}
   speed: 3
 --- !u!114 &795892799
@@ -2433,10 +2458,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator3Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 8, y: -3.99900007, z: 0}
   speed: 3
 --- !u!1001 &803037108
@@ -2683,10 +2709,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator2Top
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 6, y: 6.00099993, z: 0}
   speed: 3
 --- !u!114 &842009904
@@ -2768,7 +2795,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 857739719}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.0710239, y: 8.68556023, z: 0}
+  m_LocalPosition: {x: -5, y: -2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1749964306}
@@ -3308,10 +3335,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Barrier1Top
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 1, y: 4.99900007, z: 0}
   speed: 3
 --- !u!114 &1092885965
@@ -3395,10 +3423,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator3Top
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 8, y: 6.00099993, z: 0}
   speed: 3
 --- !u!1 &1104054359
@@ -4861,10 +4890,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator2Bottom
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 6, y: -3.99900007, z: 0}
   speed: 3
 --- !u!114 &1425637828
@@ -5144,10 +5174,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Elevator1Top
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 0, y: 6.00099993, z: 0}
   speed: 3
 --- !u!114 &1495899562
@@ -5219,10 +5250,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inverted: 0
-  moveDelay: 0
-  shouldReverse: 1
   ignorePause: 0
   movedItemName: Barrier2Top
+  moveDelay: 0
+  shouldReverse: 1
+  relativeEndPosition: 0
   endPosition: {x: 7, y: 4.99900007, z: 0}
   speed: 3
 --- !u!1 &1506085690
