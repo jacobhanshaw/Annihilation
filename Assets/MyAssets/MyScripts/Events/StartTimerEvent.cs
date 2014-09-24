@@ -1,25 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StartTimerEvent : GameEvent
-{
-		public bool       inverted;
-		public string timedObjectName;
-		private GameObject timedObject;
-	
-		private bool triggered;
-		
-		void Start ()
-		{
-				timedObject = HelperFunction.Instance.FindBasedOnLayer (timedObjectName, gameObject.layer, inverted);
-		}
-
+public class StartTimerEvent : ItemsEvent
+{	
 		override public void Trigger (bool trigger)
 		{
 				if (!triggered && trigger) {
 						triggered = true;
-						if (timedObject != null)
-								timedObject.GetComponent<CoinScript> ().startTimer ();
+						for (int i = 0; i < items.Length; ++i) {
+								if (items [i] != null)
+										items [i].GetComponent<CoinScript> ().startTimer ();
+						}
 				}
 		}
 

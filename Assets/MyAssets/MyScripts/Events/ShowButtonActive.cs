@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShowButtonActive : GameEvent
+public class ShowButtonActive : ItemsEvent
 {
-		public bool       inverted;
-		public string     	  shownSwitchName;
-		private SwitchScript  shownSwitchScript;
-	
+		private SwitchScript[] switchScripts;
+
 		void Start ()
 		{
-				shownSwitchScript = HelperFunction.Instance.FindBasedOnLayer (shownSwitchName, gameObject.layer, inverted).GetComponent<SwitchScript> ();
+				switchScripts = new SwitchScript[items.Length];
+				for (int i = 0; i < items.Length; ++i)
+						switchScripts [i] = items [i].GetComponent<SwitchScript> ();
 		}
 	
 		override public void Trigger (bool trigger)
 		{
-				shownSwitchScript.ShowButtonAsActivated (trigger);
+				foreach (SwitchScript switchScript in switchScripts)
+						switchScript.ShowButtonAsActivated (trigger);
 		}
 }

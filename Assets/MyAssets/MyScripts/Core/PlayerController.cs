@@ -66,7 +66,8 @@ OuyaSDK.IMenuAppearingListener
 		
 		//Movement variables
 		public float maxSpeed = 5.0f;				// The fastest the player can travel in the x axis.
-		public float backJumpForce = -100.0f;
+		public float jumpForce = 18.0f;
+		public float jumpMaxOut = 7.0f;
 		private float slingShotForce = 130.0f; //130.0f
 		private float npcSlingShotForce = 130.0f;
 		private float throwForceX = 100.0f;
@@ -266,10 +267,10 @@ OuyaSDK.IMenuAppearingListener
 		
 						if (jumping) {
 								if (slingShottedByPlayer == null) {
-										if (gameObject.rigidbody2D.velocity.y < 7) { //(Vector2.up * (19 + 3.5f * gameObject.rigidbody2D.velocity.y) / 1.75f)
-												gameObject.rigidbody2D.AddForce (Vector2.up * (11 + 6 * gameObject.rigidbody2D.velocity.y));//(20 -
+										if (gameObject.rigidbody2D.velocity.y < jumpMaxOut) {
+												gameObject.rigidbody2D.AddForce (Vector2.up * jumpForce);// (10 + 6 * gameObject.rigidbody2D.velocity.y));
 												if (groundedByPlayer != null)
-														groundedByPlayer.transform.rigidbody2D.AddForce (Vector2.up * - (11 + 6 * gameObject.rigidbody2D.velocity.y)); //20 -s
+														groundedByPlayer.transform.rigidbody2D.AddForce (Vector2.up * -jumpForce);
 										} else
 												jumping = false;
 										/*velocity.y = jumpVelocity;

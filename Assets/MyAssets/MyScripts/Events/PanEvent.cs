@@ -1,24 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PanEvent : GameEvent
+public class PanEvent : ItemsEvent
 {
-		public bool       inverted;
-		public string     poiScriptObjectName;
-		public float      overridePanSpeed = -1.0f;
-		public float      overridePanZoomLevel = -1.0f;
+
+		public float[]      overridePanSpeed;
+		public float[]      overridePanZoomLevel;
 		
-		private POIScript poiScript;
+		private POIScript[] poiScripts;
 		
 		void Start ()
 		{
-				poiScript = HelperFunction.Instance.FindBasedOnLayer (poiScriptObjectName, gameObject.layer, inverted).GetComponent<POIScript> ();
+				poiScripts = new POIScript[items.Length];
+				for (int i = 0; i < items.Length; ++i)
+						poiScripts [i] = items [i].GetComponent<POIScript> ();
 		}
 
 		override public void Trigger (bool trigger)
 		{
-				poiScript.forcePan = true;
-				poiScript.overridePanSpeed = overridePanSpeed;
-				poiScript.overridePanZoomLevel = overridePanZoomLevel;
+				for (int i = 0; i < poiScripts.Length; ++i) {
+						poiScripts [i].forcePan = true;
+						if (overridePanSpeed.Length == 0)
+								poiScripts [i].overridePanSpeed = -1;
+						else if (overridePanSpeed.Length == 1)
+								poiScripts [i].overridePanSpeed = overridePanSpeed [0];
+						else
+								poiScripts [i].overridePanSpeed = overridePanSpeed [i];
+
+						if (overridePanZoomLevel.Length == 0)
+								poiScripts [i].overridePanZoomLevel = -1;
+						else if (overridePanZoomLevel.Length == 1)
+								poiScripts [i].overridePanZoomLevel = overridePanZoomLevel [0];
+						else
+								poiScripts [i].overridePanZoomLevel = overridePanZoomLevel [i];
+				}
 		}
 }

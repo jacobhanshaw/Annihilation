@@ -21,43 +21,29 @@ public class POIScript : MonoBehaviour
 		public bool  ignoreCollider;
 		public float relevantDuration;
 		
-		private Vector2 bottomLeft;
-		private Vector2 topRight;
-		
-		private int layerMask = 0;
-
-		void Start ()
-		{
-				Vector2 position2d = gameObject.transform.position;
-				if (!ignoreCollider) {
-						bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
-						topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
-				}
-
-				int firstNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
-				if (firstNum != -1)
-						layerMask |= 1 << LayerMask.NameToLayer ("Player" + firstNum);
-				int secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
-				if (secondNum != -1)
-						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
-		}
+		private int playersInTrigger;
 
 		void Update ()
 		{
-				//Naive polling approach, but OnTriggerExit wasn't getting called properly. Seems to be a known Unity bug
-				
-				if (!ignoreCollider) {
-						Collider2D[] colliders = Physics2D.OverlapAreaAll (bottomLeft, 
-		                                                   topRight, layerMask);
-
-						activeScript = colliders.Length > 0;
-				}
+				activeScript = playersInTrigger > 0;
 				
 				if (shown && relevantDuration != -1.0f && relevantDuration != 0) {
 						relevantDuration -= Time.deltaTime;
 						if (relevantDuration < 0)
 								Destroy (gameObject);
 				}
+		}
+
+		void OnTriggerEnter2D (Collider2D other)
+		{
+				if (other.gameObject.CompareTag ("Player")) 
+						++playersInTrigger;
+		}
+	
+		void OnTriggerExit2D (Collider2D other)
+		{
+				if (other.gameObject.CompareTag ("Player")) 
+						--playersInTrigger;
 		}
 		
 }

@@ -1,31 +1,38 @@
 using UnityEngine;
 using System.Collections;
 
-public class MoveEvent : GameEvent
-{
-		public bool       inverted;
-		public bool       ignorePause;
-	
-		public string      movedItemName;
-		protected GameObject movedItem;
-	
-		public float      moveDelay;
-		public bool       shouldReverse;
-		private Vector3   startPosition;
-		public bool       relativeEndPosition;
-		public Vector3    endPosition;
+public class MoveEvent : ItemsEvent
+{	
 		public float      speed = 3.0f;
-		
-		private bool      triggered = false;
+		public bool       loop;
+		public bool       relativeEndPosition;
+
+		public bool       shouldReverse;
+		private bool[]      reversing;
+	
+		private Vector3[]   startPosition;
+		public Vector3[]    endPosition;
+		public float[]      moveDelay;
+	
 		private float     lastTime;
 		
 		void Start ()
-		{
-				movedItem = HelperFunction.Instance.FindBasedOnLayer (movedItemName, gameObject.layer, inverted);
-						
-				startPosition = movedItem.transform.position;
-				if (relativeEndPosition) 
-						endPosition += startPosition;
+		{				
+				startPosition = new Vector3[items.Length];
+				reversing = new bool[items.Length];
+				
+				for (int i = 0; i < items.Length; ++i) {
+						startPosition [i] = items [i].transform.position;
+						if (relativeEndPosition) {
+								if (i < endPosition.Length)
+										endPosition [i] += startPosition [i];
+								else
+										endPosition [i] = endPosition [0];
+						}
+
+						if (i >= moveDelay.Length)
+								moveDelay [i] = moveDelay [0];
+				}
 		}
 	
 		void Update ()
@@ -36,20 +43,32 @@ public class MoveEvent : GameEvent
 				else
 						deltaTime = Time.deltaTime;
 
-				if (triggered) {
-						if (moveDelay > 0.0f) 
-								moveDelay -= deltaTime;
-						else
-								movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, endPosition, deltaTime * speed);
-				} else if (shouldReverse)
-						movedItem.transform.position = Vector3.MoveTowards (movedItem.transform.position, startPosition, deltaTime * speed);
+				if (loop) {
+						for (int i = 0; i < items.Length; ++i) {
+								if (items [i].transform.position == startPosition [i])
+										reversing [i] = false;
+								if (items [i].transform.position == endPosition [i])
+										reversing [i] = true;
+						}
+				}
+
+				for (int i = 0; i < items.Length; ++i) {
+			
+						if (triggered) {
+								if (moveDelay [i] > 0.0f) 
+										moveDelay [i] -= deltaTime;
+								else {
+										if (reversing [i])
+												items [i].transform.position = Vector3.MoveTowards (items [i].transform.position, startPosition [i], deltaTime * speed);
+										else
+												items [i].transform.position = Vector3.MoveTowards (items [i].transform.position, endPosition [i], deltaTime * speed);
+								}
+						} else if (shouldReverse)
+								items [i].transform.position = Vector3.MoveTowards (items [i].transform.position, startPosition [i], deltaTime * speed);
+
+				}
 				
 				lastTime = Time.realtimeSinceStartup;
-		}
-		
-		override public void Trigger (bool trigger)
-		{
-				triggered = trigger;
 		}
 		
 }
