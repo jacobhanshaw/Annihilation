@@ -9,8 +9,10 @@ public class PanEvent : ItemsEvent
 		
 		private POIScript[] poiScripts;
 		
-		void Start ()
+		new void Start ()
 		{
+				base.Start ();
+
 				poiScripts = new POIScript[items.Length];
 				for (int i = 0; i < items.Length; ++i)
 						poiScripts [i] = items [i].GetComponent<POIScript> ();

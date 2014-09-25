@@ -5,8 +5,10 @@ public class ShowButtonActive : ItemsEvent
 {
 		private SwitchScript[] switchScripts;
 
-		void Start ()
+		new void Start ()
 		{
+				base.Start ();
+
 				switchScripts = new SwitchScript[items.Length];
 				for (int i = 0; i < items.Length; ++i)
 						switchScripts [i] = items [i].GetComponent<SwitchScript> ();

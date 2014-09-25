@@ -12,8 +12,10 @@ public class ItemsEvent : GameEvent
 		protected GameObject[] items;
 		protected bool triggered;
 
-		void Start ()
+		public void Start ()
 		{
+				Debug.Log ("ItemEventCalled");
+
 				itemsList = new List<GameObject> ();
 				GameObject item = HelperFunction.Instance.FindBasedOnLayer (itemName, gameObject.layer, inverted);
 				if (item != null)
@@ -24,7 +26,7 @@ public class ItemsEvent : GameEvent
 						itemsList.Add (item);
 
 				items = itemsList.ToArray ();
-		}
+		} 
 
 		override public void Trigger (bool trigger)
 		{
