@@ -1,7 +1,16 @@
 using UnityEngine;
 using System.Collections;
 
-abstract public class GameEvent : MonoBehaviour
+public class GameEvent : MonoBehaviour
 {
-		abstract public void Trigger (bool trigger);
+		protected bool triggered;
+		protected bool triggeredChanged;
+
+		public virtual void Trigger (bool trigger)
+		{
+				if (triggered != trigger)
+						triggeredChanged = true;
+		
+				triggered = trigger;
+		}
 }

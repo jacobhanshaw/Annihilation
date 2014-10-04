@@ -3,7 +3,6 @@ using System.Collections;
 
 public class MultipartEvent : GameEvent
 {
-
 		private MultipartSwitch parentSwitch;
 
 		void Start ()
@@ -11,7 +10,7 @@ public class MultipartEvent : GameEvent
 				parentSwitch = gameObject.transform.parent.gameObject.GetComponent<MultipartSwitch> ();
 		}
 
-		override public void Trigger (bool trigger)
+		public override void Trigger (bool trigger)
 		{
 				parentSwitch.Trigger (trigger);
 		}

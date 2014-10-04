@@ -1,22 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShowButtonActive : ItemsEvent
+public class ShowButtonActive : ItemEvent
 {
-		private SwitchScript[] switchScripts;
+		private SwitchScript switchScript;
 
 		new void Start ()
 		{
 				base.Start ();
 
-				switchScripts = new SwitchScript[items.Length];
-				for (int i = 0; i < items.Length; ++i)
-						switchScripts [i] = items [i].GetComponent<SwitchScript> ();
+				switchScript = item.GetComponent<SwitchScript> ();
 		}
 	
-		override public void Trigger (bool trigger)
+		public override void Trigger (bool trigger)
 		{
-				foreach (SwitchScript switchScript in switchScripts)
-						switchScript.ShowButtonAsActivated (trigger);
+				switchScript.ShowButtonAsActivated (trigger);
 		}
 }

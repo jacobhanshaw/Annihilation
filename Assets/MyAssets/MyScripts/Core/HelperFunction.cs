@@ -42,5 +42,10 @@ public class HelperFunction : Singleton<HelperFunction>
 			
 				return GameObject.Find (objectName + "(Clone)");
 		}
-
+		
+		public void Assert (bool condition)
+		{
+				if (!condition) 
+						throw new System.Exception ();
+		}
 }
