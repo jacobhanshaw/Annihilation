@@ -14,8 +14,8 @@ public class SwitchScript : MonoBehaviour
 		private List<int> itemsInTrigger;
 		private bool wasTriggered;
 
-		private Vector2 bottomLeft;
-		private Vector2 topRight;
+		//private Vector2 bottomLeft;
+		//private Vector2 topRight;
 	
 		private int layerMask = 0;
 
@@ -31,8 +31,9 @@ public class SwitchScript : MonoBehaviour
 				if (secondNum != -1)
 						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
 
+				bool topScreen = false;
 				if (GameLogic.Instance.splitScreen) {
-						bool topScreen = false;
+						
 
 						if (firstNum == 1 || secondNum == 1 || secondNum == 2)
 								topScreen = true;
@@ -46,7 +47,7 @@ public class SwitchScript : MonoBehaviour
 						minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersInScreen);
 				}
 		
-				if (!invisible) {
+				if (!invisible && topScreen) {
 						int yItems = (minItemsInTrigger / 4) + 1;
 						int xItems = minItemsInTrigger % 4;
 						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);
@@ -58,8 +59,8 @@ public class SwitchScript : MonoBehaviour
 
 				Vector2 position2d = gameObject.transform.position;
 
-				bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
-				topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
+				//bottomLeft = HelperFunction.Instance.BottomLeftOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
+				//topRight = HelperFunction.Instance.TopRightOfBoxCollider2D (position2d, ((BoxCollider2D)gameObject.collider2D));
 
 				if (minItemsInTrigger <= 0)
 						Trigger (true);
@@ -91,7 +92,6 @@ public class SwitchScript : MonoBehaviour
 
 		void OnTriggerEnter2D (Collider2D other)
 		{
-				Debug.Log ("Switch Enter: " + other.ToString ());
 				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
 						if (!itemsInTrigger.Contains (other.GetInstanceID ()))
 								itemsInTrigger.Add (other.GetInstanceID ());
@@ -104,7 +104,6 @@ public class SwitchScript : MonoBehaviour
 
 		void OnTriggerExit2D (Collider2D other)
 		{
-				Debug.Log ("Switch Exit: " + other.ToString ());
 				if (other.CompareTag ("Player") || other.CompareTag ("NPC")) {
 						itemsInTrigger.Remove (other.GetInstanceID ());
 						if (!oneTimeUse) {

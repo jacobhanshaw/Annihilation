@@ -525,7 +525,6 @@ OuyaSDK.IMenuAppearingListener
 						KillPlayer ();
 				} else if (other.gameObject.CompareTag ("Coin")) {
 						Achievement newAchievement = other.gameObject.GetComponent<CoinScript> ().getAchievement ();
-						Debug.Log ("Other coin gameobject: " + other.ToString ());
 						achievements.Add (newAchievement);
 						score += newAchievement.points;
 						if (AchievementReceivedListeners != null)

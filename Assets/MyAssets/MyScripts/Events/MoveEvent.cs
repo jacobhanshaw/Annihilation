@@ -33,10 +33,8 @@ public class MoveEvent : ItemEvent
 
 				base.Start ();
 
-				if (!loop) {
-						Debug.Log ("Name: " + itemName);
+				if (!loop)
 						HelperFunction.Instance.Assert (shouldReverse);
-				}
 
 				if (moveDelay.Length == 0)
 						moveDelay = new float[]{ 0.0f };
@@ -75,8 +73,9 @@ public class MoveEvent : ItemEvent
 						nextRotation [i + 1] = nextRotation [i] * newRotation;
 				}
 
-				movementVector = null;
-				rotationVector = null; 
+				//COULD NOT DO THIS OR DUPLICATE WON'T WORK \/
+				//movementVector = null;
+				//rotationVector = null; 
 		}
 		
 		private Vector3 RandomVector (Vector3 maxes)

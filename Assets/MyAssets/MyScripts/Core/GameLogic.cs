@@ -4,8 +4,8 @@ using System.Collections;
 public class GameLogic : Singleton<GameLogic>
 {
 		//Players and controls
-		public int  numPlayers = 2;  //debug number
-		public bool splitScreen = false;
+		public int  numPlayers = 4;  //debug number
+		public bool splitScreen = true;
 		public bool splitControllers = false;
 
 		//Scoring

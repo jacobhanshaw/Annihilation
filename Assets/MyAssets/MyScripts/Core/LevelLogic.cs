@@ -106,6 +106,9 @@ public class LevelLogic : MonoBehaviour
 		void DuplicateGameObjectsInLayerToLayer (List<GameObject> gameObjects, int fromLayer, int toLayer)
 		{
 				for (int i = gameObjects.Count - 1; i >= 0; --i) {
+						if (gameObjects [i].name == "ColorWall0")
+								Debug.Log ("THINGS: " + LayerMask.LayerToName (fromLayer));
+
 						if (gameObjects [i].transform.parent != null && gameObjects [i].transform.parent.parent == null && !gameObjects [i].transform.parent.gameObject.CompareTag ("Player")) {
 								if (gameObjects [i].layer == fromLayer) {
 										GameObject newObject = (GameObject)Instantiate (gameObjects [i]);

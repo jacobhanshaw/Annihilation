@@ -4,6 +4,26 @@ using System.Collections;
 public class HelperFunction : Singleton<HelperFunction>
 {
 
+		public int GetPartner (int player)
+		{
+				if (player == 1)
+						return 2;
+				else if (player == 3)
+						return 3;
+				else if (player == 2)
+						return 1;
+
+				return 4;
+		}
+
+		public int GetPair (int player)
+		{
+				if (player == 1 || player == 2)
+						return 12;
+
+				return 34;
+		}
+
 		public int PlayersInLayer (LayerMask layer, int index)
 		{
 				int result;
@@ -30,11 +50,12 @@ public class HelperFunction : Singleton<HelperFunction>
 				return position + collider.center + collider.size / 2.0f;
 		}
 
-		public GameObject FindBasedOnLayer (string objectName, LayerMask layer, bool inverted)
+		public GameObject FindBasedOnLayer (string objectName, int layer, bool inverted)
 		{
 				GameObject potentialItem = GameObject.Find (objectName);
 				bool exists = potentialItem != null;
-				bool inSameLayer = exists && (layer == potentialItem.layer);
+				bool inSameLayer = exists && (layer & (1 << potentialItem.layer)) != 0;
+
 				if (inSameLayer && inverted)
 						return GameObject.Find (objectName.Replace ("(Clone)", ""));
 				else if (inSameLayer || (exists && potentialItem.layer == LayerMask.NameToLayer ("Default")) || inverted)

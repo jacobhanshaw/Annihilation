@@ -12,7 +12,10 @@ public class ItemEvent : GameEvent
 
 		public void Start ()
 		{
-				item = HelperFunction.Instance.FindBasedOnLayer (itemName, gameObject.layer, inverted);
+				int layer = 1 << gameObject.layer;
+				layer |= 1 << LayerMask.NameToLayer ("Interact" + HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1));
+				layer |= 1 << LayerMask.NameToLayer ("Interact" + HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2));
+				item = HelperFunction.Instance.FindBasedOnLayer (itemName, layer, inverted);
 		} 
 
 }
