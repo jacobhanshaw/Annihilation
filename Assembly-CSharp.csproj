@@ -70,6 +70,7 @@
      <Compile Include="Assets\MyAssets\MyScripts\Events\MoveEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Events\MultipartEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Events\PanEvent.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Events\RigidBody2DToggleEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Events\ShowButtonActive.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Events\StartTimerEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Libraries\MonoBehaviourExtended.cs" />

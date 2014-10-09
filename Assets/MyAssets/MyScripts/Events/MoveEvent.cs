@@ -13,6 +13,7 @@ public class MoveEvent : ItemEvent
 		public float[]      	moveDelay;
 		public float[]      	movementSpeed;
 		public float[]      	rotationSpeed;
+		public bool[]           nonRelative;
 
 		public Vector3[]    	movementVector;
 		public Vector3[]     	randomizeMovementMax;
@@ -33,8 +34,8 @@ public class MoveEvent : ItemEvent
 
 				base.Start ();
 
-				if (!loop)
-						HelperFunction.Instance.Assert (shouldReverse);
+				//	if (!loop)
+				//			HelperFunction.Instance.Assert (shouldReverse);
 
 				if (moveDelay.Length == 0)
 						moveDelay = new float[]{ 0.0f };
@@ -42,6 +43,8 @@ public class MoveEvent : ItemEvent
 						movementSpeed = new float[]{  DEFAULT_MOVEMENT_SPEED };
 				if (rotationSpeed.Length == 0)
 						rotationSpeed = new float[]{  DEFAULT_ROTATION_SPEED };
+				if (nonRelative.Length == 0)
+						nonRelative = new bool[] { false };
 
 				if (rotationVector.Length == 0)
 						rotationVector = new Vector3[] { Vector3.zero };
@@ -50,13 +53,16 @@ public class MoveEvent : ItemEvent
 				if (randomizeRotationMax.Length == 0)
 						randomizeRotationMax = new Vector3[]  { Vector3.zero };
 
-				moveDelay = SpreadArrayToLength<float> (moveDelay, movementVector.Length);
-				movementSpeed = SpreadArrayToLength<float> (movementSpeed, movementVector.Length);
-				rotationSpeed = SpreadArrayToLength<float> (rotationSpeed, movementVector.Length);
+				if (movementVector.Length > 0) {
+						moveDelay = SpreadArrayToLength<float> (moveDelay, movementVector.Length);
+						movementSpeed = SpreadArrayToLength<float> (movementSpeed, movementVector.Length);
+						rotationSpeed = SpreadArrayToLength<float> (rotationSpeed, movementVector.Length);
+						nonRelative = SpreadArrayToLength<bool> (nonRelative, movementVector.Length);
 
-				rotationVector = SpreadArrayToLength<Vector3> (rotationVector, movementVector.Length);
-				randomizeMovementMax = SpreadArrayToLength<Vector3> (randomizeMovementMax, movementVector.Length);
-				randomizeRotationMax = SpreadArrayToLength<Vector3> (randomizeRotationMax, movementVector.Length);
+						rotationVector = SpreadArrayToLength<Vector3> (rotationVector, movementVector.Length);
+						randomizeMovementMax = SpreadArrayToLength<Vector3> (randomizeMovementMax, movementVector.Length);
+						randomizeRotationMax = SpreadArrayToLength<Vector3> (randomizeRotationMax, movementVector.Length);
+				}
 
 				originalMoveDelay = (float[])moveDelay.Clone ();
 
@@ -67,12 +73,18 @@ public class MoveEvent : ItemEvent
 				nextRotation [0] = item.transform.rotation;
 
 				for (int i = 0; i < nextPosition.Length-1; ++i) {
-						nextPosition [i + 1] = nextPosition [i] + (movementVector [i] + RandomVector (randomizeMovementMax [i]));
+						nextPosition [i + 1] = (movementVector [i] + RandomVector (randomizeMovementMax [i]));
 						Quaternion newRotation = Quaternion.identity;
 						newRotation.eulerAngles = (rotationVector [i] + RandomVector (randomizeRotationMax [i]));
-						nextRotation [i + 1] = nextRotation [i] * newRotation;
+						nextRotation [i + 1] = newRotation;
+						if (!nonRelative [i]) {		
+								nextPosition [i + 1] += nextPosition [i];
+								nextRotation [i + 1] *= nextRotation [i];
+						}
 				}
 
+				reversing = (nextPosition.Length == 1);
+		
 				//COULD NOT DO THIS OR DUPLICATE WON'T WORK \/
 				//movementVector = null;
 				//rotationVector = null; 
@@ -116,15 +128,22 @@ public class MoveEvent : ItemEvent
 				else
 						deltaTime = Time.deltaTime;
 	
-				if (triggeredChanged) {
-						UpdateOnTriggerChanged ();
-						triggeredChanged = false;
-				} else
-						UpdateIfNextPositionReached ();
+				//	Debug.Log ("Name: " + item.name + " length: " + nextPosition.Length + " Current Index: " + currentIndex);
+		          
+				if (nextPosition.Length != 1) {
+						Debug.Log ("HITS");
+						if (triggeredChanged) {
+								UpdateOnTriggerChanged ();
+								triggeredChanged = false;
+						} else
+								UpdateIfNextPositionReached ();
+				}
 
 				int transitionIndex = currentIndex;
 				if (!reversing)
 						transitionIndex -= 1;
+
+				//		Debug.Log ("Triggered: " + triggered.ToString () + " Reversing: " + reversing.ToString () + " Trans: " + transitionIndex);
 
 				if (triggered && startDelay > 0.0f) 
 						startDelay -= deltaTime;

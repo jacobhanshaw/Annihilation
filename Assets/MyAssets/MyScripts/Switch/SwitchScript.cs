@@ -6,7 +6,7 @@ public class SwitchScript : MonoBehaviour
 {
 		public bool invisible;
 		public bool ignoreAutoColor;
-		public int minItemsInTrigger;
+		public int minItemsInTrigger = 1;
 		public bool oneTimeUse;
 		
 		// 		Can't do this, because parenting switching causes a re-count
