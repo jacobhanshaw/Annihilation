@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11400000}
   m_Layer: 19
   m_Name: InvisibleSwitch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef4323415a1c4377bfcaddacc266790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invisible: 0
+  invisible: 1
   ignoreAutoColor: 0
   minItemsInTrigger: 1
   oneTimeUse: 1

@@ -131,7 +131,6 @@ public class MoveEvent : ItemEvent
 				//	Debug.Log ("Name: " + item.name + " length: " + nextPosition.Length + " Current Index: " + currentIndex);
 		          
 				if (nextPosition.Length != 1) {
-						Debug.Log ("HITS");
 						if (triggeredChanged) {
 								UpdateOnTriggerChanged ();
 								triggeredChanged = false;
