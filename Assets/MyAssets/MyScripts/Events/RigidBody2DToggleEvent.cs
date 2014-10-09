@@ -10,11 +10,13 @@ public class RigidBody2DToggleEvent : ItemEvent
 		new void Start ()
 		{
 				base.Start ();
+
 				rigidBody2d = item.GetComponent<Rigidbody2D> ();
 		}
 
 		public override void Trigger (bool trigger)
 		{
+
 				if (trigger)
 						rigidBody2d.isKinematic = disable;
 				else 

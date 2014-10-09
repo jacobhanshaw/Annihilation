@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 61: {fileID: 6100000}
   - 114: {fileID: 11400000}
-  m_Layer: 13
+  m_Layer: 19
   m_Name: InvisibleSwitch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!61 &6100000
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -50,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef4323415a1c4377bfcaddacc266790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipScale: 1
-  skipRender: 1
+  invisible: 0
+  ignoreAutoColor: 0
   minItemsInTrigger: 1
   oneTimeUse: 1
 --- !u!1001 &100100000

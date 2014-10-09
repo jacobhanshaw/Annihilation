@@ -13,7 +13,7 @@ public class GameLogic : Singleton<GameLogic>
 		
 		public Color[] colors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
-		new Color (0.0f, 1.0f, 149.0f / 255.0f),
+		new Color (1.0f, 149.0f / 255.0f, 0.0f),  //0.0f, 1.0f, 149.0f / 255.0f
 		new Color (246.0f / 255.0f, 64.0f / 255.0f, 195.0f / 255.0f), 
 		new Color (46.0f / 255.0f, 141.0f / 255.0f, 91.0f / 255.0f),
 		new Color (154.0f / 255.0f, 76.0f / 255.0f, 219.0f / 255.0f),
@@ -24,7 +24,7 @@ public class GameLogic : Singleton<GameLogic>
 		
 		public Color[] spawnColors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
-		new Color (0.0f, 1.0f, 0.0f),
+		new Color (1.0f, 1.0f, 0.0f), //0.0f, 1.0f, 0.0f
 		new Color (255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f), 
 		new Color (0.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f),
 		new Color (154.0f / 255.0f, 76.0f / 255.0f, 219.0f / 255.0f),

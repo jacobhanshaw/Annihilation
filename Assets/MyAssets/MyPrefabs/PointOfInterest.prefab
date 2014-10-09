@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   - 61: {fileID: 6100000}
-  m_Layer: 13
+  m_Layer: 19
   m_Name: PointOfInterest
   m_TagString: POI
   m_Icon: {fileID: 266726316, guid: 0000000000000000d000000000000000, type: 0}
@@ -28,6 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!61 &6100000
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -52,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   activeScript: 0
+  priorityIndex: 0
   forcePan: 0
   panOnEnter: 0
   overridePanSpeed: -1
