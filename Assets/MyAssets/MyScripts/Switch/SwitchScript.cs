@@ -80,7 +80,7 @@ public class SwitchScript : MonoBehaviour
 		void Trigger (bool trigger)
 		{
 				wasTriggered = trigger;
-				foreach (GameEvent gameEvent in gameEvents)
+				foreach (GameEvent gameEvent in transform.GetComponents<GameEvent> ())
 						gameEvent.Trigger (wasTriggered);
 				if (!invisible && !ignoreAutoColor) {
 						if (wasTriggered)
