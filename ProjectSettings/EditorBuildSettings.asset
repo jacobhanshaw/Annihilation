@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Ouya/StarterKit/Scenes/SceneInit.unity
+    path: Assets/MyAssets/MyScenes/BackUpSceneInit.unity
   - enabled: 1
-    path: Assets/Ouya/StarterKit/Scenes/SceneSplash.unity
+    path: Assets/MyAssets/MyScenes/SceneSplash.unity
   - enabled: 1
-    path: Assets/Ouya/StarterKit/Scenes/SceneMain.unity
+    path: Assets/MyAssets/MyScenes/SceneMain.unity
   - enabled: 1
-    path: Assets/Ouya/StarterKit/Scenes/StoryMode1.unity
+    path: Assets/MyAssets/MyScenes/StoryMode1.unity

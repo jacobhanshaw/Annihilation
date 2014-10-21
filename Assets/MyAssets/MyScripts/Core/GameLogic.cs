@@ -3,10 +3,15 @@ using System.Collections;
 
 public class GameLogic : Singleton<GameLogic>
 {
+
+		//Delegates
+		public delegate void Paused (bool paused);
+		public static Paused PausedListeners; //check if null
+
 		//Players and controls
-		public int  numPlayers = 4;  //debug number
-		public bool splitScreen = true;
-		public bool splitControllers = false;
+		public int  numPlayers = 1;  //debug number
+		public bool splitScreen = false;
+		public bool splitControllers = true;
 
 		//Scoring
 		private int place = 1; 			  //lowest unclaimed spot on the podium
@@ -59,6 +64,9 @@ public class GameLogic : Singleton<GameLogic>
 				if (!paused || playerIndex == pausingPlayer) {
 						paused = !paused;
 						pausingPlayer = playerIndex;
+
+						if (PausedListeners != null)
+								PausedListeners (paused);
 	
 						Time.timeScale = paused ? 0 : 1;
 						return true;

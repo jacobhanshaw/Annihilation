@@ -45,6 +45,8 @@ public class LevelLogic : MonoBehaviour
 		
 				playerControllers = new List<PlayerController> ();
 				
+				Debug.Log ("Num players: " + GameLogic.Instance.numPlayers);
+
 				for (int i = 1; i <= GameLogic.Instance.numPlayers; ++i) {
 						GameObject playerObj = (GameObject)Instantiate (playerPrefab, spawnLocations [(i - 1) % 2].transform.position, Quaternion.identity);
 			

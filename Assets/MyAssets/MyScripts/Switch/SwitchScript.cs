@@ -47,7 +47,7 @@ public class SwitchScript : MonoBehaviour
 						minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersInScreen);
 				}
 		
-				if (!invisible && topScreen) {
+				if (!invisible && (!GameLogic.Instance.splitScreen || topScreen)) {
 						int yItems = (minItemsInTrigger / 4) + 1;
 						int xItems = minItemsInTrigger % 4;
 						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);

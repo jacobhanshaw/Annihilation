@@ -43,7 +43,7 @@ public class MoveEvent : ItemEvent
 						movementSpeed = new float[]{  DEFAULT_MOVEMENT_SPEED };
 				if (rotationSpeed.Length == 0)
 						rotationSpeed = new float[]{  DEFAULT_ROTATION_SPEED };
-				if (nonRelative.Length == 0)
+				if (nonRelative == null || nonRelative.Length == 0)
 						nonRelative = new bool[] { false };
 
 				if (rotationVector.Length == 0)

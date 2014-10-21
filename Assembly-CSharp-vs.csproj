@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_4;UNITY_4_5;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -56,7 +56,6 @@
      <Compile Include="Assets\LitJson\ParserToken.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Camera\CameraFollow.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Camera\GuiCameraLogic.cs" />
-     <Compile Include="Assets\MyAssets\MyScripts\Camera\MenuCameraScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Camera\POIScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Core\GameLogic.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Core\HelperFunction.cs" />
@@ -77,6 +76,8 @@
      <Compile Include="Assets\MyAssets\MyScripts\Events\StartTimerEvent.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Libraries\MonoBehaviourExtended.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Libraries\Singleton.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Menu\Menu.cs" />
+     <Compile Include="Assets\MyAssets\MyScripts\Menu\MenuCameraScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Objects\Achievement.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Objects\CoinScript.cs" />
      <Compile Include="Assets\MyAssets\MyScripts\Objects\EndTimerScript.cs" />
@@ -144,9 +145,9 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Ouya\SDK\Scripts\OuyaGameObject.cs" />
+     <Compile Include="Assets\Ouya\StarterKit\Scripts\InitLoad.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneGame.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneInit.cs" />
-     <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneMain.cs" />
      <Compile Include="Assets\Ouya\StarterKit\Scripts\OuyaSceneSplash.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Depth.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />

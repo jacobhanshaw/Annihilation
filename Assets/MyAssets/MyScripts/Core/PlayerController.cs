@@ -1,12 +1,13 @@
 ﻿//INPUT MODE
-#define KEYBOARD 
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+// 	OuyaSDK.OuyaInput.GetButtonDown(0, OuyaController.BUTTON_R1)
+//OuyaSDK.OuyaInput.GetAxis(0, OuyaController.AXIS_LS_X)
 public class PlayerController : MonoBehaviour
-#if OUYA
+#if UNITY_ANDROID && !UNITY_EDITOR
 ,OuyaSDK.IJoystickCalibrationListener, 
 OuyaSDK.IPauseListener, 
 OuyaSDK.IResumeListener, 
@@ -52,12 +53,12 @@ OuyaSDK.IMenuAppearingListener
 		public int playerIndex = 1;
 		public OuyaSDK.OuyaPlayer controllerIndex = OuyaSDK.OuyaPlayer.player1;
 	
-#if KEYBOARD
-		private bool oddController;
-#elif OUYA
-		public bool leftSplit = false;
-		public bool splitController = false;
-		private bool m_useSDKForInput = false;
+	#if UNITY_ANDROID && !UNITY_EDITOR
+	public bool leftSplit = false;
+	public bool splitController = false;
+	private bool m_useSDKForInput = false;
+#else
+		private bool oddController;	
 #endif
 
 		//Jump status variables
@@ -107,7 +108,7 @@ OuyaSDK.IMenuAppearingListener
 	
 		void Awake ()
 		{
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				OuyaSDK.registerJoystickCalibrationListener (this);
 				OuyaSDK.registerMenuButtonUpListener (this);
 				OuyaSDK.registerMenuAppearingListener (this);
@@ -128,7 +129,7 @@ OuyaSDK.IMenuAppearingListener
 		void Start ()
 		{
 				Input.ResetInputAxes ();
-#if KEYBOARD
+				#if !(UNITY_ANDROID && !UNITY_EDITOR)
 				oddController = controllerIndex == OuyaSDK.OuyaPlayer.player1 || controllerIndex == OuyaSDK.OuyaPlayer.player3;
 #endif
 		
@@ -165,7 +166,7 @@ OuyaSDK.IMenuAppearingListener
 	
 		void OnDestroy ()
 		{
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				OuyaSDK.unregisterJoystickCalibrationListener (this);
 				OuyaSDK.unregisterMenuButtonUpListener (this);
 				OuyaSDK.unregisterMenuAppearingListener (this);
@@ -190,7 +191,7 @@ OuyaSDK.IMenuAppearingListener
 				if (!isNPC && !GameLogic.Instance.paused) {
 						if (!jointLengthChangeDisabled)
 								AdjustJointLength ();
-#if KEYBOARD
+						#if !(UNITY_ANDROID && !UNITY_EDITOR)
 						CheckForKeyboardPause ();
 #endif				
 						bool jumpPressed = JumpPressed () && !jumpDisabled;
@@ -578,7 +579,7 @@ OuyaSDK.IMenuAppearingListener
 				slingShotJoint = false;
 		}
 
-#if OUYA	
+	#if UNITY_ANDROID && !UNITY_EDITOR
 		public void OuyaMenuButtonUp ()
 		{
 				GameLogic.Instance.PausePressed (playerIndex);
@@ -599,7 +600,7 @@ OuyaSDK.IMenuAppearingListener
 		public void OuyaOnJoystickCalibration ()
 		{
 		}
-#elif KEYBOARD
+#else
 		void CheckForKeyboardPause ()
 		{
 				if (Input.GetKeyUp (KeyCode.P) && controllerIndex == OuyaSDK.OuyaPlayer.player1) {
@@ -612,21 +613,21 @@ OuyaSDK.IMenuAppearingListener
 #endif
 		bool JumpPressed ()
 		{
-#if OUYA
-			if (!splitController) {
-				return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
-						GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex) ||
-						GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);
-			} else {
-				if (leftSplit) {
-						return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, controllerIndex) ||
+				#if UNITY_ANDROID && !UNITY_EDITOR
+				if (!splitController) {
+						return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
+								GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex) ||
 								GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);
 				} else {
-						return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
-								GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex);
+						if (leftSplit) {
+								return GetButton (OuyaSDK.KeyEnum.BUTTON_LB, controllerIndex) ||
+										GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_UP, controllerIndex);
+						} else {
+								return GetButton (OuyaSDK.KeyEnum.BUTTON_O, controllerIndex) || 
+										GetButton (OuyaSDK.KeyEnum.BUTTON_RB, controllerIndex);
+						}
 				}
-			}
-#elif KEYBOARD
+#else
 				if (oddController)   
 						return Input.GetKey (KeyCode.W);
 				else 
@@ -638,12 +639,12 @@ OuyaSDK.IMenuAppearingListener
 		{
 				bool increase = false;
 		
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				if (leftSplit)
 						increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex)) > debounceY;
 				else
 						increase = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex)) > debounceY;
-#elif KEYBOARD			
+#else		
 				if (oddController)   
 						increase = Input.GetKey (KeyCode.E);
 				else  
@@ -657,12 +658,12 @@ OuyaSDK.IMenuAppearingListener
 		{
 				bool decrease = false;
 
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				if (leftSplit)
 						decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_Y, controllerIndex)) < -debounceY;
 				else
 						decrease = (-1 * GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_Y, controllerIndex)) < -debounceY;
-#elif KEYBOARD
+#else
 				if (oddController)   
 						decrease = Input.GetKey (KeyCode.Q);
 				else 
@@ -676,12 +677,12 @@ OuyaSDK.IMenuAppearingListener
 		{
 				bool pressed = false;
 		
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				if (leftSplit)
-					pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, controllerIndex);
+						pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_LT, controllerIndex);
 				else
-					pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, controllerIndex);
-#elif KEYBOARD
+						pressed = GetButton (OuyaSDK.KeyEnum.BUTTON_RT, controllerIndex);
+#else
 				if (oddController)   
 						pressed = Input.GetKey (KeyCode.LeftShift);
 				else 
@@ -700,19 +701,19 @@ OuyaSDK.IMenuAppearingListener
 		{
 				float horizontal = 0.0f;
 
-#if OUYA
+				#if UNITY_ANDROID && !UNITY_EDITOR
 				if (!splitController || leftSplit)
-					horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, controllerIndex);
+						horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_LSTICK_X, controllerIndex);
 				else
-					horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, controllerIndex);
+						horizontal = GetAxis (OuyaSDK.KeyEnum.AXIS_RSTICK_X, controllerIndex);
 					
 				if (horizontal == 0.0f && (!splitController || leftSplit)) {
-					if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, controllerIndex))
-						return - 1.0f;
-					else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, controllerIndex))
-						return 1.0f;
+						if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_LEFT, controllerIndex))
+								return - 1.0f;
+						else if (GetButton (OuyaSDK.KeyEnum.BUTTON_DPAD_RIGHT, controllerIndex))
+								return 1.0f;
 				}
-#elif KEYBOARD
+#else
 				if (Input.GetKey (KeyCode.A) && oddController)
 						horizontal = -1.0f;
 				else if (Input.GetKey (KeyCode.D) && oddController)
@@ -765,7 +766,7 @@ OuyaSDK.IMenuAppearingListener
 				
 				return playerGrounded;
 		}
-#if OUYA		
+	#if UNITY_ANDROID && !UNITY_EDITOR		
 		private float GetAxis (OuyaSDK.KeyEnum keyCode, OuyaSDK.OuyaPlayer player)
 		{
 				// Check if we want the *new* SDK input or the example common
