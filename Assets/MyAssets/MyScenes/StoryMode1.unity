@@ -164,6 +164,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -427,7 +429,7 @@ MonoBehaviour:
   rotationSpeed: []
   nonRelative: 
   movementVector:
-  - {x: 0, y: -4, z: 0}
+  - {x: 0, y: -5.01000023, z: 0}
   randomizeMovementMax: []
   rotationVector: []
   randomizeRotationMax: []
@@ -4483,7 +4485,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 925343e7509c4461083d5d68933aae56, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -10.4039726
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 925343e7509c4461083d5d68933aae56, type: 2}
       propertyPath: m_LocalPosition.z
@@ -5864,6 +5866,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -6321,6 +6325,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -6595,6 +6601,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -7262,6 +7270,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -7802,7 +7812,7 @@ Transform:
   m_PrefabInternal: {fileID: 282284700}
   m_GameObject: {fileID: 582038411}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalPosition: {x: -2, y: -10.4039726, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1594880850}
@@ -8039,6 +8049,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -9656,7 +9668,7 @@ MonoBehaviour:
   rotationSpeed: []
   nonRelative: 
   movementVector:
-  - {x: 0, y: -4, z: 0}
+  - {x: 0, y: -5.01000023, z: 0}
   randomizeMovementMax: []
   rotationVector: []
   randomizeRotationMax: []
@@ -10376,6 +10388,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -12052,6 +12066,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -14816,6 +14832,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -19419,7 +19437,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 925343e7509c4461083d5d68933aae56, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -9.95162582
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 925343e7509c4461083d5d68933aae56, type: 2}
       propertyPath: m_LocalPosition.z
@@ -23202,6 +23220,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -23321,7 +23341,7 @@ Transform:
   m_PrefabInternal: {fileID: 1664128086}
   m_GameObject: {fileID: 1952544578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: -9.95162582, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1594880850}
@@ -23572,6 +23592,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -23907,6 +23929,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -25121,6 +25145,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18
@@ -25330,6 +25356,8 @@ MonoBehaviour:
   spawnLocation: {fileID: 0}
   playerIndex: 1
   controllerIndex: 1
+  leftSplit: 0
+  splitController: 0
   jumping: 0
   maxSpeed: 5
   jumpForce: 18

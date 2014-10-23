@@ -54,7 +54,7 @@ public class LevelLogic : MonoBehaviour
 						playerControllers.Add (controller);
 						controller.spawnLocation = spawnLocations [(i - 1) % 2];
 						controller.controllerIndex = GameLogic.Instance.splitControllers ? (OuyaSDK.OuyaPlayer)((i + 1) / 2) : (OuyaSDK.OuyaPlayer)i;
-#if OUYA						
+#if UNITY_ANDROID && !UNITY_EDITOR				
 						controller.splitController = GameLogic.Instance.splitControllers;
 						controller.leftSplit = ((i % 2) != 0);
 #endif						

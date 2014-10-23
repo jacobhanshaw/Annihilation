@@ -53,13 +53,13 @@ OuyaSDK.IMenuAppearingListener
 		public int playerIndex = 1;
 		public OuyaSDK.OuyaPlayer controllerIndex = OuyaSDK.OuyaPlayer.player1;
 	
-	#if UNITY_ANDROID && !UNITY_EDITOR
-	public bool leftSplit = false;
-	public bool splitController = false;
-	private bool m_useSDKForInput = false;
-#else
+		//#if UNITY_ANDROID && !UNITY_EDITOR
+		public bool leftSplit = false;
+		public bool splitController = false;
+		private bool m_useSDKForInput = false;
+//#else
 		private bool oddController;	
-#endif
+//#endif
 
 		//Jump status variables
 		//public bool jump = false;				// Condition for whether the player should jump.
@@ -579,7 +579,7 @@ OuyaSDK.IMenuAppearingListener
 				slingShotJoint = false;
 		}
 
-	#if UNITY_ANDROID && !UNITY_EDITOR
+		#if UNITY_ANDROID && !UNITY_EDITOR
 		public void OuyaMenuButtonUp ()
 		{
 				GameLogic.Instance.PausePressed (playerIndex);
@@ -649,7 +649,7 @@ OuyaSDK.IMenuAppearingListener
 						increase = Input.GetKey (KeyCode.E);
 				else  
 						increase = Input.GetKey (KeyCode.O);
-#endif
+#endif 
 
 				return increase;
 		}
@@ -668,7 +668,7 @@ OuyaSDK.IMenuAppearingListener
 						decrease = Input.GetKey (KeyCode.Q);
 				else 
 						decrease = Input.GetKey (KeyCode.U);
-#endif
+#endif 
 
 				return decrease;
 		}
@@ -687,7 +687,7 @@ OuyaSDK.IMenuAppearingListener
 						pressed = Input.GetKey (KeyCode.LeftShift);
 				else 
 						pressed = Input.GetKey (KeyCode.Space);
-#endif
+#endif 
 				//	if (prevGrabPressed != pressed) {
 				//			prevGrabPressed = pressed;
 				//			return !prevGrabPressed;
@@ -722,7 +722,7 @@ OuyaSDK.IMenuAppearingListener
 						horizontal = -1.0f;
 				else if (Input.GetKey (KeyCode.L) && !oddController)
 						horizontal = 1.0f;	
-#endif
+#endif 
 				return horizontal;
 		}
 		

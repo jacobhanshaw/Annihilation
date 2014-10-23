@@ -9,9 +9,9 @@ public class GameLogic : Singleton<GameLogic>
 		public static Paused PausedListeners; //check if null
 
 		//Players and controls
-		public int  numPlayers = 1;  //debug number
+		public int  numPlayers = 2;  //debug number
 		public bool splitScreen = false;
-		public bool splitControllers = true;
+		public bool splitControllers = false;
 
 		//Scoring
 		private int place = 1; 			  //lowest unclaimed spot on the podium

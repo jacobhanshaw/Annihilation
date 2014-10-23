@@ -173,15 +173,17 @@ public class MoveEvent : ItemEvent
 		private void UpdateOnTriggerChanged ()
 		{
 				if (triggered && reversing) {
-						moveDelay = (float[])originalMoveDelay.Clone ();
 						reversing = false;
 						currentIndex += 1;
+						moveDelay = (float[])originalMoveDelay.Clone ();
 				} else if (!triggered && shouldReverse) {
 						reversing = true;
 						currentIndex -= 1;
+						moveDelay = (float[])originalMoveDelay.Clone ();
 				}
 
 				CheckIndexOverflow ();
+
 		}
 
 		private void CheckIndexOverflow ()
@@ -189,9 +191,11 @@ public class MoveEvent : ItemEvent
 				if (currentIndex < 0) {
 						reversing = false;
 						currentIndex = 1;
+						moveDelay = (float[])originalMoveDelay.Clone ();
 				} else if (currentIndex >= nextPosition.Length) {
 						reversing = loop;
 						currentIndex = nextPosition.Length - 2;
+						moveDelay = (float[])originalMoveDelay.Clone ();
 				}
 		}
 		
