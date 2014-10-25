@@ -23,7 +23,7 @@ public class TeleportScript : MonoBehaviour
 						if (GameLogic.Instance.activeTeleports [screen] == null && other.gameObject != receivedObject) {
 								GameLogic.Instance.activeTeleports [screen] = this;
 								objectInTeleport = other.gameObject;	
-						} else if (other.gameObject != receivedObject) {
+						} else if (GameLogic.Instance.activeTeleports [screen] != this && other.gameObject != receivedObject) {
 								receivedObject = GameLogic.Instance.activeTeleports [screen].objectInTeleport;
 								GameLogic.Instance.activeTeleports [screen].receivedObject = other.gameObject;
 								
