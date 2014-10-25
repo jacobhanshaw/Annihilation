@@ -38,6 +38,9 @@ public class TeleportScript : MonoBehaviour
 		{			
 				if (other.gameObject.CompareTag ("Player") || other.gameObject.CompareTag ("NPC")) {
 				
+						if (other.gameObject == objectInTeleport)
+								objectInTeleport = null;
+
 						if (other.gameObject == receivedObject)
 								receivedObject = null;
 				

@@ -214,7 +214,7 @@ OuyaSDK.IMenuAppearingListener
 										if (collider.gameObject != gameObject && (collider.gameObject.CompareTag ("Player") || collider.gameObject.CompareTag ("NPC"))) {		
 												PlayerController playerController = collider.gameObject.GetComponent<PlayerController> ();
 					
-												if (playerController && playerController.AcceptConnectionOrslingShot ()) {
+												if (playerController && playerController.AcceptConnectionOrSlingShot ()) {
 														if (jumpPressed && lastSlingShotId != collider.gameObject.GetInstanceID () && !jumping && jumpReleased && !slingShotDisabled && !playerController.slingShotDisabled) {
 																lastSlingShotId = collider.gameObject.GetInstanceID ();
 						
@@ -225,7 +225,7 @@ OuyaSDK.IMenuAppearingListener
 																StopMovement (gameObject);
 																StopMovement (slingShottedByPlayer);
 																break;
-														} else if (grabPressed && !jointDisabled) {
+														} else if (grabPressed && !jointDisabled && !playerController.jointDisabled) {
 																MakeConnection (collider.gameObject, playerController, true);
 																break;
 														}
@@ -556,9 +556,9 @@ OuyaSDK.IMenuAppearingListener
 				//			score += Time.deltaTime;
 		}
 		
-		bool AcceptConnectionOrslingShot ()
+		bool AcceptConnectionOrSlingShot ()
 		{
-				return (!Connected () && (GrabPressed () || grabHeld));
+				return (!Connected () && ((GrabPressed () && !isNPC) || grabHeld));
 		}
 	
 		public bool Connected ()
