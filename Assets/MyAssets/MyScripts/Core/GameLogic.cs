@@ -9,41 +9,22 @@ public class GameLogic : Singleton<GameLogic>
 		public static Paused PausedListeners; //check if null
 
 		//Players and controls
-		public int  numPlayers = 2;  //debug number
-		public bool splitScreen = false;
-		public bool splitControllers = false;
-
-		//Scoring
-		private int place = 1; 			  //lowest unclaimed spot on the podium
+		public int  numPlayers = 1; 
+	
 		
 		public Color[] colors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
-		new Color (1.0f, 149.0f / 255.0f, 0.0f),  //0.0f, 1.0f, 149.0f / 255.0f
-		new Color (246.0f / 255.0f, 64.0f / 255.0f, 195.0f / 255.0f), 
-		new Color (46.0f / 255.0f, 141.0f / 255.0f, 91.0f / 255.0f),
-		new Color (154.0f / 255.0f, 76.0f / 255.0f, 219.0f / 255.0f),
-		new Color (136.0f / 255.0f, 206.0f / 255.0f, 198.0f / 255.0f), 
-		new Color (160.0f / 255.0f, 204.0f / 255.0f, 186.0f / 255.0f),
-		new Color (1.0f / 255.0f, 249.0f / 255.0f, 97.0f / 255.0f)
 	};
 		
 		public Color[] spawnColors = {
 		new Color (0.0f, 181.0f / 255.0f, 1.0f),
-		new Color (1.0f, 1.0f, 0.0f), //0.0f, 1.0f, 0.0f
-		new Color (255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f), 
-		new Color (0.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f),
-		new Color (154.0f / 255.0f, 76.0f / 255.0f, 219.0f / 255.0f),
-		new Color (136.0f / 255.0f, 206.0f / 255.0f, 198.0f / 255.0f), 
-		new Color (160.0f / 255.0f, 204.0f / 255.0f, 186.0f / 255.0f),
-		new Color (1.0f / 255.0f, 249.0f / 255.0f, 97.0f / 255.0f)
 	};
 		
 		//Level info
-		public string currentLevelType;
 		public int    currentLevelNumber;
 		
 		//Teleport variables
-		public TeleportScript[] activeTeleports = { null, null };
+		public TeleportScript activeTeleport;
 		
 		//Pause Logic
 		public bool paused = false;
@@ -73,17 +54,6 @@ public class GameLogic : Singleton<GameLogic>
 				}
 
 				return false;
-		}
-		
-		//Methods to track podium placement for races
-		public int placePlayerFinished ()
-		{
-				return place++;
-		}
-		
-		public void resetForNewRace ()
-		{
-				place = 1;
 		}
 		
 }

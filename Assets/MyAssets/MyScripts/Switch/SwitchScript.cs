@@ -23,37 +23,6 @@ public class SwitchScript : MonoBehaviour
 
 		void Start ()
 		{
-
-				int firstNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
-				if (firstNum != -1)
-						layerMask |= 1 << LayerMask.NameToLayer ("Player" + firstNum);
-				int secondNum = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
-				if (secondNum != -1)
-						layerMask |= 1 << LayerMask.NameToLayer ("Player" + secondNum);
-
-				bool topScreen = false;
-				if (GameLogic.Instance.splitScreen) {
-						
-
-						if (firstNum == 1 || secondNum == 1 || secondNum == 2)
-								topScreen = true;
-						
-						int playersInScreen = int.MaxValue;
-						if (!topScreen && GameLogic.Instance.numPlayers <= 3)
-								playersInScreen = 1;
-						else if (topScreen && GameLogic.Instance.numPlayers <= 2)
-								playersInScreen = 1;
-		
-						minItemsInTrigger = Mathf.Min (minItemsInTrigger, playersInScreen);
-				}
-		
-				if (!invisible && (!GameLogic.Instance.splitScreen || topScreen)) {
-						int yItems = (minItemsInTrigger / 4) + 1;
-						int xItems = minItemsInTrigger % 4;
-						gameObject.transform.localScale = new Vector3 (gameObject.transform.localScale.x * xItems, gameObject.transform.localScale.y * yItems, gameObject.transform.localScale.z);
-						gameObject.transform.position = new Vector3 (gameObject.transform.position.x, gameObject.transform.position.y + (gameObject.transform.localScale.y - 1.0f) / 2.0f, gameObject.transform.position.z);
-				}
-				
 				gameEvents = transform.GetComponents<GameEvent> ();
 				itemsInTrigger = new List<int> ();
 

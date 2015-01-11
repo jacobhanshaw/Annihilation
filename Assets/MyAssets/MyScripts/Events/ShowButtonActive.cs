@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShowButtonActive : ItemEvent
+public class ShowButtonActive : GameEvent
 {
+		public GameObject item;
 		private SwitchScript switchScript;
 
 		new void Start ()
 		{
-				base.Start ();
-
 				switchScript = item.GetComponent<SwitchScript> ();
 		}
 	

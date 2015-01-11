@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class MoveEvent : ItemEvent
+public class MoveEvent : GameEvent
 {	
 		private const float DEFAULT_MOVEMENT_SPEED = 3.0f;
 		private const float DEFAULT_ROTATION_SPEED = 10.0f;
+
+		public GameObject item;
+		public bool ignorePause;
 
 		public bool       		loop;
 		public bool      		shouldReverse;
@@ -31,8 +34,6 @@ public class MoveEvent : ItemEvent
 		
 		new void Start ()
 		{			
-
-				base.Start ();
 
 				//	if (!loop)
 				//			HelperFunction.Instance.Assert (shouldReverse);

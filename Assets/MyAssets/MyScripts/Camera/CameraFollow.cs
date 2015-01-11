@@ -31,48 +31,14 @@ public class CameraFollow : MonoBehaviour
 				
 				Debug.Log ("Players: " + playersArray.Length.ToString ());
 				players = new List<GameObject> (playersArray);
-				
-				LayerMask initialPlayerLayer = 0; 
-				LayerMask otherPlayerLayer = 0;
-				LayerMask initialInteractLayer = 0;
-				LayerMask otherInteractLayer = 0;
-				LayerMask combinedInteractLayer = 0;
-				LayerMask combinedVersusLayer = 0;
-				
-				//Gets Layer Numbers from Camera labels, Example: GUI12 - (1 &  2)
-
-				int numOne = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 1);
-				if (numOne != -1) {
-						initialPlayerLayer = LayerMask.NameToLayer ("Player" + numOne.ToString ());
-						initialInteractLayer = LayerMask.NameToLayer ("Interact" + numOne.ToString ());
-				}
-				int numTwo = HelperFunction.Instance.PlayersInLayer (gameObject.layer, 2);
-				if (numTwo != -1) {
-						otherPlayerLayer = LayerMask.NameToLayer ("Player" + numTwo.ToString ());
-						otherInteractLayer = LayerMask.NameToLayer ("Interact" + numTwo.ToString ());
-				}
-				
-				if (numOne != -1 && numTwo != -1) {
-						combinedInteractLayer = LayerMask.NameToLayer ("Interact" + numOne.ToString () + numTwo.ToString ());
-						combinedVersusLayer = LayerMask.NameToLayer ("Versus" + numOne.ToString () + numTwo.ToString ());
-				}
-					
-				for (int i = players.Count-1; i >= 0; --i) {
-						if (players [i].layer != initialPlayerLayer && players [i].layer != otherPlayerLayer)
-								players.RemoveAt (i);
-				}
-
 
 				//Get all Poi's
 
 				poiScripts = new List<POIScript> ();
 				panToPois = new List<POIScript> ();
-				
 				GameObject[] pois = GameObject.FindGameObjectsWithTag ("POI");
-				foreach (GameObject poi in pois) {
-						if (poi.layer == initialInteractLayer || poi.layer == otherInteractLayer || poi.layer == combinedInteractLayer || poi.layer == combinedVersusLayer) 
-								poiScripts.Add (poi.GetComponent<POIScript> ());
-				}
+				foreach (GameObject poi in pois) 
+						poiScripts.Add (poi.GetComponent<POIScript> ());
 		}
 		
 		void Update ()

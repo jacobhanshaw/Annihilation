@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PanEvent : ItemEvent
+public class PanEvent : GameEvent
 {
+		public GameObject item;
+
 		public float      overridePanSpeed = -1.0f;
 		public float      overridePanZoomLevel = -1.0f;
 		
@@ -10,8 +12,6 @@ public class PanEvent : ItemEvent
 		
 		new void Start ()
 		{
-				base.Start ();
-
 				poiScript = item.GetComponent<POIScript> ();
 		}
 

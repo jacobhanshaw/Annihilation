@@ -3,14 +3,23 @@
 --- !u!78 &1
 TagManager:
   tags:
-  - Deadly
   - Ground
-  - Obstacle
+  - Enemy
   - Coin
+  - Switch
+  - Deadly
   - POI
+  - Player
   - NPC
   - 
-  - Switch
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - ExplosionFX
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
@@ -20,25 +29,25 @@ TagManager:
   Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
-  User Layer 8: GUI
-  User Layer 9: GUI12
-  User Layer 10: GUI34
-  User Layer 11: Player1
-  User Layer 12: Player2
-  User Layer 13: Player3
-  User Layer 14: Player4
-  User Layer 15: Interact1
-  User Layer 16: Interact2
-  User Layer 17: Interact3
-  User Layer 18: Interact4
-  User Layer 19: Interact12
-  User Layer 20: Interact34
-  User Layer 21: Versus12
-  User Layer 22: Versus34
-  User Layer 23: Versus1
-  User Layer 24: Versus2
-  User Layer 25: Versus3
-  User Layer 26: Versus4
+  User Layer 8: Deadly
+  User Layer 9: Player
+  User Layer 10: Enemies
+  User Layer 11: Ground
+  User Layer 12: 
+  User Layer 13: 
+  User Layer 14: 
+  User Layer 15: 
+  User Layer 16: 
+  User Layer 17: 
+  User Layer 18: 
+  User Layer 19: 
+  User Layer 20: 
+  User Layer 21: 
+  User Layer 22: 
+  User Layer 23: 
+  User Layer 24: 
+  User Layer 25: 
+  User Layer 26: 
   User Layer 27: 
   User Layer 28: 
   User Layer 29: 
@@ -48,4 +57,24 @@ TagManager:
   - name: Default
     userID: 0
     uniqueID: 0
+    locked: 0
+  - name: Default
+    userID: 1
+    uniqueID: 3363470833
+    locked: 0
+  - name: Background
+    userID: 2
+    uniqueID: 1535931219
+    locked: 0
+  - name: Character
+    userID: 4
+    uniqueID: 2511236001
+    locked: 0
+  - name: Foreground
+    userID: 3
+    uniqueID: 1024582385
+    locked: 0
+  - name: UI
+    userID: 5
+    uniqueID: 149272721
     locked: 0

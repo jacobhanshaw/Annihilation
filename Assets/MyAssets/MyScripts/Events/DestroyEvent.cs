@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DestroyEvent : ItemEvent
+public class DestroyEvent : GameEvent
 {
+
+		public GameObject item;
 	
 		public override void Trigger (bool trigger)
 		{
