@@ -31,7 +31,7 @@ public class Rocket : MonoBehaviour
 		{
 				React (col);
 		}
-
+		/*
 		void OnCollisionEnter2D (Collision2D coll)
 		{
 				React (coll.collider);
@@ -41,7 +41,7 @@ public class Rocket : MonoBehaviour
 		{
 				React (coll.collider);
 		}
-
+*/
 		void React (Collider2D col)
 		{
 				if (!col.isTrigger) {
@@ -49,7 +49,7 @@ public class Rocket : MonoBehaviour
 						if (col.tag == "Enemy") {
 								// ... find the Enemy script and call the Hurt function.
 								//	col.gameObject.GetComponent<Enemy>().Hurt();
-				
+								Destroy (col.gameObject);
 								// Call the explosion instantiation.
 								OnExplode ();
 				

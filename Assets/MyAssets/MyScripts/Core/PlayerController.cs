@@ -13,45 +13,10 @@ public class PlayerController : MonoBehaviour
 	
 		public delegate void PlayerDied ();
 		public static PlayerDied PlayerDiedListeners; //check if null
-	
-		//INDEX in KeyCodes for Action - arbitrary
-		public const int THROW_INDEX = 0;
-		public const int JUMP_INDEX = 1;
-		public const int LEFT_INDEX = 2;
-		public const int RIGHT_INDEX = 3;
-		public const int UP_BURST_INDEX = 4;
-		public const int DOWN_BURST_INDEX = 5;
-		public const int LEFT_BURST_INDEX = 6;
-		public const int RIGHT_BURST_INDEX = 7;
-		public const int DUL_BURST_INDEX = 8;
-		public const int DUR_BURST_INDEX = 9;
-		public const int DDL_BURST_INDEX = 10;
-		public const int DDR_BURST_INDEX = 11;
-		public const int ZAP_INDEX = 12;
-		public const int RANDOMIZE_INDEX = 13;
-		public const int X_SHOOT_INDEX = 14;
-		public const int T_SHOOT_INDEX = 15;
-		public const int DOUBLE_SPEED_INDEX = 16;
-		public const int SLOW_MO_INDEX = 17;
-		public const int SWORD_INDEX = 18;
-		public const int FLY_INDEX = 19;
-		public const int MINION_INDEX = 20;
-		public const int AUTO_AIM_INDEX = 21;
-		public const int PAUSE_INDEX = 22;
-		public const int PUSH_INDEX = 23;
-		public const int PULL_INDEX = 24;
-		public const int SD_INDEX = 25;
-
-		public KeyCode[] keycodes = { KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.I, KeyCode.J, KeyCode.K,
-	                              KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O, KeyCode.P, KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T, KeyCode.U, KeyCode.V, KeyCode.W,
-		KeyCode.X, KeyCode.Y, KeyCode.Z };
 
 		public float health = 100.0f;
 		public float personalSpeedModifier = 1.0f;
-
-		public bool enemy;
-		public bool lockedPosition;
-		
+	
 		//Debounce variables
 		private bool jumpReleased;
 		private float debounceY = 0.5f;
@@ -92,6 +57,9 @@ public class PlayerController : MonoBehaviour
 		[HideInInspector]
 		public bool
 				facingRight = true;			// For determining which way the player is currently facing.
+
+		//Buttons pressed
+		private bool[] movesArray;
 	
 		void Awake ()
 		{
@@ -107,17 +75,14 @@ public class PlayerController : MonoBehaviour
 	
 		void Start ()
 		{
-				Input.ResetInputAxes ();
-				gameObject.rigidbody2D.isKinematic = lockedPosition;
 				PlayerDiedListeners += PlayerDiedEvent;
-
-				if (enemy)
-						health = 20.0f;
+				Controller.Instance.MoveListeners += UpdateMovesArray;
 		}
 	
 		void OnDestroy ()
 		{
-
+				PlayerDiedListeners += PlayerDiedEvent;
+				Controller.Instance.MoveListeners -= UpdateMovesArray;
 		}
 		
 		void PlayerDiedEvent ()
@@ -352,5 +317,10 @@ public class PlayerController : MonoBehaviour
 				}
 		
 				return false;
+		}
+
+		public void UpdateMovesArray (bool[] moves)
+		{
+				movesArray = moves;
 		}
 }

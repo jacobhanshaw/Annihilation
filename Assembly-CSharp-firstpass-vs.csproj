@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{F59F0F62-DF82-09A8-D2FC-2D7C1432AE2D}</ProjectGuid>
+	<ProjectGuid>{38E712B5-51F3-B383-99E8-B663307AAD0A}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -69,7 +69,7 @@
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
  <Reference Include="NGUI">
- <HintPath>/Users/computer/Desktop/Projects/Unity/Annihiliation/Assets/NGUI/DLLs/NGUI.dll</HintPath>
+ <HintPath>/Users/computer/Desktop/Projects/Unity/Annihilation/Assets/NGUI/DLLs/NGUI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

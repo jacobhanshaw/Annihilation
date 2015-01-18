@@ -30,4 +30,19 @@ public class HelperFunction : Singleton<HelperFunction>
 				if (!condition) 
 						throw new System.Exception ();
 		}
+
+		public T[] RandomizeArray<T> (T[] array)
+		{
+				int iterations = array.Length / 2;
+				while (iterations >= 0) {
+						int from = Random.Range (0, array.Length - 1);	
+						int to = Random.Range (0, array.Length - 1);
+						T temp = array [to];
+						array [to] = array [from];
+						array [from] = temp;
+
+						iterations -= 1;
+				}
+				
+		}
 }

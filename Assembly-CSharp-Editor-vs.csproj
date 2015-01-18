@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{2B55A971-37A4-8C1D-5B4E-22ED83CF7F96}</ProjectGuid>
+	<ProjectGuid>{46403FAD-236F-F471-0A88-DB0AE59EBCD6}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -82,10 +82,10 @@
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
  <Reference Include="NGUI">
- <HintPath>/Users/computer/Desktop/Projects/Unity/Annihiliation/Assets/NGUI/DLLs/NGUI.dll</HintPath>
+ <HintPath>/Users/computer/Desktop/Projects/Unity/Annihilation/Assets/NGUI/DLLs/NGUI.dll</HintPath>
  </Reference>
  <Reference Include="NGUI_Editor">
- <HintPath>/Users/computer/Desktop/Projects/Unity/Annihiliation/Assets/NGUI/DLLs/Editor/NGUI_Editor.dll</HintPath>
+ <HintPath>/Users/computer/Desktop/Projects/Unity/Annihilation/Assets/NGUI/DLLs/Editor/NGUI_Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -93,9 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{F59F0F62-DF82-09A8-D2FC-2D7C1432AE2D}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+      <Project>{38E712B5-51F3-B383-99E8-B663307AAD0A}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-vs.csproj">
-      <Project>{202B9ED5-4E8E-5FB4-B699-60C55A5B8DB4}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+      <Project>{0FA6EC0E-702A-0789-E83A-E374C78F25A0}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
