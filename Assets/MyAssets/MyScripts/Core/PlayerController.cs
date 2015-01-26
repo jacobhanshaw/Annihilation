@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
 		//Buttons pressed
 		private bool[] movesArray;
+		private Gun gunComponent;
 	
 		void Awake ()
 		{
@@ -71,22 +72,31 @@ public class PlayerController : MonoBehaviour
 				groundChecks [2] = transform.FindChild ("groundCheckc");
 				
 				achievements = new List<Achievement> ();
+
+				movesArray = new bool[]{false,false,false,false,false};
 		}
 	
 		void Start ()
 		{
 				PlayerDiedListeners += PlayerDiedEvent;
-				Controller.Instance.MoveListeners += UpdateMovesArray;
+				Controller.MoveListeners += UpdateMovesArray;
+				gunComponent = gameObject.GetComponent<Gun> ();
+				Controller.ShootListeners += shootGun;
 		}
 	
 		void OnDestroy ()
 		{
 				PlayerDiedListeners += PlayerDiedEvent;
-				Controller.Instance.MoveListeners -= UpdateMovesArray;
+				Controller.MoveListeners -= UpdateMovesArray;
 		}
 		
 		void PlayerDiedEvent ()
 		{
+		}
+
+		void shootGun (bool[] moveDirection, bool[] attackMods)
+		{
+				gunComponent.playerFire (facingRight, moveDirection, attackMods);
 		}
 		
 		void Update ()
@@ -95,7 +105,6 @@ public class PlayerController : MonoBehaviour
 				onWall = PlayerIsOnWall ();
 
 				if (!GameLogic.Instance.paused) {
-						CheckForKeyboardPause ();				
 						bool jumpPressed = JumpPressed ();
 						jumpReleased |= !jumpPressed;
 						jumping &= !jumpReleased;
@@ -133,16 +142,6 @@ public class PlayerController : MonoBehaviour
 				}		
 					
 				rigidbody2D.velocity = velocity;
-		}
-		
-		void RandomizeKeycodes ()
-		{
-				for (int i = 0; i < keycodes.Length; ++i) {
-						int newIndex = Random.Range (0, keycodes.Length);
-						KeyCode tmp = keycodes [i];
-						keycodes [i] = keycodes [newIndex];
-						keycodes [newIndex] = tmp;
-				}
 		}
 	
 		Vector2 PerpendicularUpVector (Vector2 vector)
@@ -228,26 +227,17 @@ public class PlayerController : MonoBehaviour
 				//			score += Time.deltaTime;
 		}
 		
-		void CheckForKeyboardPause ()
-		{
-				if (Input.GetKeyUp (keycodes [PAUSE_INDEX])) {
-						if (Time.timeScale != 0.0f)
-								Time.timeScale = 0.0f;
-						else
-								Time.timeScale = 1.0f;
-				} 
-		}
 		bool JumpPressed ()
 		{
-				return Input.GetKey (keycodes [JUMP_INDEX]);
+				return movesArray [(int)Controller.MotionIndex.Jump];
 		}
 		
 		float GetHorizontalMovement ()
 		{
 
-				if (Input.GetKey (keycodes [LEFT_INDEX]))
+				if (movesArray [(int)Controller.MotionIndex.Left])
 						return -1.0f;
-				else if (Input.GetKey (keycodes [RIGHT_INDEX]))
+				else if (movesArray [(int)Controller.MotionIndex.Right])
 						return 1.0f;
 
 				return 0.0f;
