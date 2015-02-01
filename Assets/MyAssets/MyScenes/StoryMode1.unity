@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0
@@ -382,6 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 100002, guid: d7062658437874bcbacb8d98e58c9e97, type: 2}
+  playerScale: 1
   spawnLocation: {fileID: 582038411}
 --- !u!4 &170266090
 Transform:
@@ -579,7 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0
@@ -3479,7 +3480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0
@@ -6017,7 +6018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 1
   coinExpires: 1
@@ -7174,7 +7175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0
@@ -7672,7 +7673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0
@@ -7871,7 +7872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3baefd37e9b1246e1907c514befb9083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameCoin: "\x04"
+  nameCoin: $
   pointsCoin: 40420
   timerUsed: 0
   coinExpires: 0

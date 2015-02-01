@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Gun : MonoBehaviour
 {
+		[HideInInspector]
+		public float
+				scale = 1.0f;
+		
 		private float speed = 50.0f;
 		public Rigidbody2D bulletPrefab;
 
@@ -42,7 +46,7 @@ public class Gun : MonoBehaviour
 				*/
 		}
 		
-		public void playerFire (bool facingRight, bool[] moveDirection, bool[] attackMods)
+		public void playerFire (bool facingRight, bool[] moveDirection, bool[] attackMods, float scale)
 		{
 				int numMissles = 1;
 				float rotation = 0.0f;
@@ -64,14 +68,15 @@ public class Gun : MonoBehaviour
 
 				for (int i = 0; i < numMissles; ++i) {
 						Vector2 velocity = new Vector2 (speedX * Mathf.Cos (rotation * Mathf.Deg2Rad), speedY * Mathf.Sin (rotation * Mathf.Deg2Rad));
-						fire (Quaternion.Euler (new Vector3 (0, 0, rotation)), velocity, attackMods);
+						fire (Quaternion.Euler (new Vector3 (0, 0, rotation)), velocity, attackMods, scale);
 						rotation += rotationStep;
 				}
 		}
 
-		public void fire (Quaternion rotation, Vector2 velocity, bool[] attackMods)
+		public void fire (Quaternion rotation, Vector2 velocity, bool[] attackMods, float scale)
 		{
 				Rigidbody2D bulletInstance = Instantiate (bulletPrefab, transform.position, rotation) as Rigidbody2D;
 				bulletInstance.velocity = velocity;
+				bulletInstance.transform.localScale = new Vector2 (scale * bulletInstance.transform.localScale.x, scale * bulletInstance.transform.localScale.y);
 		}
 }

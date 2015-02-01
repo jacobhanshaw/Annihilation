@@ -3,7 +3,29 @@ using System.Collections;
 
 public class Controller : Singleton<Controller>
 {
-		private float lastTimeScale = 1.0f;
+		//Time Consts
+		private const float PAUSE_TIMESCALE = 0.01f;
+		private const float SLOW_MO_TIMESCALE = 0.25f;
+		private const float DOUBLE_SPEED_TIMESCALE = 2.5f;
+
+		//Size Vars
+		private float currentSize = 1.0f;
+		private const float SIZE_UP_SIZE = 2.0f;
+		private const float SIZE_DOWN_SIZE = 0.5f;
+/*
+ * 1 - Left
+ * 2 - Right
+ * 3 - Down
+ * 4 - Jump
+ * 5 - T-Mod
+ * 6 - X-Mod
+ * I - Fast
+ * H - Slow
+ * J - Pause
+ * C - Shoot
+ * L - Size Up
+ * M - Size Down
+ */
 
 		//Move Delegates
 		public delegate void Move (bool[] movesArray);
@@ -20,12 +42,13 @@ public class Controller : Singleton<Controller>
 
 		//Power Delegates
 		public delegate void Power ();
+		public delegate void SizePower (float size);
 		public static Power FlyListeners; //check if null
 		public static Power SloMoListeners; //check if null
 		public static Power DoubleSpeedListeners; //check if null
 		public static Power PauseListeners; //check if null
-		public static Power SizeUpListeners; //check if null
-		public static Power SizeDownListeners; //check if null
+		public static SizePower SizeUpListeners; //check if null
+		public static SizePower SizeDownListeners; //check if null
 
 
 		public enum MotionIndex
@@ -102,17 +125,20 @@ public class Controller : Singleton<Controller>
 				offset += (int)MotionIndex.Length;
 
 				bool[] attackModArray = new bool[] {
-			Input.GetKey (keycodes [offset + (int)AttackModIndex.TMod]), 
-			Input.GetKey (keycodes [offset + (int)AttackModIndex.XMod]), 
-			                        Input.GetKey (keycodes [offset + (int)AttackModIndex.Zap]),
-			                        Input.GetKey (keycodes [offset + (int)AttackModIndex.Minion]), 
-			                        Input.GetKey (keycodes [offset + (int)AttackModIndex.AutoAim])
-		};
+						Input.GetKey (keycodes [offset + (int)AttackModIndex.TMod]), 
+						Input.GetKey (keycodes [offset + (int)AttackModIndex.XMod]), 
+			            Input.GetKey (keycodes [offset + (int)AttackModIndex.Zap]),
+			            Input.GetKey (keycodes [offset + (int)AttackModIndex.Minion]), 
+			            Input.GetKey (keycodes [offset + (int)AttackModIndex.AutoAim])
+				};
 
 				offset += (int)AttackModIndex.Length;
 
 				if (ThrowListeners != null && Input.GetKeyDown (keycodes [offset + (int)AttackIndex.Throw]))
 						ThrowListeners (directionArray, attackModArray);
+
+				if (BurstListeners != null && Input.GetKeyDown (keycodes [offset + (int)AttackIndex.Burst]))
+						BurstListeners (directionArray, attackModArray);
 
 				if (ShootListeners != null && Input.GetKeyDown (keycodes [offset + (int)AttackIndex.Shoot]))
 						ShootListeners (directionArray, attackModArray);
@@ -132,35 +158,43 @@ public class Controller : Singleton<Controller>
 						FlyListeners ();
 
 				if (Input.GetKeyDown (keycodes [offset + (int)PowerIndex.SlowMo])) {
-						Debug.Log ("Slo Mo");
-						setTimeScale (0.5f);
+						setTimeScale (SLOW_MO_TIMESCALE);
 						if (SloMoListeners != null)
 								SloMoListeners ();
 				}
 
 				if (Input.GetKeyDown (keycodes [offset + (int)PowerIndex.DoubleSpeed])) {
-						Debug.Log ("Fast");
-						setTimeScale (2.0f);	
+						setTimeScale (DOUBLE_SPEED_TIMESCALE);	
 						if (DoubleSpeedListeners != null)
 								DoubleSpeedListeners ();
 				}
 
 				if (Input.GetKeyDown (keycodes [offset + (int)PowerIndex.Pause])) {
-						Debug.Log ("Pause");
-						setTimeScale (0.0f);
+						setTimeScale (PAUSE_TIMESCALE);
 						if (PauseListeners != null)
 								PauseListeners ();
 				}
-	
-				if (SizeUpListeners != null && Input.GetKeyDown (keycodes [offset + (int)PowerIndex.SizeUp]))
-						SizeUpListeners ();
 
-				if (SizeDownListeners != null && Input.GetKeyDown (keycodes [offset + (int)PowerIndex.SizeDown]))
-						SizeDownListeners ();
+				if (SizeUpListeners != null && Input.GetKeyDown (keycodes [offset + (int)PowerIndex.SizeUp])) {
+						currentSize = newSize (SIZE_UP_SIZE);
+						SizeUpListeners (currentSize);
+				}
+				if (SizeDownListeners != null && Input.GetKeyDown (keycodes [offset + (int)PowerIndex.SizeDown])) {
+						currentSize = newSize (SIZE_DOWN_SIZE);
+						SizeDownListeners (currentSize);
+				}
 
 				//	if (Input.GetKeyDown (keycodes [offset + (int)PowerIndex.Randomize]))
 				//			HelperFunction.Instance.RandomizeArray (keycodes);
 
+		}
+
+		private float newSize (float goalSize)
+		{
+				if (currentSize != goalSize)
+						return goalSize;
+
+				return 1.0f;
 		}
 
 		private void setTimeScale (float newTimeScale)

@@ -133,7 +133,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.49000001, y: -.519999981, z: 0}
+  m_LocalPosition: {x: -.49000001, y: -.529999971, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -145,7 +145,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -.519999981, z: 0}
+  m_LocalPosition: {x: 0, y: -.529999971, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -169,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .49000001, y: -.519999981, z: 0}
+  m_LocalPosition: {x: .49000001, y: -.529999971, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -238,11 +238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c0761bac0ff4bd9858f700ab698690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keycodes: 6100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a000000
   health: 100
   personalSpeedModifier: 1
-  enemy: 0
-  lockedPosition: 0
   spawnColor: {r: 0, g: 0, b: 0, a: 0}
   spawnLocation: {fileID: 0}
   score: 0
@@ -258,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e54665b0c104c7babf9026333bf28a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scale: 1
   bulletPrefab: {fileID: 5000000, guid: 8fde8ec1b330d4bbfb4839f4b41cadc0, type: 2}
 --- !u!114 &11400004
 MonoBehaviour:
@@ -270,6 +268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f72db081ec5dc40cb83aac5a7fac4980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keycodes: 300000003100000032000000330000003400000035000000360000003700000038000000390000006100000062000000630000006400000065000000660000006700000068000000690000006a0000006b0000006c0000006d0000006e0000006f000000700000007100000072000000730000007400000075000000760000007700000078000000790000007a000000
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

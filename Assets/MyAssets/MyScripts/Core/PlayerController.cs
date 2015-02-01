@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
 		public delegate void PlayerDied ();
 		public static PlayerDied PlayerDiedListeners; //check if null
 
-		public float health = 100.0f;
+		[HideInInspector]
+		public float
+				health = 100.0f;
 		public float personalSpeedModifier = 1.0f;
 	
 		//Debounce variables
@@ -82,21 +84,30 @@ public class PlayerController : MonoBehaviour
 				Controller.MoveListeners += UpdateMovesArray;
 				gunComponent = gameObject.GetComponent<Gun> ();
 				Controller.ShootListeners += shootGun;
+				Controller.SizeUpListeners += changeScale;
+				Controller.SizeDownListeners += changeScale;
 		}
 	
 		void OnDestroy ()
 		{
 				PlayerDiedListeners += PlayerDiedEvent;
 				Controller.MoveListeners -= UpdateMovesArray;
+				Controller.SizeUpListeners -= changeScale;
+				Controller.SizeDownListeners -= changeScale;
 		}
 		
 		void PlayerDiedEvent ()
 		{
 		}
 
+		void changeScale (float newScale)
+		{
+				gameObject.transform.localScale = new Vector3 (newScale, newScale, 1.0f);
+		}
+
 		void shootGun (bool[] moveDirection, bool[] attackMods)
 		{
-				gunComponent.playerFire (facingRight, moveDirection, attackMods);
+				gunComponent.playerFire (facingRight, moveDirection, attackMods, gameObject.transform.localScale.x);
 		}
 		
 		void Update ()
@@ -108,7 +119,6 @@ public class PlayerController : MonoBehaviour
 						bool jumpPressed = JumpPressed ();
 						jumpReleased |= !jumpPressed;
 						jumping &= !jumpReleased;
-		
 						if (jumpPressed && (grounded || onWall) && jumpReleased && !jumping) {
 								jumping = true;
 								jumpReleased = false;
