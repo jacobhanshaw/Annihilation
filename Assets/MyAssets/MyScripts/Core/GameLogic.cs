@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameLogic : Singleton<GameLogic>
 {
-
+	
 		//Delegates
 		public delegate void Paused (bool paused);
 		public static Paused PausedListeners; //check if null

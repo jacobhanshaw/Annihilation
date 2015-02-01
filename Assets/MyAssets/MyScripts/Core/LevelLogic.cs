@@ -14,9 +14,6 @@ public class LevelLogic : MonoBehaviour
 	
 		//Player variables
 		public GameObject   playerPrefab;
-		[HideInInspector]
-		public float
-				playerScale = 1.0f;
 		
 		//List of all player controllers ERROR CURRENTLY UNUSED
 		private PlayerController playerController;

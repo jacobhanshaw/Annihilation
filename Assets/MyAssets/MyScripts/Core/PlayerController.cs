@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviour
 				Controller.ShootListeners += shootGun;
 				Controller.SizeUpListeners += changeScale;
 				Controller.SizeDownListeners += changeScale;
+
 		}
 	
 		void OnDestroy ()
@@ -203,7 +204,7 @@ public class PlayerController : MonoBehaviour
 						if (newSpawnScript != null)
 								newSpawnScript.addColor (spawnColor);
 						spawnLocation = other.gameObject;
-				} else if (other.gameObject.CompareTag ("Deadly")) {
+				} else if (other.gameObject.CompareTag ("Deadly") || other.gameObject.CompareTag ("Enemy")) {
 						PlayerDiedListeners ();
 						KillPlayer ();
 				} else if (other.gameObject.CompareTag ("Coin")) {
