@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
 		public float personalSpeedModifier = 1.0f;
 	
 		//Debounce variables
+		private bool flying;
+		private const float FLYING_SPEED_MULT = 2.5f;
 		private bool jumpReleased;
 		private float debounceY = 0.5f;
 
@@ -86,7 +88,7 @@ public class PlayerController : MonoBehaviour
 				Controller.ShootListeners += shootGun;
 				Controller.SizeUpListeners += changeScale;
 				Controller.SizeDownListeners += changeScale;
-
+				Controller.FlyListeners += flyChanged;
 		}
 	
 		void OnDestroy ()
@@ -95,6 +97,7 @@ public class PlayerController : MonoBehaviour
 				Controller.MoveListeners -= UpdateMovesArray;
 				Controller.SizeUpListeners -= changeScale;
 				Controller.SizeDownListeners -= changeScale;
+				Controller.FlyListeners -= flyChanged;
 		}
 		
 		void PlayerDiedEvent ()
@@ -104,6 +107,12 @@ public class PlayerController : MonoBehaviour
 		void changeScale (float newScale)
 		{
 				gameObject.transform.localScale = new Vector3 (newScale, newScale, 1.0f);
+		}
+
+		void flyChanged ()
+		{
+				flying = !flying;
+				gameObject.rigidbody2D.gravityScale = flying ? 0.0f : 1.0f;
 		}
 
 		void shootGun (bool[] moveDirection, bool[] attackMods)
@@ -125,34 +134,42 @@ public class PlayerController : MonoBehaviour
 								jumpReleased = false;
 								wallJump = onWall;
 						}
-			 
 				}
 		}
 		
 		void FixedUpdate ()
 		{
-				Vector2 velocity = rigidbody2D.velocity;
 				float h = GetHorizontalMovement ();
 				
 				if (h != 0.0f)
 						facingRight = h > 0.0f;
+				if (flying) {
+						StopMovement (gameObject);
+						Vector3 movement = new Vector3 (h * FLYING_SPEED_MULT, GetVerticalMovement () * FLYING_SPEED_MULT, 0.0f);
+						//	while (CollisionIfGameObjectMovedAlongVector (gameObject, movement) && (movement.x > 0.01f || movement.y > 0.01f))
+						//			movement *= 0.5f;
+						//s	if (!CollisionIfGameObjectMovedAlongVector (gameObject, movement))
+						gameObject.transform.position += movement * Time.fixedDeltaTime;
+				} else {
+						Vector2 velocity = rigidbody2D.velocity;
 
-				if (grounded)
-						velocity.x = maxSpeed * h;
-				else if (h * velocity.x < 0.0f || Mathf.Abs (velocity.x) < maxControlledAirSpeed)
-						gameObject.rigidbody2D.AddForce (Vector2.right * (controlledAirSpeedForce * h));
-		
-				if (jumping) {
-						if (wallJump) {
-								float direction = wallJumpLeft ? 1.0f : -1.0f;
-								velocity.x = 1.2f * maxSpeed * direction;
-						} 
-						velocity.y = jumpVelocity;
-						jumping = false;
+						if (grounded)
+								velocity.x = maxSpeed * h;
+						else if (h * velocity.x < 0.0f || Mathf.Abs (velocity.x) < maxControlledAirSpeed)
+								gameObject.rigidbody2D.AddForce (Vector2.right * (controlledAirSpeedForce * h));
+				
+						if (jumping) {
+								if (wallJump) {
+										float direction = wallJumpLeft ? 1.0f : -1.0f;
+										velocity.x = 1.2f * maxSpeed * direction;
+								} 
+								velocity.y = jumpVelocity;
+								jumping = false;
 			
-				}		
-					
-				rigidbody2D.velocity = velocity;
+						}	
+						rigidbody2D.velocity = velocity;
+				}
+				
 		}
 	
 		Vector2 PerpendicularUpVector (Vector2 vector)
@@ -180,18 +197,6 @@ public class PlayerController : MonoBehaviour
 						direction = 0;
 				Vector2 forceVector = new Vector2 ((1.0f + fractionX) * throwForceX * direction, (2.0f - fractionX) * throwForceY);
 				//	otherPlayer.rigidbody2D.AddForce (forceVector);
-		}
-		
-	
-		//Box corners
-		Vector3 TopRight (GameObject box)
-		{
-				return box.transform.position + new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.0f, 0);
-		}
-	
-		Vector3 BottomLeft (GameObject box)
-		{
-				return box.transform.position - new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.05f, 0);
 		}
 	
 		void OnTriggerEnter2D (Collider2D other)
@@ -242,16 +247,27 @@ public class PlayerController : MonoBehaviour
 		{
 				return movesArray [(int)Controller.MotionIndex.Jump];
 		}
+
+		float GetVerticalMovement ()
+		{
+				float direction = 0.0f;
+				if (movesArray [(int)Controller.MotionIndex.Jump])
+						direction += 1.0f;
+				if (movesArray [(int)Controller.MotionIndex.Down])
+						direction += -1.0f;
 		
+				return direction;
+		}	
+
 		float GetHorizontalMovement ()
 		{
-
+				float direction = 0.0f;
 				if (movesArray [(int)Controller.MotionIndex.Left])
-						return -1.0f;
-				else if (movesArray [(int)Controller.MotionIndex.Right])
-						return 1.0f;
+						direction += -1.0f;
+				if (movesArray [(int)Controller.MotionIndex.Right])
+						direction += 1.0f;
 
-				return 0.0f;
+				return direction;
 		}
 		
 		bool PlayerIsGrounded ()
@@ -302,6 +318,17 @@ public class PlayerController : MonoBehaviour
 				}
 		
 				return false;
+		}
+
+		//Box corners
+		Vector3 TopRight (GameObject box)
+		{
+				return box.transform.position + new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.0f, 0);
+		}
+	
+		Vector3 BottomLeft (GameObject box)
+		{
+				return box.transform.position - new Vector3 (box.transform.localScale.x / 2.0f, box.transform.localScale.y / 2.05f, 0);
 		}
 
 		//Collision check

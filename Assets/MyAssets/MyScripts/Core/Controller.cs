@@ -4,7 +4,7 @@ using System.Collections;
 public class Controller : Singleton<Controller>
 {
 		//Time Consts
-		private const float PAUSE_TIMESCALE = 0.01f;
+		private const float PAUSE_TIMESCALE = 0.0f;
 		private const float SLOW_MO_TIMESCALE = 0.25f;
 		private const float DOUBLE_SPEED_TIMESCALE = 2.5f;
 
@@ -19,12 +19,14 @@ public class Controller : Singleton<Controller>
  * 4 - Jump
  * 5 - T-Mod
  * 6 - X-Mod
- * I - Fast
- * H - Slow
- * J - Pause
- * C - Shoot
- * L - Size Up
- * M - Size Down
+ * B - Shoot
+ * F - Fly
+ * G - Slow
+ * H - Fast
+ * I - Pause
+ * J - Randomize
+ * K - Size Up
+ * L - Size Down
  */
 
 		//Move Delegates
@@ -54,7 +56,6 @@ public class Controller : Singleton<Controller>
 		public enum MotionIndex
 		{
 				//Move/Direction - Hold
-				Up,
 				Left,
 				Right,
 				Down,
@@ -96,8 +97,8 @@ public class Controller : Singleton<Controller>
 				Length
 		}
 
-		public KeyCode[] keycodes = { KeyCode.Alpha0,KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, 
-		KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E, 
+		private KeyCode[] keycodes = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, 
+		KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9,KeyCode.Alpha0, KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E, 
 		KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.I, KeyCode.J, KeyCode.K,KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O, KeyCode.P, 
 		KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T, KeyCode.U, KeyCode.V, KeyCode.W,KeyCode.X, KeyCode.Y, KeyCode.Z };
 
@@ -112,7 +113,6 @@ public class Controller : Singleton<Controller>
 		{
 				int offset = 0;
 				bool[] directionArray = new bool[] {
-						Input.GetKey (keycodes [(int)MotionIndex.Up]),
 						Input.GetKey (keycodes [(int)MotionIndex.Left]), 
 						Input.GetKey (keycodes [(int)MotionIndex.Right]),
 						Input.GetKey (keycodes [(int)MotionIndex.Down]),
